@@ -157,10 +157,10 @@ class Command(BaseCommand):
         # ---------------------------------------------------------
         week7, _ = Week.objects.get_or_create(number=7, defaults={'description': 'Applied Capstone Projects'})
         days_w7 = [
-            (42, 'Project: Networking Detective', 'section_42_network_capstone.md'),
-            (43, 'Project: Security Audit', 'section_43_security_capstone.md'),
-            (44, 'Project: Automated DevOps Pipeline', 'section_44_devops_capstone.md'),
-            (45, 'Project: Big Data Analytics', 'section_45_data_capstone.md'),
+            (42, 'Project: Networking Detective', 'section_31_network_capstone.md'),
+            (43, 'Project: Security Audit', 'section_32_security_capstone.md'),
+            (44, 'Project: Automated DevOps Pipeline', 'section_33_devops_capstone.md'),
+            (45, 'Project: Big Data Analytics', 'section_34_data_capstone.md'),
         ]
 
         # ---------------------------------------------------------
