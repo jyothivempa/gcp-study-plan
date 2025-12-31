@@ -157,11 +157,12 @@
     - [x] Add "Verify My Cloud" button to Capstone pages
 - [x] **6. Automated "DevOps" Deployment** <!-- id: 75 -->
 # Deployment & Hosting
-- [ ] **Deploy to PythonAnywhere**
+- [x] **Deploy to PythonAnywhere**
     - [x] Check Project Feasibility (Settings, WSGI)
     - [x] Create Deployment Guide Artifact (`pythonanywhere_deployment.md`)
     - [x] **Push Code to GitHub** (Repository: `jyothivempa/gcp-study-plan`)
-    - [ ] Verify Production Settings (`ALLOWED_HOSTS`, `DEBUG`)
+    - [x] Verify Production Settings (`ALLOWED_HOSTS`, `DEBUG`)
+    - [x] **Live Database Population** (Script Ran Successfully)
 
 
 

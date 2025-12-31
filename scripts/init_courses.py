@@ -7,7 +7,7 @@ gcp_course, created = Course.objects.get_or_create(
     slug='gcp',
     defaults={
         'title': 'GCP Associate Cloud Engineer',
-        'description': '30-Day Zero to Hero Study Plan',
+        'description': 'Master GCP in 45 Days (From Zero to Hero)',
         'icon_class': 'fa-brands fa-google'
     }
 )
