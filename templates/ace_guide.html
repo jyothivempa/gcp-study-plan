@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ACE Exam Guide - Certification Strategy{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 min-h-full py-12 h-full overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <h1 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">
+                <span class="text-brand-600">Ace The Exam</span> Strategy Guide
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-500">
+                How our 45-Day Plan maps directly to the official Google Cloud Associate Cloud Engineer exam guide.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Exam Domains (Left Col) -->
+            <div class="lg:col-span-2 space-y-8">
+
+                <!-- Domain 1 -->
+                <div
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="p-6 border-b border-slate-100 bg-blue-50">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-slate-900">Domain 1: Set up a cloud solution environment
+                            </h2>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">~20% of
+                                Exam</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 mb-4">Focuses on project setup, billing configuration, and installing
+                            the CLI.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="{% url 'lesson_detail' 'gcp' 2 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mr-3">D2</span>
+                                <span class="text-sm font-medium text-slate-700">Project Structure</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 3 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mr-3">D3</span>
+                                <span class="text-sm font-medium text-slate-700">Billing & IAM</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 15 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mr-3">D15</span>
+                                <span class="text-sm font-medium text-slate-700">Cloud Shell & CLI</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain 2 -->
+                <div
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="p-6 border-b border-slate-100 bg-purple-50">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-slate-900">Domain 2: Plan and configure solutions</h2>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">~17.5%
+                                of Exam</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 mb-4">Planning compute resources, data storage options, and network
+                            design.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="{% url 'lesson_detail' 'gcp' 4 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm mr-3">D4</span>
+                                <span class="text-sm font-medium text-slate-700">Compute Engine</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 6 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm mr-3">D6</span>
+                                <span class="text-sm font-medium text-slate-700">Cloud Storage</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 8 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm mr-3">D8</span>
+                                <span class="text-sm font-medium text-slate-700">VPC & Subnets</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 19 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm mr-3">D19</span>
+                                <span class="text-sm font-medium text-slate-700">Cloud SQL</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain 3 -->
+                <div
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="p-6 border-b border-slate-100 bg-amber-50">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-slate-900">Domain 3: Deploy and implement operations</h2>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">~25% of
+                                Exam</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 mb-4">Deploying apps on GKE, App Engine, Cloud Run, and monitoring
+                            them.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="{% url 'lesson_detail' 'gcp' 18 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm mr-3">D18</span>
+                                <span class="text-sm font-medium text-slate-700">Kubernetes (GKE)</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 16 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm mr-3">D16</span>
+                                <span class="text-sm font-medium text-slate-700">App Engine</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 17 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm mr-3">D17</span>
+                                <span class="text-sm font-medium text-slate-700">Cloud Run</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 14 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm mr-3">D14</span>
+                                <span class="text-sm font-medium text-slate-700">Operations Suite</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain 4 -->
+                <div
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="p-6 border-b border-slate-100 bg-green-50">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-slate-900">Domain 4: Configure access and security</h2>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">~20% of
+                                Exam</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 mb-4">Managing IAM, service accounts, and audit logs.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="{% url 'lesson_detail' 'gcp' 12 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-sm mr-3">D12</span>
+                                <span class="text-sm font-medium text-slate-700">IAM Core</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 13 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-sm mr-3">D13</span>
+                                <span class="text-sm font-medium text-slate-700">Service Accounts</span>
+                            </a>
+                            <a href="{% url 'lesson_detail' 'gcp' 34 %}"
+                                class="flex items-center p-3 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-100 hover:border-brand-200 transition-colors">
+                                <span
+                                    class="h-8 w-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-sm mr-3">D34</span>
+                                <span class="text-sm font-medium text-slate-700">Bonus Security Exam</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Sidebar (Right Col) -->
+            <div class="space-y-8">
+
+                <!-- Exam Strategy Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-24">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                        <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i> Top 10 Exam Tips
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">1.</span>
+                            <span class="text-sm text-slate-600">Choose <b>Granular Roles</b> over Primitive
+                                (Owner/Editor) unless specified.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">2.</span>
+                            <span class="text-sm text-slate-600">Prefer <b>Managed Services</b> (Cloud Run/SQL) over VMs
+                                for less ops.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">3.</span>
+                            <span class="text-sm text-slate-600">Know the difference between <b>Zonal, Regional, and
+                                    Global</b> resources.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">4.</span>
+                            <span class="text-sm text-slate-600"><b>Flow logs</b> are for network analysis; <b>Audit
+                                    logs</b> are for who did what.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">5.</span>
+                            <span class="text-sm text-slate-600"><b>Preemptible VMs</b> are for fault-tolerant batch
+                                jobs to save cost.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-600 font-bold mr-2">6.</span>
+                            <span class="text-sm text-slate-600">Use <b>Cloud Storage</b> classes (Nearline/Coldline)
+                                for lifecycle cost savings.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-8 pt-6 border-t border-slate-100 space-y-3">
+                        <p class="text-xs text-slate-400 font-bold uppercase mb-2">Resources</p>
+                        <a href="{% url 'ace_cheat_sheet' %}"
+                            class="block w-full text-center px-4 py-3 bg-white border-2 border-slate-200 hover:border-brand-500 text-slate-700 hover:text-brand-600 font-bold rounded-xl transition-colors">
+                            <i class="fa-solid fa-bolt mr-2 text-yellow-500"></i> Rapid Review Cheat Sheet
+                        </a>
+                        <a href="{% url 'lesson_detail' 'gcp' 31 %}"
+                            class="block w-full text-center px-4 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors">
+                            Take Advanced Exam
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Certification Philosophy & Disclaimer -->
+        <div class="mt-16 bg-blue-50 border-l-4 border-blue-600 p-8 rounded-r-xl">
+            <h3 class="text-xl font-bold text-blue-900 mb-4">
+                <i class="fa-solid fa-circle-info mr-2"></i> Why Hands-on Practice Matters
+            </h3>
+            <div class="prose prose-blue max-w-none text-blue-800">
+                <p class="font-semibold">
+                    Hands-on real world experience is critical to preparing for Google Cloud certification exams.
+                </p>
+                <p>
+                    Our Associate and Professional certifications are an indicator of proficiency with Google Cloud
+                    technology.
+                    Training materials are developed to build this proficiency involving the same Job Task Analyses
+                    (JTAs) as the certification exams,
+                    ensuring focus on the same underlying job role profile and required skills.
+                </p>
+                <p class="text-sm mt-4">
+                    <em>Note: Completing training is not required to fulfill certification requirements, nor are
+                        training courses guaranteed to lead to success on an exam.
+                        The recommended resources might not by themselves be sufficient for test preparation for test
+                        takers at different points in their careers.</em>
+                </p>
+                <div class="mt-6 flex flex-wrap gap-4">
+                    <a href="https://cloud.google.com/certification" target="_blank"
+                        class="text-blue-700 hover:text-blue-900 font-bold underline">
+                        Official Certifications Website <i class="fa-solid fa-external-link-alt ml-1"></i>
+                    </a>
+                    <a href="https://www.googlecloudcommunity.com/" target="_blank"
+                        class="text-blue-700 hover:text-blue-900 font-bold underline">
+                        Google Cloud Community <i class="fa-solid fa-external-link-alt ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

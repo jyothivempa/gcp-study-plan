@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GCPMastery: Zero to Hero by Jagz{% endblock %}</title>
+
+    <!-- Google Fonts: Inter for that premium modern SaaS look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (via CDN for rapid development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    },
+                    typography: {
+                        DEFAULT: {
+                            css: {
+                                maxWidth: 'none',
+                                color: '#334155',
+                                h1: { color: '#1e293b', fontWeight: '800' },
+                                h2: { color: '#1e293b', fontWeight: '700', marginTop: '2em' },
+                                strong: { color: '#1e293b', fontWeight: '600' },
+                                a: { color: '#2563eb', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
+                                code: { color: '#e11d48', backgroundColor: '#f1f5f9', padding: '0.2em 0.4em', borderRadius: '0.25rem', fontWeight: '600' },
+                                'code::before': { content: '""' },
+                                'code::after': { content: '""' },
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Alpine.js (for reactive UI) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom CSS (Only for specific overrides) -->
+    <style>
+        /* Smooth scrolling for the whole page */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Mermaid adjustments */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        /* 3D Flip Animation Utilities */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Tailwind Arbitrary Group Variant Support Fix */
+        .group.flipped .group-\[\.flipped\]\:rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body
+    class="bg-[#F8FAFC] text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden selection:bg-brand-500/30">
+
+    <!-- Global Background Mesh Gradient (Fixed) -->
+    <div class="fixed inset-0 z-0 pointer-events-none opacity-60">
+        <div
+            class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-200/40 blur-[120px] animate-float">
+        </div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-200/40 blur-[120px] animate-float"
+            style="animation-delay: -3s;"></div>
+    </div>
+
+    <!-- TOP NAVBAR -->
+    {% block navbar %}
+    <nav class="bg-white border-b border-slate-200 h-16 flex-none z-30">
+        <div class="h-full px-4 lg:px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center gap-2 group">
+                <div
+                    class="w-8 h-8 bg-brand-600 text-white rounded-lg flex items-center justify-center font-bold text-xl group-hover:bg-brand-700 transition">
+                    <i class="fa-brands fa-google"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold text-slate-900 leading-tight">GCP<span
+                            class="text-brand-600">Mastery</span></span>
+                    <span
+                        class="ml-2 text-xs font-medium text-slate-500 hidden sm:inline-block border-l border-slate-300 pl-2">Zero
+                        to Hero by Jagz</span>
+                </div>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-xl mx-8 hidden lg:block">
+                <form action="{% url 'search_lessons' %}" method="get" class="relative group">
+                    <input type="text" name="q" placeholder="Search topics (e.g. 'Load Balancer')..."
+                        class="w-full bg-slate-100 border-none rounded-xl py-2.5 pl-12 pr-4 text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all placeholder:text-slate-400 hover:bg-white hover:shadow-sm">
+                    <div
+                        class="absolute left-4 top-2.5 text-slate-400 group-focus-within:text-brand-500 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right: Navigation & User -->
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
+                    <a href="{% url 'curriculum_overview' %}"
+                        class="hover:text-brand-600 px-3 py-2 rounded-md hover:bg-slate-50 transition">Curriculum</a>
+                    <a href="{% url 'roadmap' %}"
+                        class="hover:text-brand-600 px-3 py-2 rounded-md hover:bg-slate-50 transition">Roadmap</a>
+                    <a href="{% url 'ace_guide' %}"
+                        class="hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-indigo-50 transition font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-check"></i> Strategy
+                    </a>
+                </div>
+
+                <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+
+                <div class="flex items-center gap-4">
+                    {% if user.is_authenticated %}
+
+                    <!-- GAMIFICATION STATS -->
+                    <div class="hidden lg:flex items-center gap-4 mr-4">
+                        <!-- Streak -->
+                        <div class="flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-full border border-orange-100/50"
+                            title="Daily Streak">
+                            <i class="fa-solid fa-fire animate-pulse text-orange-500"></i>
+                            <span class="text-sm font-bold font-display">
+                                {{ user.profile.current_streak }}
+                            </span>
+                        </div>
+
+                        <!-- Level & XP -->
+                        <div class="flex items-center gap-3">
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    Level {{ user.profile.level }}
+                                </span>
+                                <div class="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden mt-1">
+                                    {% widthratio user.profile.xp 500 100 as xp_pct %}
+                                    <div class="h-full bg-gradient-to-r from-brand-400 to-indigo-500"
+                                        style="width: {{ xp_pct }}%"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="w-9 h-9 bg-gradient-to-br from-brand-500 to-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-lg shadow-brand-500/20 transform hover:scale-110 transition-transform">
+                                {{ user.profile.level }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-sm font-bold text-slate-900">{{ user.username }}</div>
+                            <div class="text-xs text-brand-600 font-bold">{{ user.profile.xp }} XP</div>
+                        </div>
+                        <div
+                            class="w-9 h-9 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white shadow-sm">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="text-slate-400 hover:text-red-600 transition p-1"
+                                title="Log Out">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="text-slate-600 hover:text-brand-600 font-medium text-sm">Log
+                        In</a>
+                    <a href="{% url 'register' %}"
+                        class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-md text-sm font-bold transition shadow-sm hover:shadow-md">Get
+                        Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+    <!-- MAIN INTERFACE -->
+    <div class="flex-1 flex overflow-hidden">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Mermaid.js & Scripts -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

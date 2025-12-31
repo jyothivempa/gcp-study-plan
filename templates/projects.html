@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Projects - GCP 45-Day Plan{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1>Real-World GCP Projects</h1>
+    <p>Build these to add professional experience to your resume.</p>
+</div>
+
+<div style="display: grid; gap: var(--space-lg);">
+    <!-- Project 1 -->
+    <div class="card">
+        <div>
+            <span
+                style="background: var(--primary-color); color: white; padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 700;">PROJECT
+                1</span>
+        </div>
+        <h2 class="mt-4" style="font-size: 1.5rem;">Scalable Web Application on GKE</h2>
+        <p><strong>Architecture:</strong> Global Load Balancer &rarr; Kubernetes Engine (Frontend/Backend Pods) &rarr;
+            Cloud SQL (PostgreSQL)</p>
+
+        <h3>Resume Bullet Points</h3>
+        <ul style="margin-left: 1.5rem; color: var(--text-secondary);">
+            <li class="mb-4">Designed and deployed a microservices-based web application using Google Kubernetes Engine
+                (GKE) for high availability.</li>
+            <li class="mb-4">Configured Cloud SQL with high-availability replicas and automated backups for data
+                persistence.</li>
+            <li>Implemented an HTTP(S) Load Balancer to distribute traffic across multi-zonal clusters.</li>
+        </ul>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="card">
+        <div>
+            <span
+                style="background: #E37400; color: white; padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 700;">PROJECT
+                2</span>
+        </div>
+        <h2 class="mt-4" style="font-size: 1.5rem;">Serverless Event-Driven Image Processor</h2>
+        <p><strong>Architecture:</strong> Cloud Storage (Upload) &rarr; Cloud Pub/Sub &rarr; Cloud Functions &rarr;
+            Vision API &rarr; Firestore</p>
+
+        <h3>Resume Bullet Points</h3>
+        <ul style="margin-left: 1.5rem; color: var(--text-secondary);">
+            <li class="mb-4">Built a completely serverless image processing pipeline using Cloud Functions triggered by
+                Cloud Storage events.</li>
+            <li class="mb-4">Integrated Google Cloud Vision API to automatically detect labels in uploaded images.</li>
+            <li>Stored image metadata and analysis results in Firestore for real-time querying.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

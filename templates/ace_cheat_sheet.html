@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ACE Exam Cheat Sheet - Rapid Review{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 h-full overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <div class="mb-12 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-4">ACE <span class="text-brand-600">Cheat Sheet</span>
+            </h1>
+            <p class="text-xl text-slate-500 max-w-2xl mx-auto">
+                Essential CLI commands, IAM roles, and key limits to memorize before you walk into the test center.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Section 1: gcloud Compute -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-900 px-6 py-4 flex items-center justify-between">
+                    <h2 class="text-white font-bold font-mono text-lg">> gcloud compute</h2>
+                    <span class="bg-purple-600 text-xs text-white px-2 py-1 rounded">VITAL</span>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Create VM</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud compute instances create my-vm --zone=us-central1-a
+                            </code>
+                        </div>
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">List Regions</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud compute regions list
+                            </code>
+                        </div>
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">SSH into VM</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud compute ssh my-vm --zone=us-central1-a
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: gcloud Storage -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-900 px-6 py-4 flex items-center justify-between">
+                    <h2 class="text-white font-bold font-mono text-lg">> gcloud storage</h2>
+                    <span class="bg-amber-600 text-xs text-white px-2 py-1 rounded">UPDATED</span>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Make Bucket</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud storage buckets create gs://unique-name --location=US
+                            </code>
+                        </div>
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Copy File (Upload)</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud storage cp local.txt gs://bucket-name/
+                            </code>
+                        </div>
+                        <div class="border-b border-slate-100 pb-3">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Make Public (Risky!)</p>
+                            <code
+                                class="text-sm text-brand-700 bg-brand-50 px-2 py-1 rounded block mt-1 w-full overflow-x-auto">
+                                gcloud storage buckets add-iam-policy-binding gs://bucket --member=allUsers --role=roles/storage.objectViewer
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: IAM Roles -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-green-50 px-6 py-4 border-b border-green-100">
+                    <h2 class="text-green-900 font-bold text-lg"><i class="fa-solid fa-user-shield mr-2"></i> IAM
+                        Primitive vs Predefined</h2>
+                </div>
+                <div class="p-0">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-900 font-bold uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-3">Role Type</th>
+                                <th class="px-6 py-3">Roles</th>
+                                <th class="px-6 py-3">Best Practice</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="bg-red-50">
+                                <td class="px-6 py-4 font-bold text-slate-900">Primitive (Basic)</td>
+                                <td class="px-6 py-4 font-mono text-xs">Owner, Editor, Viewer</td>
+                                <td class="px-6 py-4 text-red-700 font-bold">AVOID. Too broad. Only for quick dev tests.
+                                </td>
+                            </tr>
+                            <tr class="bg-green-50">
+                                <td class="px-6 py-4 font-bold text-slate-900">Predefined</td>
+                                <td class="px-6 py-4 font-mono text-xs">
+                                    roles/storage.objectAdmin<br>roles/compute.instanceAdmin</td>
+                                <td class="px-6 py-4 text-green-700 font-bold">PREFERRED. Granular access control.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-bold text-slate-900">Custom</td>
+                                <td class="px-6 py-4 font-mono text-xs">User created</td>
+                                <td class="px-6 py-4 text-slate-600">Use when predefined roles don't fit exactly.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 4: Key Limits -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100">
+                    <h2 class="text-indigo-900 font-bold text-lg"><i class="fa-solid fa-weight-hanging mr-2"></i> Limits
+                        & Quotas to Know</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                    <div class="p-6 text-center">
+                        <div class="text-3xl font-extrabold text-slate-900 mb-1">15</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">VPCs per Project</div>
+                        <p class="text-sm text-slate-500 mt-2 px-4">(Default quota, can be increased)</p>
+                    </div>
+                    <div class="p-6 text-center">
+                        <div class="text-3xl font-extrabold text-slate-900 mb-1">100</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Buckets per Project?
+                        </div>
+                        <p class="text-sm text-slate-500 mt-2 px-4">Trick Question! <b>No Limit</b> on buckets.</p>
+                    </div>
+                    <div class="p-6 text-center">
+                        <div class="text-3xl font-extrabold text-slate-900 mb-1">62 TB</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Max Memory (VM)</div>
+                        <p class="text-sm text-slate-500 mt-2 px-4">For M2 memory-optimized machines.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-12 text-center">
+            <a href="{% url 'ace_guide' %}"
+                class="inline-flex items-center text-brand-600 hover:text-brand-800 font-bold">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back to Strategy Guide
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

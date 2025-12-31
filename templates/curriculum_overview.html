@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Course Catalog - Cloud Study Plan{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 min-h-screen">
+    <!-- HERO SECTION -->
+    <div class="bg-slate-900 pt-20 pb-24 relative overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30">
+        </div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+                Master the <span class="text-brand-500">Cloud</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
+                Structured, zero-to-hero study plans for Google Cloud and Microsoft Azure.
+            </p>
+        </div>
+    </div>
+
+    <!-- COURSE GRID -->
+    <div class="max-w-6xl mx-auto px-4 -mt-16 relative z-20 pb-20">
+        <div class="grid md:grid-cols-2 gap-8">
+            {% for course in courses %}
+            <a href="{% url 'course_detail' course.slug %}"
+                class="group relative bg-white rounded-3xl p-8 shadow-xl border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+                <!-- Course Icon -->
+                <div
+                    class="w-16 h-16 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-3xl mb-6 shadow-sm group-hover:bg-brand-600 group-hover:text-white transition-colors duration-300">
+                    <i class="{{ course.icon_class }}"></i>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                        {{ course.weeks.count }} Modules
+                    </span>
+                    <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-brand-600 transition-colors"></i>
+                </div>
+
+                <h2 class="text-2xl font-black text-slate-900 mb-3 group-hover:text-brand-600 transition-colors">
+                    {{ course.title }}
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    {{ course.description }}
+                </p>
+
+                <!-- Progress Bar Placeholder (Optional) -->
+                <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-brand-500 w-0 group-hover:w-full transition-all duration-1000"></div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

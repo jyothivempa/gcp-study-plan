@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Certification Roadmap - GCP 45-Day Plan{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 min-h-full py-12 h-full overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <h1 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">
+                Associate Cloud Engineer Roadmap
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-500">
+                Your structured path from beginner to certified professional in 4 phases.
+            </p>
+        </div>
+
+        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+
+            <!-- EXAM OVERVIEW (Left Column / Sticky) -->
+            <div class="lg:col-span-4 self-start order-2 lg:order-1 mb-12 lg:mb-0">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-24">
+                    <div class="p-6 bg-brand-50 border-b border-brand-100">
+                        <h2 class="text-xl font-bold text-brand-900 flex items-center">
+                            <i class="fa-solid fa-certificate mr-3 text-brand-600"></i> Exam Overview
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Skills Assessed</p>
+                            <ul class="mt-3 space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-500 mt-1 mr-2.5"></i>
+                                    <span class="text-slate-600 text-sm">Set up a cloud solution environment</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-500 mt-1 mr-2.5"></i>
+                                    <span class="text-slate-600 text-sm">Plan and configure solutions</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-500 mt-1 mr-2.5"></i>
+                                    <span class="text-slate-600 text-sm">Deploy and implement operations</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa-solid fa-check text-green-500 mt-1 mr-2.5"></i>
+                                    <span class="text-slate-600 text-sm">Configure access and security</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-6">
+                            <dl class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-xs text-slate-400 font-bold uppercase">Format</dt>
+                                    <dd class="text-sm font-semibold text-slate-700">50 MCQs</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-xs text-slate-400 font-bold uppercase">Duration</dt>
+                                    <dd class="text-sm font-semibold text-slate-700">2 Hours</dd>
+                                </div>
+                                <div class="col-span-2">
+                                    <dt class="text-xs text-slate-400 font-bold uppercase">Cost</dt>
+                                    <dd class="text-sm font-semibold text-slate-700">$125 USD (Plus Tax)</dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <a href="https://cloud.google.com/certification/cloud-engineer" target="_blank"
+                            class="block w-full text-center px-4 py-3 border border-transparent text-sm font-bold rounded-xl text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-sm">
+                            Register for Exam <i class="fa-solid fa-external-link-alt ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIMELINE (Right Column) -->
+            <div class="lg:col-span-8 order-1 lg:order-2">
+                <div class="flow-root">
+                    <ul class="-mb-8">
+                        <!-- Phase 1 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200"
+                                    aria-hidden="true"></span>
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span
+                                            class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center ring-8 ring-white">
+                                            <span class="text-blue-600 font-bold text-sm">1</span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1 pt-1.5 justify-between space-x-4">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-slate-900">Core Fundamentals <span
+                                                    class="text-slate-400 font-normal text-sm ml-2">(Days 1-7)</span>
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">Mastering the building blocks:
+                                                Compute Engine, Virtual Private Cloud (VPC), and Firewall rules.
+                                                Learning to navigate the console.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Phase 2 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200"
+                                    aria-hidden="true"></span>
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span
+                                            class="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center ring-8 ring-white">
+                                            <span class="text-purple-600 font-bold text-sm">2</span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1 pt-1.5 justify-between space-x-4">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-slate-900">Storage & Databases <span
+                                                    class="text-slate-400 font-normal text-sm ml-2">(Days 8-14)</span>
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">Distinguishing between options: Cloud
+                                                Storage (GCS), Cloud SQL, Firestore, and Bigtable. Knowing when to use
+                                                what.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Phase 3 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200"
+                                    aria-hidden="true"></span>
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span
+                                            class="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center ring-8 ring-white">
+                                            <span class="text-amber-600 font-bold text-sm">3</span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1 pt-1.5 justify-between space-x-4">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-slate-900">Security & Operations <span
+                                                    class="text-slate-400 font-normal text-sm ml-2">(Days 15-21)</span>
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">Locking it down: IAM roles, Cloud
+                                                Monitorng, Logging, and Billing controls. Managing access safely.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Phase 4 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span
+                                            class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center ring-8 ring-white">
+                                            <span class="text-green-600 font-bold text-sm">4</span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1 pt-1.5 justify-between space-x-4">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-slate-900">Advanced & Review <span
+                                                    class="text-slate-400 font-normal text-sm ml-2">(Days 22-30)</span>
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">Complex topics: Kubernetes (GKE), App
+                                                Engine, and Serverless. Followed by intensive practice exams.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- Phase 5 (Bonus) -->
+                        <li>
+                            <div class="relative pb-8">
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span
+                                            class="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center ring-8 ring-white">
+                                            <span class="text-rose-600 font-bold text-sm">5</span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1 pt-1.5 justify-between space-x-4">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-slate-900">Bonus: Advanced Scenarios <span
+                                                    class="text-slate-400 font-normal text-sm ml-2">(Days 31-37)</span>
+                                            </h3>
+                                            <p class="text-sm text-slate-500 mt-1">The ultimate challenge. 7 days of
+                                                intensive scenario-based exams to test your architectural limits.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 bg-brand-50 rounded-xl p-6 border border-brand-100 flex items-start">
+                    <i class="fa-solid fa-lightbulb text-brand-600 mt-1 mr-4"></i>
+                    <div>
+                        <h4 class="font-bold text-brand-900">Why this order?</h4>
+                        <p class="text-sm text-brand-800 mt-1">We start with infrastructure (VMs/Network) because it's
+                            the foundation. Security comes later once you have resources to secure. Practice exams are
+                            last so the knowledge is fresh.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

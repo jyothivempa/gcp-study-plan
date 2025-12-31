@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Certificate of Completion{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cinzel:wght@400;700&display=swap');
+
+    .font-signature {
+        font-family: 'Pinyon Script', cursive;
+    }
+
+    .font-serif-header {
+        font-family: 'Cinzel', serif;
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #certificate-container,
+        #certificate-container * {
+            visibility: visible;
+        }
+
+        #certificate-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: white;
+            border: none;
+            box-shadow: none;
+        }
+
+        @page {
+            size: landscape;
+            margin: 0;
+        }
+
+        /* Hide navbar and footer */
+        nav,
+        footer,
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
+
+    <!-- Actions Bar -->
+    <div class="mb-8 flex gap-4 no-print">
+        <a href="{% url 'dashboard' %}"
+            class="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-medium bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
+            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <button onclick="window.print()"
+            class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition">
+            <i class="fa-solid fa-download"></i> Download PDF
+        </button>
+    </div>
+
+    <!-- CERTIFICATE CONTAINER -->
+    <div id="certificate-container"
+        class="relative bg-white w-[1100px] h-[750px] p-12 shadow-2xl mx-auto text-center border-[20px] border-slate-50 flex flex-col items-center justify-between">
+
+        <!-- Border Pattern -->
+        <div class="absolute inset-4 border-2 border-slate-900/10"></div>
+        <div class="absolute inset-6 border border-slate-900/20"></div>
+
+        <!-- Corner Ornaments (CSS Shapes) -->
+        <div class="absolute top-8 left-8 w-16 h-16 border-t-4 border-l-4 border-brand-800"></div>
+        <div class="absolute top-8 right-8 w-16 h-16 border-t-4 border-r-4 border-brand-800"></div>
+        <div class="absolute bottom-8 left-8 w-16 h-16 border-b-4 border-l-4 border-brand-800"></div>
+        <div class="absolute bottom-8 right-8 w-16 h-16 border-b-4 border-r-4 border-brand-800"></div>
+
+        <!-- Header -->
+        <div class="mt-12 z-10 w-full">
+            <div class="flex items-center justify-center gap-2 mb-6 opacity-80">
+                <i class="fa-brands fa-google text-4xl text-slate-700"></i>
+                <span class="text-2xl font-bold tracking-widest text-slate-700 uppercase font-serif-header">Cloud
+                    Associate Path</span>
+            </div>
+
+            <h1 class="text-6xl font-serif-header font-bold text-slate-900 mb-4 uppercase tracking-widest">Certificate
+            </h1>
+            <h2 class="text-2xl font-serif-header text-brand-700 uppercase tracking-[0.2em] mb-8">Of Completion</h2>
+
+            <p class="text-slate-500 italic text-lg mb-8">This certifies that</p>
+        </div>
+
+        <!-- Name -->
+        <div class="z-10 w-full mb-8">
+            <h3
+                class="text-6xl font-signature text-slate-900 border-b-2 border-slate-200 inline-block px-12 py-2 min-w-[500px]">
+                {{ user.first_name }} {{ user.last_name }}
+            </h3>
+            {% if not user.first_name %}
+            <h3
+                class="text-6xl font-signature text-slate-900 border-b-2 border-slate-200 inline-block px-12 py-2 min-w-[500px]">
+                {{ user.username }}
+            </h3>
+            {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div class="z-10 w-full max-w-2xl mx-auto mb-12">
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Has successfully completed the comprehensive <strong class="text-slate-900">45-Day Google Cloud
+                    Associate Engineer Study Plan</strong>, demonstrating proficiency in GCP Core Infrastructure,
+                Networking, Security, Cloud Operations, and Capstone Projects.
+            </p>
+        </div>
+
+        <!-- Footer / Signatures -->
+        <div class="flex items-end justify-between w-full px-16 z-10 mt-auto mb-12">
+            <div class="text-center">
+                <div class="text-xl font-bold text-slate-900 mb-1 border-t-2 border-slate-300 pt-2 w-48 mx-auto">
+                    {{ completion_date|date:"F j, Y" }}
+                </div>
+                <div class="text-xs uppercase tracking-widest text-slate-400">Date Issued</div>
+            </div>
+
+            <!-- Seal -->
+            <div
+                class="relative w-32 h-32 rounded-full border-4 border-brand-800 flex items-center justify-center text-brand-800 mb-4">
+                <div class="absolute inset-1 border border-brand-800 rounded-full"></div>
+                <div class="text-center">
+                    <i class="fa-solid fa-award text-4xl mb-1 block"></i>
+                    <span class="text-[0.6rem] font-bold uppercase tracking-widest block">Verified</span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <div class="font-signature text-3xl text-slate-900 mb-1 w-48 mx-auto">Antigravity AI</div>
+                <div class="text-xs uppercase tracking-widest text-slate-400 border-t-2 border-slate-300 pt-2">Course
+                    Instructor</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
