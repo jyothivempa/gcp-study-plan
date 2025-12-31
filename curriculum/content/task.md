@@ -65,7 +65,7 @@
 
 # Final Implementation
 - [x] Create `populate_full_curriculum.py` to ingest Day 1-30 <!-- id: 31 -->
-- [x] Run population script and verify <!-- id: 32 -->
+- [ ] Run population script and verify <!-- id: 32 -->
 
 # Bonus Content (Week 5: Advanced Scenarios)
 - [x] **Enhance Week 5 Content (Tutorial-Site Standard)**
@@ -160,6 +160,7 @@
 - [ ] **Deploy to PythonAnywhere**
     - [x] Check Project Feasibility (Settings, WSGI)
     - [x] Create Deployment Guide Artifact (`pythonanywhere_deployment.md`)
+    - [x] **Push Code to GitHub** (Repository: `jyothivempa/gcp-study-plan`)
     - [ ] Verify Production Settings (`ALLOWED_HOSTS`, `DEBUG`)
 
 
