@@ -125,7 +125,7 @@ Resources in GCP live in one of three scopes. Mixing these up causes errors.
     *   *Result:* Sets your active working context.
 
 ## 6️⃣ Checkpoint Questions
-## 6️⃣ Checkpoint Questions
+
 **Q1. Which Identifier is globally unique and cannot be changed?**
 *   A. Project Name
 *   B. Project ID
