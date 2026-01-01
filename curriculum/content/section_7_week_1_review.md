@@ -1,98 +1,113 @@
-﻿# Week 1 Project: Hosting a Serverless Website
+﻿# SECTION 7: Week 1 - Comprehensive Review & Capstone
 
-> **Objective**: By the end of this session, you will host a live, public website using Google Cloud Storage for pennies per month, without touching a single server.
+> **Goal**: Verify your mastery of Fundamentals, Compute, and Storage.
 
-## ðŸ—ï¸ Architecture
+## 1️⃣ Week 1 Cheat Sheet 📝
+
+| Concept | Definition | Exam Key |
+| :--- | :--- | :--- |
+| **OpEx vs CapEx** | Operational (Pay-as-you-go) vs Capital (Upfront). | Cloud is **OpEx**. |
+| **Project ID** | `my-app-8821` | Globally unique. Immutable. |
+| **Zone vs Region** | Zone = Building (`us-central1-a`). Region = City (`us-central1`). | Region has 3+ Zones. |
+| **Live Migration** | Moving running VMs without downtime. | GCP Superpower (others reboot). |
+| **Spot VM** | 90% Discount. 30s Warning. | Use for stateless batch jobs. |
+| **MIG** | Managed Instance Group. | Auto-healing (recreates failed VMs). |
+| **Standard PD** | Magnetic Hard Drive. | Backup / Cold data. |
+| **Local SSD** | Ephemeral (Physical). | Fast Cache / Swap. Data dies on stop. |
+| **Storage Class** | Standard ➔ Nearline ➔ Coldline ➔ Archive. | Use **Lifecycle Policies** to move them. |
+| **Signed URL** | Temporary Key. | Secure object upload/download. |
+
+---
+
+## 2️⃣ The "Connector" Challenge Lab 🏆
+**Scenario:** You need a Web Server (Day 2) that serves an image stored in a Private Bucket (Day 3).
+
+### Architecture
 ```mermaid
 graph LR
-    User[ðŸŒ User Browser] -- HTTP Request --> GCS[â˜ï¸ Google Cloud Storage Bucket]
-    GCS -- Serves --> HTML[ðŸ“„ index.html]
-    GCS -- Serves --> JPG[ðŸ–¼ï¸ image.jpg]
-    style GCS fill:#e8f0fe,stroke:#3b82f6,stroke-width:2px
+    User --> VM[Compute Engine VM]
+    VM -- "Service Account Auth" --> GCS[Cloud Storage Bucket]
 ```
 
-## ðŸ› ï¸ The Challenge
-Your startup, "CloudCafe", needs a landing page. You have $0 budget for ops and hate managing Linux servers. You decide to use **Cloud Storage** as a web server.
-
-### Prerequisites
-- Active GCP Project
-- Cloud Shell or Local Terminal with `gcloud` installed
-- (Optional) A funny cat picture
+### Steps
+1.  **Create a Bucket:**
+    *   Name: `my-secret-assets-[YOUR_NAME]`
+    *   Upload an image `logo.png`.
+    *   **Do NOT** make it public. (Keep it private!).
+2.  **Create a VM:**
+    *   Name: `connector-vm`
+    *   **Identity and API Access:**
+        *   Service Account: **Compute Engine Default Service Account**.
+        *   Access Scopes: **Allow full access to all Cloud APIs** (easiest for lab).
+3.  **SSH into VM:**
+    *   Run: `gcloud storage cp gs://my-secret-assets-[YOUR_NAME]/logo.png .`
+    *   *Result:* It downloads! Why? Because the VM's Service Account is authorized.
+4.  **Verify:**
+    *   Run `ls`. You see `logo.png`.
+    *   You successfully connected Compute to Storage securely!
 
 ---
 
-## ðŸš€ Lab Steps
+## 3️⃣ Week 1 Mock Exam 🧠
+<form>
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <p class="font-bold">1. You have a photo sharing app. You need to store user uploads permanently. You must be able to retrieve them instantly, but 99% of photos are rarely accessed after 30 days. Which strategy is most cost-effective?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q1" value="wrong"> Store all in Standard class.</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Store all in Archive class.</label>
+      <label class="block"><input type="radio" name="q1" value="correct"> Use Standard, then a Lifecycle Rule to move to Nearline/Coldline.</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Use Persistent Disks.</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Lifecycle rules automate cost savings based on object age.
+    </div>
+  </div>
 
-### Step 1: Create the Bucket
-Buckets are global resources, so the name must be unique across *all* of Google Cloud.
-1. Go to **Cloud Storage** > **Buckets**.
-2. Click **Create**.
-3. **Name**: `cloud-cafe-web-[YOUR_NAME]` (e.g., `cloud-cafe-web-jyothi-123`).
-4. **Location**: Choose a `Region` near you (e.g., `us-central1`).
-5. **Storage Class**: `Standard` (best for frequently accessed websites).
-6. **Access Control**: Uncheck "Enforce public access prevention". **Crucial** for a website!
-7. Click **Create**.
+  <!-- Q2 -->
+  <div class="quiz-question mt-6" id="q2">
+    <p class="font-bold">2. Which feature allows you to run a script *automatically* every time a VM creates or reboots?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q2" value="correct"> Startup Script</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> Cloud Functions</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> Cron Job</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> Metadata Server</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Startup scripts (in metadata) execute on boot.
+    </div>
+  </div>
 
-### Step 2: Create Your Website Files
-Open a text editor (or Cloud Shell Editor) and create `index.html`:
+  <!-- Q3 -->
+  <div class="quiz-question mt-6" id="q3">
+    <p class="font-bold">3. You deleted a VM. You checked "Delete boot disk" when creating it. Is the data on the boot disk recoverable?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q3" value="wrong"> Yes, simple undelete operation.</label>
+      <label class="block"><input type="radio" name="q3" value="wrong"> Yes, in the "Recycle Bin".</label>
+      <label class="block"><input type="radio" name="q3" value="correct"> No, unless you took a Snapshot beforehand.</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Deleting a disk is permanent. Snapshots are your only safety net.
+    </div>
+  </div>
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CloudCafe</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f9ff; }
-        h1 { color: #0284c7; }
-    </style>
-</head>
-<body>
-    <h1>Welcome to CloudCafe â˜•</h1>
-    <p>Served 100% Serverless from Google Cloud Storage!</p>
-</body>
-</html>
-```
-
-Also create a simple `404.html`:
-```html
-<h1>404 - Coffee Spilled ðŸ˜­</h1>
-<p>Page not found.</p>
-```
-
-### Step 3: Upload Files
-1. In the Bucket details page, click **Upload Files**.
-2. Upload `index.html` and `404.html`.
-
-### Step 4: Make it Public
-By default, everything is private. We need to let the world see it.
-1. Click the **Permissions** tab.
-2. Click **Grant Access**.
-3. **New Principals**: `allUsers` (This is a special identifier for "everyone on the internet").
-4. **Role**: `Storage Object Viewer` (Read-only access).
-5. Click **Save** > **Allow Public Access**.
-
-> **âš ï¸ Security Warning**: Never do this for sensitive data! This is *only* for public websites.
-
-### Step 5: Configure Website Mode
-1. Go back to the **Configuration** tab (or check the overflow menu on the bucket list).
-2. Look for **Edit Website Configuration**.
-3. **Index page suffix**: `index.html`
-4. **Error page**: `404.html`
-5. Save.
-
-### Step 6: Test It!
-Your website is now live at a special URL:
-`https://storage.googleapis.com/[YOUR_BUCKET_NAME]/index.html`
-
-Or, simply click the "Public URL" link next to `index.html` in the file list.
+  <!-- Q4 -->
+  <div class="quiz-question mt-6" id="q4">
+    <p class="font-bold">4. A Global application needs to survive the failure of an entire Region (e.g. us-central1 goes offline). Where should you deploy?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q4" value="wrong"> Single Zone</label>
+      <label class="block"><input type="radio" name="q4" value="wrong"> Regional (Multiple Zones)</label>
+      <label class="block"><input type="radio" name="q4" value="correct"> Multi-Regional (Multiple Regions)</label>
+      <label class="block"><input type="radio" name="q4" value="wrong"> Edge PoP</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Only Multi-Region deployments survive regional failures.
+    </div>
+  </div>
+</form>
 
 ---
 
-## ðŸŽ¯ Verification
-If you can see your "CloudCafe" heading in a browser, you passed!
-
-## ðŸ§¹ Tear Down
-To stop incurring costs (though likely $0.00), delete the bucket when finished. 
-`gcloud storage rm --recursive gs://[YOUR_BUCKET_NAME]`
-
----
+### 🎓 Congratulations!
+You have completed **Week 1** of the GCP Master Plan.
+**Next Week:** We construct the piping of the cloud: **VPC Networking (Sections 8-12)**.

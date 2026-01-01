@@ -2,147 +2,136 @@
 
 > **Official Doc Reference**: [Cloud Storage Documentation](https://cloud.google.com/storage/docs)
 
-## 1️⃣ Overview: The "Hole" in the Cloud
-Cloud Storage is **Object Storage**. It is NOT a filesystem (like NTFS or EXT4).
-*   **Capacity:** Infinite.
-*   **Durability:** **11 Nines** (99.999999999%). Practically verified to never lose data.
-*   **Consistency:** **Global Strong Consistency**. If you write `file.txt` and immediately read `file.txt` in Japan, you get the NEW version. (GCP is famous for this; AWS took years to catch up).
+## 1️⃣ Overview: The "Infinite" Drive ♾️
+Cloud Storage is **Object Storage**. It is NOT a filesystem (like NTFS).
+*   **Capacity:** Infinite. (You can store exabytes).
+*   **Durability:** **11 Nines** (99.999999999%). If you store 10,000 objects, you might lose one every 10 million years.
+*   **Consistency:** **Global Strong Consistency**. If you upload a file in New York, a user in Tokyo sees the *new* file instantly. (This is a huge GCP competitive advantage).
 
-## 2️⃣ Storage Classes (The Cost Ladder)
+---
+
+## 2️⃣ Storage Classes (The Cost Ladder) 📉
 Memorize the "Minimums".
 
 | Class | Minimum Storage Duration | Use Case | Retrieval Cost |
 | :--- | :--- | :--- | :--- |
-| **Standard** | None | Frequent access (Websites, App Data). | $0 |
+| **Standard** | None | Frequent access. Hosting Websites. Streaming Video. | $0 |
 | **Nearline** | **30 Days** | Backups (1x/month). | Low |
 | **Coldline** | **90 Days** | Disaster Recovery (1x/quarter). | Medium |
 | **Archive** | **365 Days** | Regulatory Logs (1x/year). | High |
 
-> **Exam Trap:** "You have data you need to access once a year, but you need it INSTANTLY when you do."
-> *   **Answer:** Archive. (Archive is milliseconds access time, unlike AWS Glacier which can take hours).
-
 ### Lifecycle Visualization
 ```mermaid
 graph LR
-    Std[Standard: Hot Data] -- 30 days --> Near[Nearline: Backups]
-    Near -- 90 days --> Cold[Coldline: DR]
-    Cold -- 365 days --> Arch[Archive: Compliance]
-    Arch -- 3 years --> Del((Deletion))
+    Std[Standard: Hot Data] -- "30+ days" --> Near[Nearline: Backups]
+    Near -- "90+ days" --> Cold[Coldline: DR]
+    Cold -- "365+ days" --> Arch[Archive: Compliance]
+    Arch -- "Expires" --> Del((Deletion))
     
     style Std fill:#fce8e6,stroke:#ea4335,stroke-width:2px
     style Arch fill:#e8f0fe,stroke:#4285f4,stroke-width:2px
 ```
 
+---
+
 ## 3️⃣ Location Types (Resilience)
-1.  **Region:** One location (e.g., `us-central1`).
-    *   *Cost:* Lowest.
-    *   *SLA:* 99.9%
-2.  **Dual-Region:** Two specific regions (e.g., `us-central1` AND `us-east1`).
-    *   *Benefit:* Optimized for Turbo Replication and High Availability. **If Iowa burns down, your data is safe in South Carolina.**
-3.  **Multi-Region:** Large area (e.g., `US` or `EU`).
-    *   *Benefit:* Content Delivery (Geo-Redundancy).
+1.  **Region:** One location (e.g., `us-central1`). Lowest cost.
+2.  **Dual-Region:** Two specific regions (e.g., `us-central1` + `us-east1`).
+    *   *Superpower:* If one region goes offline (hurricane), your data is available in the other. **99.99% SLA**.
+3.  **Multi-Region:** A large area (e.g., `US` or `EU`). Good for content delivery.
 
-## 4️⃣ Lifecycle Management & Autoclass
-You don't want to manually move files to Coldline.
-*   **Lifecycle Rules:** "If `age > 30` days, SetStorageClass to `Nearline`."
-*   **Autoclass:** A checkbox that lets Google AI move your files up and down classes automatically.
+---
 
-### Retention Policy (Bucket Lock) 🔒
-*   **What:** Enforces WORM (Write Once, Read Many).
-*   **Example:** "This file CANNOT be deleted for 7 years." (SEC Rule 17a-4 for Finance).
-*   **Trap:** If you "Lock" the policy, even **You** (the Admin) cannot delete the bucket until the timer expires. Be careful!
-*   *VS Lifecycle:* Lifecycle deletes things; Retention prevents deletion.
+## 4️⃣ Security & Access 🔐
+*   **Uniform Bucket-Level Access (UBLA):** The modern standard. "Everyone in Group X can read ALL files." (Simpler).
+*   **Signed URLs:** Creating a temporary "Key" to access a file.
+    *   *Usage:* Let a user upload a profile picture *directly* to the bucket without giving them your password.
+*   **Retention Policy (Bucket Lock):**
+    *   **WORM** (Write Once, Read Many).
+    *   *Regulatory:* "This file CANNOT be deleted for 7 years." (SEC Rule 17a-4).
+    *   *Warning:* If you lock it, **even YOU cannot delete it.**
 
-## 5️⃣ Security: IAM vs ACLs vs Signed URLs
-*   **Uniform Bucket-Level Access (UBLA):** The new standard. "All users in group X can read ALL files."
-    *   *Disables:* ACLs (Fine-grained "User A can read File Y").
-*   **Signed URLs:** Key concept.
-    *   *Scenario:* User uploads a profile picture directly to your bucket.
-    *   *Solution:* Generate a "Signed URL" valid for 15 minutes. The user PUTs to that URL. No Credentials needed on their device.
+---
 
-## 6️⃣ Hands-On Lab: The "Lifecycle" Test ♻️
-**Mission:** Create a bucket that deletes temp files after 1 day.
+## 5️⃣ Hands-On Lab: Host a Serverless Website 🌐
+**Mission:** Host a public website for almost $0/month. No servers to manage!
 
-1.  **Create Bucket:** `gcloud storage buckets create gs://my-temp-bucket-99`
-2.  **Define Rule (JSON):**
-    ```json
-    {
-      "rule": [{"action": {"type": "Delete"}, "condition": {"age": 1}}]
-    }
-    ```
-3.  **Apply Rule:** `gcloud storage buckets update gs://my-temp-bucket-99 --lifecycle-file=lifecycle.json`
-4.  **Verify:** `gcloud storage buckets describe gs://my-temp-bucket-99`
+1.  **Create Bucket:**
+    *   Go to **Cloud Storage** > **Buckets** > **Create**.
+    *   **Name:** `my-cool-website-[YOUR_NAME]` (Must be globally unique!).
+    *   **Services:** Uncheck "Enforce public access prevention" (Because we want it public).
+2.  **Grant Access:**
+    *   Go to **Permissions** tab.
+    *   Click **Grant Access**.
+    *   **New Principals:** `allUsers` (This means "The Internet").
+    *   **Role:** `Storage Object Viewer` (Read Only).
+    *   **Save.**
+3.  **Upload Files:**
+    *   Create a file `index.html` on your desktop: `<h1>Hello from Cloud Storage!</h1>`
+    *   Upload it to the bucket.
+4.  **Visit It:**
+    *   Click `index.html`. Copy the **Public URL**.
+    *   Paste it in Chrome. You have a live website!
 
-## 7️⃣ Checkpoint Questions
-**Q1. You need to store regulatory documents for 7 years to meet SEC 17a-4 requirements. The data must be immutable (cannot be deleted). What feature do you enable?**
-*   A. Versioning
-*   B. Retention Policy (Bucket Lock)
-*   C. Lifecycle Rule
-*   D. IAM Policy
-> **Answer: B.** Retention Policies enforce WORM (Write Once Read Many). Locking it makes it irreversible.
+---
 
-**Q2. Which storage class is best for data accessed once a quarter (e.g., 90 days)?**
-*   A. Standard
-*   B. Nearline
-*   C. Coldline
-*   D. Archive
-> **Answer: C.** Coldline is optimized for 90-day access patterns.
+## 6️⃣ Checkpoint Quiz
+<form>
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <p class="font-bold">1. You need to store tax records for exactly 7 years to meet legal requirements. No one, not even the admin, should be able to delete them. What feature do you use?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q1" value="wrong"> Standard Storage Class</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Lifecycle Rule</label>
+      <label class="block"><input type="radio" name="q1" value="correct"> Retention Policy (Bucket Lock)</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Signed URL</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Retention Policies enforce WORM compliance.
+    </div>
+  </div>
 
-**Q3. You want to allow a specific user to upload a file to your bucket *without* giving them a Google Account. What is the best method?**
-*   A. Make the bucket public (allUsers).
-*   B. Generate a Signed URL.
-*   C. Give them the Service Account Key.
-*   D. Use Cloud CDN.
-> **Answer: B.** Signed URLs provide temporary, secure access without credentials.
+  <!-- Q2 -->
+  <div class="quiz-question mt-6" id="q2">
+    <p class="font-bold">2. Your application allows users to upload profile photos. You want the user to upload directly to the bucket without routing traffic through your web server. What should you generate?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q2" value="wrong"> A Service Account Key</label>
+      <label class="block"><input type="radio" name="q2" value="correct"> A Signed URL</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> A Public Bucket</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> An ACL (Access Control List)</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Signed URLs provide secure, time-limited upload/download access.
+    </div>
+  </div>
 
-**Q4. What is the "consistency" model of Cloud Storage?**
-*   A. Eventual Consistency for all operations.
-*   B. Strong Consistency for overwrites, Eventual for new files.
-*   C. Global Strong Consistency for all operations.
-*   D. Read-after-Write consistency only in one region.
-> **Answer: C.** Cloud Storage offers strong global consistency for read-after-write.
+  <!-- Q3 -->
+  <div class="quiz-question mt-6" id="q3">
+    <p class="font-bold">3. What is the retrieval cost for "Standard" storage?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q3" value="correct"> $0 (Free retrieval)</label>
+      <label class="block"><input type="radio" name="q3" value="wrong"> High cost</label>
+      <label class="block"><input type="radio" name="q3" value="wrong"> Depends on the file type</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Standard class is expensive to store, but free to access (retrieval).
+    </div>
+  </div>
+</form>
 
-**Q5. You accidentally deleted a critical file. Which feature would have allowed you to restore the previous version?**
-*   A. Lifecycle Management
-*   B. Object Versioning
-*   C. Autoclass
-*   D. Retention Policy
-> **Answer: B.** Object Versioning keeps history of overwrites and deletions.
+---
 
-**Q6. What happens if you try to access "Archive" class data instantly?**
-*   A. You cannot; you must wait 4 hours.
-*   B. It works immediately (milliseconds), but costs more to retrieve.
-*   C. It works immediately and is free.
-*   D. You must first "thaw" the data to Standard class.
-> **Answer: B.** Unlike AWS Glacier, GCP Archive has instant retrieval (milliseconds) but high data retrieval costs.
+### ⚡ Zero-to-Hero: Pro Tips
+*   **Dual-Region:** Always use Dual-Region for production data. It costs slightly more than Region, but it saves your life if a region goes down.
+*   **Command Line:** `gcloud storage cp file.txt gs://my-bucket/` is the command you'll use 1000 times a day. Learn it.
 
-
-
+---
 <!-- FLASHCARDS
 [
-  {
-    "term": "Bucket",
-    "def": "Container for objects (files). Must have a globally unique name."
-  },
-  {
-    "term": "Standard Class",
-    "def": "Hot data. Access frequently. Best for serving web assets."
-  },
-  {
-    "term": "Nearline",
-    "def": "Data accessed < 1/month. 30-day min storage fee."
-  },
-  {
-    "term": "Coldline",
-    "def": "Data accessed < 1/quarter. 90-day min storage fee."
-  },
-  {
-    "term": "Archive",
-    "def": "Deep freeze backup. < 1/year. 365-day min storage fee."
-  },
-  {
-    "term": "Signed URL",
-    "def": "Temporary time-bound access key for a specific file."
-  }
+  {"term": "Bucket", "def": "A container for objects. Must have a globally unique name."},
+  {"term": "Standard Storage", "def": "Hot data. Frequent access. No retrieval fee."},
+  {"term": "Archive Storage", "def": "Coldest data. Backup once a year. High retrieval fee."},
+  {"term": "Signed URL", "def": "A URL that gives temporary permission to upload/download an object."},
+  {"term": "Uniform Bucket-Level Access", "def": "Disables ACLs. Uses IAM for the whole bucket. Recommended."}
 ]
 -->

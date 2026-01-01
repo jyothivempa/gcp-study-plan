@@ -1,168 +1,142 @@
-# SECTION 5: Disks & Storage Basics
+# SECTION 5: Block Storage (Disks)
 
-## 1️⃣ Plain-English Explanation
-When you buy a laptop, it comes with a hard drive. If the laptop breaks, the hard drive usually still has your files.
-In the cloud, we separate the **Computer** (VM) from the **Hard Drive** (Persistent Disk).
+> **Official Doc Reference**: [Persistent Disk](https://cloud.google.com/compute/docs/disks)
 
-*   **Persistent Disk (PD):** A network hard drive. It lives in the same building (Zone) as your VM. If you delete the VM, the disk *can* stay alive (if you configured it to).
-*   **Local SSD:** A super-fast hard drive physically plugged into the server motherboard. It is fleeting. If the VM turns off, the data on the Local SSD is gone **forever**.
+## 1️⃣ The Concept: Block vs Object 📦
+Storage is not all the same. This distinction is the **#1 Exam Topic**.
 
-## 2️⃣ Persistent Disk vs Local SSD (The Analogy)
-*   **Persistent Disk:** Your **External USB Drive**. You can unplug it from one computer and plug it into another. It’s reliable.
-*   **Local SSD:** The **RAM** (almost). It’s incredibly fast, but if you reboot or shut down, it gets wiped clean (Ephemeral). *Use it for "Swap" or temp cache only.*
+| Feature | **Block Storage** (Persistent Disk) | **Object Storage** (Cloud Storage) |
+| :--- | :--- | :--- |
+| **Analogy** | **Hard Drive (C:)** | **Google Drive / Dropbox** |
+| **Data Type** | OS, Databases, Installed Apps. | Photos, Videos, Backups, CSVs. |
+| **Editability** | You can edit *parts* of a file (e.g. Database record). | You must re-upload the *whole* file. (Immutable). |
+| **Access** | Attached to **ONE** VM (usually). | Accessible by **ANYONE** (Authentication). |
+
+---
+
+## 2️⃣ Disk Types: The Speed Ladder 🏎️
+You attach these to your VM.
 
 ```mermaid
 graph TD
-    subgraph Host ["Physical Server Host"]
-        VM["COMPUTE INSTANCE VM"]
-        SSD["Local SSD Physical"]
-        VM === SSD
-    end
+    Level1[Standard HDD] -- "Cheap / Backup" --> Level2[Standard SSD]
+    Level2 -- "Web Apps" --> Level3[Balanced SSD]
+    Level3 -- "Databases" --> Level4[Extreme SSD]
+    Level4 -- "Top Tier" --> Level5[🚀 Hyperdisk Extreme]
 
-    subgraph Zone ["Zone Data Center"]
-        PD["Persistent Disk Network Storage"]
-    end
-
-    VM -.->|Network Cable| PD
-
-    style SSD fill:#fecaca,stroke:#dc2626,stroke-width:2px
-    style PD fill:#bbf7d0,stroke:#16a34a,stroke-width:2px
-    style VM fill:#bfdbfe,stroke:#2563eb
+    style Level1 fill:#f1f5f9,stroke:#64748b
+    style Level2 fill:#e2e8f0,stroke:#64748b
+    style Level3 fill:#cbd5e1,stroke:#475569
+    style Level4 fill:#94a3b8,stroke:#334155
+    style Level5 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
 ```
 
-## 3️⃣ Boot Disk vs Data Disk
-*   **Boot Disk:** Contains the Operating System (Windows C: Drive). Every VM requires one.
-*   **Data Disk:** Additional space (D: Drive). You can attach many of these.
+1.  **Standard HDD:** Magnetic spinning disks. Cheap. Good for backups/logs.
+2.  **Balanced Persistent Disk:** Best Price/Performance. **Default for most apps.**
+3.  **SSD Persistent Disk:** Fast. For Databases (Postgres/MySQL).
+4.  **Hyperdisk:** The new architecture. **Decouples IOPS from Size.**
+    *   *Old Way:* To get more speed (IOPS), you had to buy a bigger disk (Size).
+    *   *Hyperdisk Way:* You can have a 10GB disk with massive speed.
 
-## 4️⃣ Attach/Detach Disks (Exam Focus)
-*   **Attach:** You can attach a disk to a running VM (Hot Attach).
-*   **Resize:** You can increase the size of a disk while the VM is running (Upsizing is easy).
-    *   *Trap:* You CANNOT decrease the size. You can only make it bigger.
-*   **Detach:** You must unmount it from the OS first, then click detach.
+---
 
-## 5️⃣ Common Disk Types (Speed vs Cost)
-1.  **Standard Persistent Disk (HDD):** Cheap, slow, magnetic. good for backups.
-2.  **Balanced Persistent Disk (SSD):** Middle ground. Best for most web apps.
-3.  **SSD Persistent Disk:** Fast. Good for databases.
-4.  **Extreme Persistent Disk:** Insanely fast. For heavy enterprise databases (SAP HANA).
-5.  **Hyperdisk (New 🚀):** The next generation. Decouples IOPS from Size (unlike PD). You can have a small disk with massive IOPS.
+## 3️⃣ Persistent Disk vs Local SSD (The Physical Difference) 🔌
 
-## 5.5️⃣ RAID (Redundant Array of Independent Disks)
-*   *Question:* "Do I need to configure RAID 10 on my VM?"
-*   *Answer:* **NO.**
-*   *Why?* Google does this for you automatically at the hardware layer. Every block of data is replicated and checksummed. Doing software RAID on top is usually redundant and slows things down (unless you are aggregating disks for IOPS).
+```mermaid
+graph TD
+    subgraph Host ["Physical Server"]
+        VM["Your VM"]
+        LSSD["Local SSD (Physically Attached)"]
+        VM === LSSD
+    end
+    
+    subgraph Network ["The Zone (Network)"]
+        PD["Persistent Disk (Network Attached)"]
+    end
+    
+    VM -.->|Ethernet Cable| PD
+    
+    style LSSD fill:#fecaca,stroke:#dc2626,stroke-width:2px
+    style PD fill:#bbf7d0,stroke:#16a34a,stroke-width:2px
+```
 
-## 5.6️⃣ Bonus: Filestore (NFS)
-    *   Sometimes you need a folder shared by 100 Linux VMs (Like a shared office drive).
-    *   **Persistent Disks** are focused on ONE VM (usually).
-    *   **Filestore** is a managed NFS server for *many* VMs to read/write simultaneously. Use cases: Rendering farms, CMS media folders.
+*   **Persistent Disk (PD):** Safe. If your VM crashes, the disk is safe in the network. You can attach it to a new VM.
+*   **Local SSD:** **Ephemeral (Temporary).** It is physically glued to the server. If you stop the VM, the data is **WIPED**. Use it for Cache or Swap only.
 
-## 6️⃣ Hands-On Lab: Creating Disks 💾
-1.  **Go to:** Compute Engine > Disks.
-2.  **Create:** Click "Create Disk".
-3.  **Region/Zone:** MUST match your VM.
-4.  **Source:** "Blank disk" (empty) or "Image" (with OS).
-5.  **Attach:** Go to VM > Edit > Additional Disks > Attach Existing Disk.
+---
 
-## 7️⃣ Comparison Table
+## 4️⃣ Hands-On Lab: The "Hot Resize" Trick 🔥
+**Mission:** You filled up your disk! Increase the size without stopping the server.
 
-| Feature | Persistent Disk (PD) | Local SSD |
-| :--- | :--- | :--- |
-| **Speed** | Fast (Network attached) | Extreme (Physically attached) |
-| **Durability** | High (Data survives reboots) | None (Data dies on stop) |
-| **Migration** | Can move to another VM | Locked to one VM |
-| **Max Size** | 64 TB | 9 TB (distributed in 375GB chunks) |
+1.  **Create a VM:** Standard `e2-micro`, 10GB boot disk.
+2.  **Go to Disks:** Compute Engine > Storage > Disks.
+3.  **Select:** Click your VM's disk.
+4.  **Edit:** Click Edit. Change Size from **10GB** to **20GB**. Save.
+5.  **Verify:**
+    *   SSH into the VM.
+    *   Run `lsblk`. You will see the physical device is now 20GB!
+    *   *(Note: You usually have to run a command like `growpart` to expand the filesystem, but the hardware resize is instant).*
 
-## 8️⃣ Interview-Ready Q&A
-**Q: "I deleted my VM and my important database data is gone! Why?"**
-*   **A:** When creating a VM, there is a checkbox: *"Delete boot disk when instance is deleted"*. It is checked by default. You should have unchecked it or used a separate **Data Disk**.
+> **Exam Trap:** You can **Increase** (Upsize) a disk anytime. You can **NEVER Decrease** (Downsize) it. To shrink, you must create a new smaller disk and copy data.
 
-**Q: "Can I share one disk between two VMs?"**
-*   **A:** Yes, but only in **Read-Only** mode (Multi-writer is possible but very complex and rare, usually for specific clusters like Oracle RAC).
+---
 
-## 9️⃣ One-Line Memory Hook 🧠
-> "Persistent Disks are **USB sticks** (moveable); Local SSDs are **RAM** (fast but forgetful)."
+## 5️⃣ Checkpoint Quiz
+<form>
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <p class="font-bold">1. Which storage type is "Ephemeral" and loses all data if the VM is stopped?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q1" value="wrong"> Standard Persistent Disk</label>
+      <label class="block"><input type="radio" name="q1" value="correct"> Local SSD</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Cloud Storage Bucket</label>
+      <label class="block"><input type="radio" name="q1" value="wrong"> Hyperdisk</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Local SSD is physical and temporary.
+    </div>
+  </div>
 
-## 🚨 Checkpoint Questions
-## 🚨 Checkpoint Questions
-**Q1. True or False: You can resize a 100GB persistent disk down to 50GB without deleting it.**
-*   A. True
-*   B. False
-> **Answer: B.** False. You can only upsizing (increase) disks. To shrink, you must create a new smaller disk and migrate data.
+  <!-- Q2 -->
+  <div class="quiz-question mt-6" id="q2">
+    <p class="font-bold">2. You have a 100GB disk that is half full. You want to save money by shrinking it to 50GB. How do you do this?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q2" value="wrong"> Edit the disk and type 50GB.</label>
+      <label class="block"><input type="radio" name="q2" value="correct"> You cannot shrink it. You must create a new disk and copy data.</label>
+      <label class="block"><input type="radio" name="q2" value="wrong"> Use the "Compression" feature.</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Disks can only grow, never shrink.
+    </div>
+  </div>
 
-**Q2. Which disk type provides the absolute highest IOPS and lowest latency, but loses data if the instance stops?**
-*   A. Standard Persistent Disk
-*   B. SSD Persistent Disk
-*   C. Local SSD
-*   D. Hyperdisk
-> **Answer: C.** Local SSD is physically attached. It is ephemeral (data loss on stop/maintenance) but fastest.
+  <!-- Q3 -->
+  <div class="quiz-question mt-6" id="q3">
+    <p class="font-bold">3. Which disk type creates a clear separation between IOPS (Performance) and Capacity (Size)?</p>
+    <div class="space-y-2">
+      <label class="block"><input type="radio" name="q3" value="wrong"> Standard HDD</label>
+      <label class="block"><input type="radio" name="q3" value="wrong"> SSD Persistent Disk</label>
+      <label class="block"><input type="radio" name="q3" value="correct"> Hyperdisk</label>
+      <label class="block"><input type="radio" name="q3" value="wrong"> Local SSD</label>
+    </div>
+    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
+      <span class="text-green-600 font-bold">Correct!</span> Hyperdisk allows you to provision IOPS independently of disk size.
+    </div>
+  </div>
+</form>
 
-**Q3. If your VM is in Zone A, can you attach a Zonal Persistent Disk from Zone B?**
-*   A. Yes, over the internal network.
-*   B. No, Zonal PDs are locked to the zone.
-*   C. Yes, if you use a snapshot.
-*   D. Only if using a VPN.
-> **Answer: B.** Zonal resources must be in the same zone. You'd need to snapshot and restore to move it.
+---
 
-**Q4. You are running a mission-critical Oracle database that requires 100,000 IOPS. Which disk type should you choose?**
-*   A. Standard HDD
-*   B. Balanced PD
-*   C. Extreme PD (or Hyperdisk Extreme)
-*   D. Local SSD (as boot disk)
-> **Answer: C.** Extreme PD is designed for high-performance enterprise workloads.
+### ⚡ Zero-to-Hero: Pro Tips
+*   **Filestore:** Mentioned briefly: If you need 10 VMs to access the *same* folder (Read/Write), you can't use PDs. You need **Filestore** (Managed NFS).
+*   **Snapshots:** Always Snapshot your disk before a risky change. Snapshots are incremental (cheap) and saved globally (safe).
 
-**Q5. What is the main use case for Google Cloud Filestore?**
-*   A. Storing object data like photos.
-*   B. Shared NFS file storage for multiple VMs.
-*   C. Boot disks for Windows VMs.
-*   D. Archiving logs.
-> **Answer: B.** Filestore provides a managed NFS server for shared access.
-
-**Q6. What happens to the data on a "Boot Disk" when you delete the VM instance by default?**
-*   A. It is preserved as a snapshot.
-*   B. It is detached and saved.
-*   C. It is deleted.
-*   D. It is archived to Cloud Storage.
-> **Answer: C.** The "Delete boot disk when instance is deleted" flag is checked by default. You must uncheck it to save the disk.
-
-## ➡️ What’s Next 
-We stored data on a disk. But what about storing photos, videos, and backups that *anyone* on the internet can see?
-**Next Section:** Cloud Storage (Buckets).
-
-
-
-## ⚡ Zero-to-Hero: Pro Tips
-*   **CLI Command**: Practice `gcloud storage list` to see resources via command line.
-*   **Real World**: In production, prefer **Terraform** over clicking in the console for storage.
-
-
-
-## 🚀 Next-Level: VM Performance & Security
-*   **Confidential VMs:** Encrypt data *in-use* (in RAM) using AMD SEV technologies.
-*   **VM Manager:** Automated tool to manage OS patches (Patch management) and configuration (OS config) across a massive fleet of 1,000+ VMs.
-
-
+---
 <!-- FLASHCARDS
 [
-  {
-    "term": "Block Storage",
-    "def": "Like a hard drive. Good for OS and databases. Expensive. (Persistent Disk)."
-  },
-  {
-    "term": "Object Storage",
-    "def": "Like Google Drive. Good for files/media. Infinite scale. (Cloud Storage)."
-  },
-  {
-    "term": "File Storage",
-    "def": "Network Attached Storage (NAS). Good for shared files. (Filestore)."
-  },
-  {
-    "term": "Persistent Disk",
-    "def": "Zonal block storage attached to a VM."
-  },
-  {
-    "term": "Local SSD",
-    "def": "Ephemeral, super-fast storage attached physically to the server. Data lost on stop."
-  }
+  {"term": "Block Storage", "def": "Storage managed as blocks (hard drive). Used for OS/Databases. (Persistent Disk)."},
+  {"term": "Object Storage", "def": "Storage managed as files/objects. Used for media/backups. (Cloud Storage)."},
+  {"term": "Local SSD", "def": "Ephemeral, high-performance physical storage. Data lost on stop."},
+  {"term": "Snapshot", "def": "A backup of a Persistent Disk. Incremental and Global."}
 ]
 -->
