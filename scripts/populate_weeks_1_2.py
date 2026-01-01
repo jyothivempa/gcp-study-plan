@@ -102,7 +102,55 @@ def populate_weeks():
             
         # Extract Flashcards
         # Robust regex: Allows spaces around <!--, FLASHCARDS, and keys
-        # Flashcard parsing removed per feature removal request.
+        
+        # EXTRACT QUIZZES (New Feature)
+        # We parse the HTML form in the markdown to populate the QuizQuestion model
+        # This ensures the DB is in sync with the Markdown content
+        try:
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(content, 'html.parser')
+            questions = soup.find_all('div', class_='quiz-question')
+            
+            if questions:
+                # WIPE existing quizzes for this day to ensure fresh sync
+                QuizQuestion.objects.filter(day=day).delete()
+                print(f"  > Found {len(questions)} quiz questions. Syncing...")
+                
+                for q_div in questions:
+                    q_text = q_div.find('p').get_text(strip=True)
+                    # Remove "1. ", "2. " prefix if present
+                    q_text = re.sub(r'^\d+\.\s*', '', q_text)
+                    
+                    options = q_div.find_all('label')
+                    correct_idx = 1
+                    opts_text = []
+                    
+                    for idx, lbl in enumerate(options, 1):
+                        inp = lbl.find('input')
+                        opt_text = lbl.get_text(strip=True)
+                        opts_text.append(opt_text)
+                        if inp and inp.get('value') == 'correct':
+                            correct_idx = idx
+                            
+                    # Feedback/Explanation
+                    explanation = ""
+                    feedback_div = q_div.find('div', class_='feedback')
+                    if feedback_div:
+                        explanation = feedback_div.get_text(strip=True)
+
+                    QuizQuestion.objects.create(
+                        day=day,
+                        question_type='mcq',
+                        question_text=q_text,
+                        option_1=opts_text[0] if len(opts_text) > 0 else "",
+                        option_2=opts_text[1] if len(opts_text) > 1 else "",
+                        option_3=opts_text[2] if len(opts_text) > 2 else "",
+                        option_4=opts_text[3] if len(opts_text) > 3 else "",
+                        correct_option=correct_idx,
+                        explanation=explanation
+                    )
+        except Exception as e:
+            print(f"  > Error parsing quizzes for Day {day_num}: {e}")
 
         day.save()
         print(f"Updated Day {day_num}: {day.title}")
