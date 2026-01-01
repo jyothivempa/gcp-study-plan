@@ -260,38 +260,40 @@
     {% endblock %}
 
     <!-- MAIN INTERFACE -->
-    <div class="flex-1 flex overflow-hidden">
-        {% block content %}{% endblock %}
-    </div>
+    <div class="flex-1 flex flex-col overflow-hidden relative">
+        <div class="flex-1 overflow-y-auto custom-scrollbar scroll-smooth">
+            {% block content %}{% endblock %}
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 mt-auto">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-            <div class="flex justify-center space-x-6 md:order-2">
-                <a href="#" class="text-slate-400 hover:text-slate-500">
-                    <span class="sr-only">Discord</span>
-                    <i class="fa-brands fa-discord text-xl"></i>
-                </a>
-                <a href="#" class="text-slate-400 hover:text-slate-500">
-                    <span class="sr-only">Twitter</span>
-                    <i class="fa-brands fa-twitter text-xl"></i>
-                </a>
-                <a href="#" class="text-slate-400 hover:text-slate-500">
-                    <span class="sr-only">GitHub</span>
-                    <i class="fa-brands fa-github text-xl"></i>
-                </a>
-            </div>
-            <div class="mt-8 md:mt-0 md:order-1">
-                <p class="text-center text-base text-slate-400">
-                    &copy; {% now "Y" %} GCPMastery. All rights reserved.
-                </p>
-                <p class="text-center text-xs text-slate-400 mt-2">
-                    <span class="font-bold text-green-600">● Updated for 2025 Exam Guide</span> | <a href="#"
-                        class="hover:underline">FAQ & Support</a>
-                </p>
-            </div>
+            <!-- FOOTER (Scrolls with content) -->
+            <footer class="bg-white border-t border-slate-200 mt-auto">
+                <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+                    <div class="flex justify-center space-x-6 md:order-2">
+                        <a href="#" class="text-slate-400 hover:text-slate-500">
+                            <span class="sr-only">Discord</span>
+                            <i class="fa-brands fa-discord text-xl"></i>
+                        </a>
+                        <a href="#" class="text-slate-400 hover:text-slate-500">
+                            <span class="sr-only">Twitter</span>
+                            <i class="fa-brands fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-slate-400 hover:text-slate-500">
+                            <span class="sr-only">GitHub</span>
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                    </div>
+                    <div class="mt-8 md:mt-0 md:order-1">
+                        <p class="text-center text-base text-slate-400">
+                            &copy; {% now "Y" %} GCPMastery. All rights reserved.
+                        </p>
+                        <p class="text-center text-xs text-slate-400 mt-2">
+                            <span class="font-bold text-green-600">● Updated for 2025 Exam Guide</span> | <a
+                                href="{% url 'faq' %}" class="hover:underline">FAQ & Support</a>
+                        </p>
+                    </div>
+                </div>
+            </footer>
         </div>
-    </footer>
+    </div>
 
     <!-- Mermaid.js & Scripts -->
     <script type="module">
