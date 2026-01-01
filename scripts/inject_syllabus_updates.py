@@ -6,14 +6,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gcp_study_plan.settings')
 django.setup()
 
-from curriculum.models import Day
+from curriculum.models import Day, Week
 
 # MAPPING
-# Day 21: Containers Intro (Was Review, but Reviews can happen on weekends. Let's make 21 technical).
+# Day 21: Containers Intro
 # Day 41: Cost Opt
 # Day 42: Mock 1
 # Day 43: Mock 2
-# Day 45: Final Exam (Already exists?)
 
 UPDATES = {
     21: "section_21_containers_intro.md",
@@ -38,18 +37,24 @@ def inject():
         if ":" in title:
             title = title.split(":", 1)[1].strip()
             
-        # Assign Week IDs
+        # Determine Week Number
         week_num = 3 if num == 21 else 6
+        
+        # FIX: Ensure Week Exists
+        week_obj, _ = Week.objects.get_or_create(
+            number=week_num,
+            defaults={'description': f'Week {week_num} Placeholder'}
+        )
         
         # Using defaults to prevent IntegrityError on creation
         day, created = Day.objects.get_or_create(
             number=num,
-            defaults={'week_id': week_num} 
+            defaults={'week': week_obj} 
         )
         
         day.title = title
         day.concept_content = content
-        day.week_id = week_num # Ensure it's set on update too
+        day.week = week_obj # Use the object, not the ID
         
         if num == 21:
             day.description = "Before GKE, you must understand Docker."
