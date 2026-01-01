@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQ & Support - GCP Mastery{% endblock %}
+
+{% block content %}
+<div class="bg-white min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h1 class="text-3xl font-extrabold text-slate-900 text-center mb-8">Frequently Asked Questions</h1>
+
+        <div class="space-y-12">
+            <!-- Update Schedule -->
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-600"></i> Update Schedule
+                </h2>
+                <div class="bg-slate-50 border-l-4 border-brand-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-sm text-slate-700">Last Content Update: <span
+                            class="text-slate-900">January 1, 2026</span></p>
+                    <p class="text-sm text-slate-600 mt-1">We review all content quarterly to match the official Google
+                        Cloud Exam Guide. Next scheduled review: <span class="font-medium">April 1, 2026</span>.</p>
+                </div>
+            </section>
+
+            <!-- Support -->
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">How do I get help?</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 pt-1">
+                            <i class="fa-brands fa-discord text-indigo-500 text-lg"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-slate-900">Community Discord</h3>
+                            <p class="mt-1 text-sm text-slate-500">Join 500+ students in our <a href="#"
+                                    class="text-brand-600 hover:underline">Discord Server</a>. Course mentors are active
+                                daily.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Course Questions -->
+            <section class="border-t border-slate-200 pt-8">
+                <h2 class="text-xl font-bold text-slate-900 mb-6">Course & Billing</h2>
+                <dl class="space-y-8">
+                    <div>
+                        <dt class="text-lg font-medium text-slate-900">Is this course really free?</dt>
+                        <dd class="mt-2 text-base text-slate-500">Yes. The entire 45-day curriculum is free. We may add
+                            premium advanced specialized modules later, but the core ACE path stays free.</dd>
+                    </div>
+                    <div>
+                        <dt class="text-lg font-medium text-slate-900">Do I need to pay for Google Cloud?</dt>
+                        <dd class="mt-2 text-base text-slate-500">Google Cloud offers a Free Tier ($300 credit for 90
+                            days for new users). Our labs are designed to start with the Free Tier. We teach you how to
+                            set budget alerts on <a href="/curriculum/course/gcp/day/3/"
+                                class="text-brand-600 hover:underline">Day 3</a>.</dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -110,35 +110,35 @@
                                 <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                                 {% endif %}
                             </div>
+                            <!-- Time Estimate Badge -->
+                            <div class="mt-2 text-xs font-medium text-slate-400 flex items-center gap-2">
+                                <i class="fa-regular fa-clock"></i>
+                                <span>~ {{ week.days.count|add:2 }} Hours</span>
+                            </div>
                             <h3
-                                class="text-xl font-display font-bold text-slate-800 leading-snug group-hover:text-brand-700 transition-colors">
+                                class="text-xl font-display font-bold text-slate-800 leading-snug group-hover:text-brand-700 transition-colors mt-2">
                                 {{ week.description }}
                             </h3>
                         </div>
 
-                        <!-- Days List -->
-                        <div class="relative z-10 space-y-2 mb-8 flex-1">
+                        <!-- Days List (Syllabus) -->
+                        <div class="relative z-10 space-y-3 mb-8 flex-1">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Syllabus</p>
                             {% for day in week.days.all %}
-                            {% if forloop.counter <= 3 %} <!-- Show first 3 days only per card for cleanliness -->
+                            <div
+                                class="flex items-center gap-3 text-sm text-slate-600 group-hover:text-slate-700 transition-colors border-b border-slate-50 pb-2 last:border-0 last:pb-0">
                                 <div
-                                    class="flex items-center gap-3 text-sm text-slate-600 group-hover:text-slate-700 transition-colors">
-                                    <div
-                                        class="w-5 h-5 rounded flex items-center justify-center shrink-0 
+                                    class="w-6 h-6 rounded flex items-center justify-center shrink-0 
                                 {% if day.id in completed_day_ids %}bg-green-100 text-green-600{% else %}bg-slate-100 text-slate-400{% endif %}">
-                                        {% if day.id in completed_day_ids %}
-                                        <i class="fa-solid fa-check text-[10px]"></i>
-                                        {% else %}
-                                        <span class="text-[9px] font-bold">{{ day.number }}</span>
-                                        {% endif %}
-                                    </div>
-                                    <span class="truncate">{{ day.title }}</span>
+                                    {% if day.id in completed_day_ids %}
+                                    <i class="fa-solid fa-check text-[10px]"></i>
+                                    {% else %}
+                                    <span class="text-[10px] font-bold">{{ day.number }}</span>
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% endfor %}
-                                {% if week.days.count > 3 %}
-                                <div class="text-xs text-slate-400 font-medium pl-8">+ {{ week.days.count|add:"-3" }}
-                                    more lessons</div>
-                                {% endif %}
+                                <span class="truncate">{{ day.title }}</span>
+                            </div>
+                            {% endfor %}
                         </div>
 
                         <!-- Footer Action -->

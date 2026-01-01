@@ -16,4 +16,7 @@ def projects(request):
     return render(request, 'projects.html', {'user_progress_percentage': get_progress(request.user)})
 
 def roadmap(request):
-    return render(request, 'roadmap.html', {'user_progress_percentage': get_progress(request.user)})
+    return render(request, 'roadmap.html')
+
+def faq(request):
+    return render(request, 'faq.html', {'user_progress_percentage': get_progress(request.user)})

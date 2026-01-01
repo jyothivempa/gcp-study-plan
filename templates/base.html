@@ -264,6 +264,35 @@
         {% block content %}{% endblock %}
     </div>
 
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+            <div class="flex justify-center space-x-6 md:order-2">
+                <a href="#" class="text-slate-400 hover:text-slate-500">
+                    <span class="sr-only">Discord</span>
+                    <i class="fa-brands fa-discord text-xl"></i>
+                </a>
+                <a href="#" class="text-slate-400 hover:text-slate-500">
+                    <span class="sr-only">Twitter</span>
+                    <i class="fa-brands fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-slate-400 hover:text-slate-500">
+                    <span class="sr-only">GitHub</span>
+                    <i class="fa-brands fa-github text-xl"></i>
+                </a>
+            </div>
+            <div class="mt-8 md:mt-0 md:order-1">
+                <p class="text-center text-base text-slate-400">
+                    &copy; {% now "Y" %} GCPMastery. All rights reserved.
+                </p>
+                <p class="text-center text-xs text-slate-400 mt-2">
+                    <span class="font-bold text-green-600">● Updated for 2025 Exam Guide</span> | <a href="#"
+                        class="hover:underline">FAQ & Support</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
     <!-- Mermaid.js & Scripts -->
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
