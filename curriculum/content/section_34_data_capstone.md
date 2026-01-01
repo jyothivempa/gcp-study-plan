@@ -45,14 +45,44 @@ CLUSTER BY customer_id
 AS ...
 ```
 
-### Step 4: The Validation 📉
-Run the specific query on the new table:
-```sql
-SELECT * 
-FROM `sales.transactions_optimized`
-WHERE transaction_date = '2025-01-01'
+### Step 4: The Job-Ready Solution (Terraform) 📉
+Automate the data pipeline creation to prevent "ClickOps" drift.
+
+```hcl
+# main.tf
+provider "google" { project = "your-project-id" }
+
+# 1. Pub/Sub Topic (Ingestion)
+resource "google_pubsub_topic" "events_topic" {
+  name = "ingestion-topic"
+}
+
+# 2. BigQuery Dataset
+resource "google_bigquery_dataset" "analytics_ds" {
+  dataset_id                  = "analytics_ds"
+  location                    = "US"
+  default_table_expiration_ms = 3600000 # 1 Hour (Cost Safe)
+}
+
+# 3. BigQuery Table (Partitioned Schema)
+resource "google_bigquery_table" "events_table" {
+  dataset_id = google_bigquery_dataset.analytics_ds.dataset_id
+  table_id   = "raw_events"
+  
+  # PARTITIONING (The Cost Saver)
+  time_partitioning {
+    type = "DAY"
+    field = "timestamp"
+  }
+
+  schema = <<EOF
+[
+  { "name": "timestamp", "type": "TIMESTAMP", "mode": "REQUIRED" },
+  { "name": "payload", "type": "JSON", "mode": "NULLABLE" }
+]
+EOF
+}
 ```
-*   *Result:* "This query will process 10 GB." -> Cost: $0.05.
 
 ## 4️⃣ Checkpoint Questions
 **Q1. Why is `SELECT *` considered a BigQuery anti-pattern?**

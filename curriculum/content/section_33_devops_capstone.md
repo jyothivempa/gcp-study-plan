@@ -40,7 +40,43 @@ graph LR
     *   `Cloud Run Admin`
     *   `Service Account User` (to act as the runtime identity).
 
-### Step 3: Trigger the Build 🚀
+### Step 3: The Job-Ready Solution (Code) 🚀
+Don't just fix it manually. Build the repo structure that works out of the box.
+
+**1. The App (`app.py`)**
+```python
+from flask import Flask
+import os
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    target = os.environ.get('TARGET', 'World')
+    return f'Hello {target}! Deployed via Cloud Build.'
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=8080)
+```
+
+**2. The Build Config (`cloudbuild.yaml`)**
+```yaml
+steps:
+  # Install Dependencies
+  - name: 'python:3.9'
+    entrypoint: 'pip'
+    args: ['install', '-r', 'requirements.txt']
+
+  # Build & Push Container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-app', '.']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['run', 'deploy', 'my-app', '--image', 'gcr.io/$PROJECT_ID/my-app', '--region', 'us-central1', '--platform', 'managed']
+```
+
+**3. Trigger It:**
 ```bash
 gcloud builds submit --config=cloudbuild.yaml .
 ```

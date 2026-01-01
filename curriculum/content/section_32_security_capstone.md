@@ -30,14 +30,39 @@ Run these commands to find the holes.
 2.  `gcloud storage buckets get-iam-policy gs://[BUCKET_NAME]`
     *   *Look for:* `allUsers` having `roles/storage.objectAdmin`.
 
-### Step 2: The Fixes 🛡️
-*   **Fix 1: Bucket Public Access**
-    *   *Command:* `gcloud storage buckets remove-iam-policy-binding gs://my-bucket --member=allUsers --role=roles/storage.objectAdmin`
-    *   *Better:* Enable **Public Access Prevention** (PAP) on the bucket.
-*   **Fix 2: Overprivileged Service Account**
-    *   *Task:* Downgrade the VM's Service Account from `Owner` to `Storage Object Viewer` + `Metric Writer`.
-*   **Fix 3: Firewall Open Ports**
-    *   *Task:* Delete the `0.0.0.0/0` SSH allow rule. Use **IAP (Identity-Aware Proxy)** instead.
+### Step 3: The Job-Ready Solution (Terraform) 🛡️
+Auditing is hard. Hardening via code is better. Save this as `main.tf`.
+
+```hcl
+# main.tf
+# 1. Custom Role (Least Privilege)
+resource "google_project_iam_custom_role" "auditor_role" {
+  role_id     = "app_auditor"
+  title       = "App Auditor"
+  description = "Can view logs and monitoring, but cannot edit resources."
+  permissions = [
+    "logging.logEntries.list",
+    "logging.logs.list",
+    "monitoring.timeSeries.list",
+    "compute.instances.get",
+    "compute.instances.list"
+  ]
+}
+
+# 2. Service Account (Identity)
+resource "google_service_account" "app_sa" {
+  account_id   = "sa-app-prod"
+  display_name = "Production Application Service Account"
+}
+
+# 3. Bind Role to Service Account
+resource "google_project_iam_binding" "app_permissions" {
+  project = "your-project-id"
+  role    = google_project_iam_custom_role.auditor_role.name
+  members = ["serviceAccount:${google_service_account.app_sa.email}"]
+}
+```
+**Why this wins interviews:** You show you understand *custom roles* reducing the attack surface, rather than lazy `roles/viewer` assignments.
 
 ## 4️⃣ Checkpoint Questions
 **Q1. You see a bucket policy granting `roles/storage.objectViewer` to `allUsers`. What does this mean?**
