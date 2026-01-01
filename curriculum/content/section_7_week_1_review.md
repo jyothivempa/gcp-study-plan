@@ -111,3 +111,18 @@ graph LR
 ### 🎓 Congratulations!
 You have completed **Week 1** of the GCP Master Plan.
 **Next Week:** We construct the piping of the cloud: **VPC Networking (Sections 8-12)**.
+
+<!-- FLASHCARDS
+[
+  {"term": "CapEx", "def": "Capital Expenditure. Upfront cost (like buying a server)."},
+  {"term": "OpEx", "def": "Operational Expenditure. Pay-as-you-go (like Cloud)."},
+  {"term": "Zone", "def": "A deployment area within a region (e.g., us-central1-a)."},
+  {"term": "Region", "def": "A geographical location containing 3+ Zones (e.g., us-central1)."},
+  {"term": "Project ID", "def": "Globally unique, immutable identifier for your project."},
+  {"term": "IAM Role", "def": "A collection of permissions. You grant Roles to Principals."},
+  {"term": "Spot VM", "def": "highly discounted VM that can be preempted with 30s notice."},
+  {"term": "Live Migration", "def": "GCP ability to move running VMs to new hardware without downtime."},
+  {"term": "Standard Storage", "def": "Hot data, no retrieval cost, expensive storage."},
+  {"term": "Nearline Storage", "def": "Backup data, 30-day minimum, low retrieval cost."}
+]
+-->
