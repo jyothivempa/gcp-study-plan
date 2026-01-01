@@ -102,18 +102,7 @@ def populate_weeks():
             
         # Extract Flashcards
         # Robust regex: Allows spaces around <!--, FLASHCARDS, and keys
-        flashcards_match = re.search(r'<!--\s*FLASHCARDS\s*(\[.*?\])\s*-->', content, re.DOTALL)
-        if flashcards_match:
-            try:
-                import json
-                flashcards_json = json.loads(flashcards_match.group(1).strip())
-                day.flashcards = flashcards_json
-                print(f"  > Found {len(flashcards_json)} flashcards.")
-            except json.JSONDecodeError as e:
-                print(f"  > ERROR: JSON Decode Error for Day {day_num}: {e}")
-                print(f"  > Content snippet: {flashcards_match.group(1)[:50]}...")
-        else:
-            print(f"  > No flashcards found (Regex miss).")
+        # Flashcard parsing removed per feature removal request.
 
         day.save()
         print(f"Updated Day {day_num}: {day.title}")

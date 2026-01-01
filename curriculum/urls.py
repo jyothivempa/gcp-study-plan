@@ -16,7 +16,5 @@ urlpatterns = [
     path('api/save_note/<int:day_number>/', views.save_note, name='save_note'),
     path('search/', views.search_lessons, name='search_lessons'),
     path('api/verify_capstone/', views.verify_capstone, name='verify_capstone'),
-    path('study/flashcards/<int:day_number>/', views.study_flashcards, name='study_flashcards'),
-    path('api/submit_flashcard/', views.submit_flashcard, name='submit_flashcard'),
-    path('api/explain_flashcard/', views.explain_flashcard, name='explain_flashcard'),
+
 ]

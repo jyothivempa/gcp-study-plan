@@ -141,10 +141,7 @@
                         class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all focus:bg-slate-900 focus:text-white">Lab</a>
                     <a href="#notes"
                         class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all focus:bg-slate-900 focus:text-white">Notes</a>
-                    {% if day.flashcards %}
-                    <a href="#flashcards"
-                        class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all focus:bg-slate-900 focus:text-white">Cards</a>
-                    {% endif %}
+
                     {% if day.quiz_questions.exists %}
                     <a href="#quiz"
                         class="px-5 py-2.5 rounded-xl text-sm font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 transition-all focus:bg-brand-600 focus:text-white">Quiz</a>
@@ -259,35 +256,7 @@
                     </div>
                 </section>
 
-                <!-- SECTION: INTERACTIVE FLASHCARDS (New) -->
-                {% if day.flashcards %}
-                <section id="flashcards" class="print:hidden scroll-mt-24 pt-8 border-t border-slate-100">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span
-                            class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold"><i
-                                class="fa-solid fa-layer-group"></i></span>
-                        <h2 class="text-2xl font-bold text-slate-900">Flashcards</h2>
-                    </div>
 
-                    <div
-                        class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-1">
-                            <h3 class="font-bold text-indigo-900 text-lg mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-bolt text-indigo-500"></i> Master High-Yield Concepts
-                            </h3>
-                            <p class="text-indigo-700/80 text-sm leading-relaxed max-w-xl">
-                                Review {{ day.flashcards|length }} key terms and definitions for this lesson using our
-                                smart spaced-repetition system.
-                                Now with <strong>AI-powered explanations</strong>!
-                            </p>
-                        </div>
-                        <a href="{% url 'study_flashcards' day.number %}"
-                            class="shrink-0 px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1 transition-all flex items-center gap-3">
-                            <i class="fa-solid fa-play"></i> Start Session
-                        </a>
-                    </div>
-                </section>
-                {% endif %}
 
 
                 <!-- SECTION: QUIZ -->

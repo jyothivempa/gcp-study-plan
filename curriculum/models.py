@@ -34,7 +34,7 @@ class Day(models.Model):
     outcome = models.CharField(max_length=255, help_text="What the learner will achieve")
     interview_questions = models.TextField(help_text="Markdown for interview questions", blank=True)
     video_url = models.URLField(blank=True, null=True, help_text="YouTube URL for the lesson video")
-    flashcards = models.JSONField(blank=True, null=True, help_text="JSON list of flashcards")
+    video_url = models.URLField(blank=True, null=True, help_text="YouTube URL for the lesson video")
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -101,19 +101,5 @@ class SearchLog(models.Model):
     def __str__(self):
         return f"'{self.query}' ({self.results_count} results)"
 
-class FlashcardProgress(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    day = models.ForeignKey(Day, on_delete=models.CASCADE)
-    card_index = models.IntegerField(help_text="Index of the card in the Day.flashcards JSON list")
-    
-    # Leitner System
-    box = models.IntegerField(default=1, help_text="Box 1 (Daily) to 5 (Retired)")
-    next_review_date = models.DateField(auto_now_add=True)
-    last_reviewed_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        unique_together = ['user', 'day', 'card_index']
 
-    def __str__(self):
-        return f"{self.user.username} - Day {self.day.number} Card {self.card_index} (Box {self.box})"
 
