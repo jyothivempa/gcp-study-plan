@@ -16,9 +16,11 @@ from curriculum.models import Day
 DAY_MAPPING = {
     23: "section_16_app_engine.md",
     24: "section_23_cloud_spanner_bigtable.md",
+    25: "section_22_cloud_run.md", # Wait, previous check said Day 25 was Cloud Run. Let's ensure this.
     26: "section_24_bigquery_data_warehousing.md",
-    27: "section_25_pub_sub_data_pipelines.md",
-    28: "section_20_backup_dr.md" 
+    27: "section_27_cloud_build.md", # NEW: CI/CD moved here
+    28: "section_25_pub_sub_data_pipelines.md", # Shifted from 27
+ 
 }
 # Note: Day 29 (Architecture) & 30 (Final Review) can be done separately or added if files exist.
 # section_21_final_architecture.md exists, let's map it to Day 29.
