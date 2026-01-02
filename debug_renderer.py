@@ -14,20 +14,22 @@ def debug_view():
     c = Client()
     
     # 1. PAGE VERIFICATION
-    print("\n[1] Fetching Lesson Page (Day 7)...")
+    print("\n[1] Fetching Lesson Page (Day 1)...")
     try:
-        response = c.get('/curriculum/course/gcp/day/7/', HTTP_HOST='127.0.0.1')
+        response = c.get('/curriculum/course/gcp/day/1/', HTTP_HOST='127.0.0.1')
         print(f"Status Code: {response.status_code}")
         
         if response.status_code == 200:
             content = response.content.decode()
             
-            # DARK MODE VERIFICATION
-            if '<html lang="en" class="dark scroll-smooth">' in content:
-                 print("THEME VERIFICATION: PASS (Forced Dark Mode found)")
+            # 2. THEME VERIFICATION (SEPIA / LIGHT)
+            if '<html lang="en" class="scroll-smooth">' in content:
+                print("THEME VERIFICATION: PASS (Light/Sepia Mode Active - 'dark' class removed)")
+            elif 'class="dark' in content:
+                print("THEME VERIFICATION: FAIL (Dark Mode still forced)")
             else:
-                 print("THEME VERIFICATION: FAIL (Did not find forced dark class)")
-                 print(f"HTML Tag Context: {content[:100]}")
+                print("THEME VERIFICATION: UNKNOWN (Check View Source)")
+                print(f"HTML Tag Context: {content[:100]}")
             
             # Check for API integration
             if "loadSidebar()" in content and "x-data" in content:
