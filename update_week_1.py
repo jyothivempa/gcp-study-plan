@@ -38,14 +38,12 @@ DAYS_CONFIG = {
         ]
     },
     5: {
-        "file": "section_5_vpc_networking.md",
-        "outcome": "Configure VPCs, Subnets & Firewalls",
+        "file": "section_5_storage_basics.md",
+        "outcome": "Understand Block Storage (Persistent Disks & Local SSD)",
         "quizzes": [
-            {"text": "A VPC in Google Cloud is:", "type": "mcq", "options": ["A. Regional", "B. Global", "C. Zonal", "D. Local"], "correct": 2},
-            {"text": "A Subnet in Google Cloud is:", "type": "mcq", "options": ["A. Global", "B. Regional", "C. Zonal", "D. Local"], "correct": 2},
-            {"text": "By default, what is the behavior of Ingress (Incoming) traffic?", "type": "mcq", "options": ["A. Allowed", "B. Blocked", "C. Allowed only from Google", "D. Allowed on Port 80"], "correct": 2},
-            {"text": "Which tag represents 'The entire internet' in IP ranges?", "type": "mcq", "options": ["A. 127.0.0.1", "B. 0.0.0.0/0", "C. 192.168.1.1", "D. 10.0.0.0/8"], "correct": 2},
-            {"text": "Which port do you need to open for a secure HTTPS web server?", "type": "mcq", "options": ["A. 80", "B. 22", "C. 443", "D. 3389"], "correct": 3}
+            {"text": "Which storage type is \"Ephemeral\" and loses all data if the VM is stopped?", "type": "mcq", "options": ["A. Standard Persistent Disk", "B. Local SSD", "C. Cloud Storage Bucket", "D. Hyperdisk"], "correct": 2},
+            {"text": "You have a 100GB disk that is half full. You want to save money by shrinking it to 50GB. How do you do this?", "type": "mcq", "options": ["A. Edit the disk and type 50GB.", "B. You cannot shrink it. You must create a new disk and copy data.", "C. Use the \"Compression\" feature.", "D. Contact Google Support"], "correct": 2},
+            {"text": "Which disk type creates a clear separation between IOPS (Performance) and Capacity (Size)?", "type": "mcq", "options": ["A. Standard HDD", "B. SSD Persistent Disk", "C. Hyperdisk", "D. Local SSD"], "correct": 3}
         ]
     },
     6: {
