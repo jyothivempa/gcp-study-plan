@@ -48,6 +48,7 @@ graph LR
 4.  **BGP Session:** Google uses BGP (Border Gateway Protocol) to exchange routes dynamically. "I have 10.0.1.0/24 here!"
 
 ## 7️⃣ Checkpoint Questions
+<!--
 **Q1. You need to transfer 20TB of data daily. Latency must be consistent. VPN is too variable. What do you choose?**
 *   A. Cloud VPN
 *   B. **Dedicated Interconnect**
@@ -64,6 +65,7 @@ graph LR
 *   B. RIP
 *   C. **BGP (Border Gateway Protocol)**
 > **Answer: C.** Cloud Router requires BGP.
+-->
 
 ## ✅ Day 33 Checklist
 <div class="checklist-card" x-data="{ 

@@ -56,12 +56,27 @@ graph TD
 5.  **Visualize:** See the "Burn Rate" chart. It tells you "At this rate, you will violate your SLO in 3 days."
 
 ## 7️⃣ Checkpoint Questions
-1.  **True or False: SREs strive for 100% availability.**
-    *   *Answer: False. 100% is impossible and freezes innovation.*
-2.  **Who consumes the SLA?**
-    *   *Answer: The External Customer (and Lawyers).*
-3.  **If you exhaust your Error Budget, what should you do?**
-    *   *Answer: Stop new feature releases. Focus on stability.*
+<!--
+**Q1. True or False: SREs strive for 100% availability.**
+    *   *Answer: False. 100% is impossible and freezes innovation.* Wait, options must be A/B type?
+    *   A. True
+    *   B. False
+> **Answer: B.** False. 100% is impossible and freezes innovation.
+
+**Q2. Who consumes the SLA?**
+*   A. Engineers
+*   B. **The External Customer (and Lawyers).**
+*   C. Product Managers
+*   D. None
+> **Answer: B.**
+
+**Q3. If you exhaust your Error Budget, what should you do?**
+*   A. Keep deploying
+*   B. **Stop new feature releases. Focus on stability.**
+*   C. Ignore it
+*   D. Increase the budget
+> **Answer: B.**
+-->
 
 ## ✅ Day 36 Checklist
 <div class="checklist-card" x-data="{ 

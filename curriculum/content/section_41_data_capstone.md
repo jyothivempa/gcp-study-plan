@@ -85,6 +85,7 @@ EOF
 ```
 
 ## 4️⃣ Checkpoint Questions
+<!--
 **Q1. Why is `SELECT *` considered a BigQuery anti-pattern?**
 *   A. It looks ugly.
 *   B. It returns too many rows.
@@ -105,3 +106,4 @@ EOF
 *   C. **Clustering** on `User_ID`.
 *   D. Nothing.
 > **Answer: C.** Clustering sorts data inside the partition, making lookups faster.
+-->

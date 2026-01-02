@@ -19,6 +19,7 @@ We touched on **Site Reliability Engineering (SRE)** this week.
 
 ## 4️⃣ Mock Questions (Week 6)
 
+<!--
 **Q1. Your team wants to safely experiment with a new feature, but they are afraid of breaking Production. You have plenty of "Error Budget" left. What does an SRE say?**
 *   A. "No."
 *   B. **"Go ahead. We have budget to burn."**
@@ -30,6 +31,7 @@ We touched on **Site Reliability Engineering (SRE)** this week.
 *   B. The key is expired.
 *   C. Google will delete it.
 > **Answer: A.** Long-lived keys are the #1 security hole.
+-->
 
 ## ✅ Week 6 Checklist
 <div class="checklist-card" x-data="{ 

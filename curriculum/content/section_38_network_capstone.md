@@ -105,6 +105,7 @@ resource "google_compute_router_nat" "nat" {
 
 
 ## 4️⃣ Checkpoint Questions
+<!--
 **Q1. You created a Custom VPC but forgot to create a firewall rule. What is the default behavior?**
 *   A. Allow All.
 *   B. Deny All Inbound / Allow All Outbound.
@@ -125,3 +126,4 @@ resource "google_compute_router_nat" "nat" {
 *   C. `http-server`
 *   D. `us-central1`
 > **Answer: B.** We used `--tags=web` on the VM and `--target-tags=web` on the Firewall.
+-->

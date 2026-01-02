@@ -60,6 +60,7 @@ graph TD
 5.  **Actions:** (Optional) Connect to Pub/Sub to trigger automation.
 
 ## 7️⃣ Checkpoint Questions
+<!--
 **Q1. You need the absolute cheapest compute for a batch job that runs for 4 hours and can restart if interrupted.**
 *   A. E2 Standard VM
 *   B. **Spot VM**
@@ -78,6 +79,7 @@ graph TD
 *   A. True
 *   B. **False**
 > **Answer: B.** Budgets are for *alerting*. Programmatic action requires Pub/Sub + Cloud Functions (CapOps).
+-->
 
 ## ✅ Day 37 Checklist
 <div class="checklist-card" x-data="{ 

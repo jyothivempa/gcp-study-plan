@@ -51,6 +51,7 @@
 | **Lift & Shift VM** | Compute Engine |
 
 ## 5️⃣ Checkpoint Questions (The Ultimate Test)
+<!--
 **Q1. A global retail company needs a database for their inventory. It must handle millions of updates per second (IoT sensors on shelves) and consistency is less important than speed. What do you choose?**
 *   A. Cloud Spanner
 *   B. Cloud SQL
@@ -71,3 +72,4 @@
 *   C. HTTPS.
 *   D. Cloud Armor.
 > **Answer: B.** PGA allows VMs to reach Google APIs (Storage/BigQuery) via internal Google fiber.
+-->

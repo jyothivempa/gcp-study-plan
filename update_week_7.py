@@ -70,9 +70,37 @@ def update_week7():
             matches = quiz_pattern.finditer(full_content)
             count = 0
             for match in matches:
-                # ... standard parsing logic ...
-                # (Abbreviated to avoid clutter if exams use different format)
-                pass 
+                q_text = match.group(2).strip()
+                options_text = match.group(3).strip()
+                opts = {'A': '', 'B': '', 'C': '', 'D': ''}
+                for line in options_text.split('\n'):
+                    line = line.strip()
+                    if line.startswith('*   A.'): opts['A'] = line[6:].strip()
+                    elif line.startswith('*   B.'): opts['B'] = line[6:].strip()
+                    elif line.startswith('*   C.'): opts['C'] = line[6:].strip()
+                    elif line.startswith('*   D.'): opts['D'] = line[6:].strip()
+                
+                snippet_start = match.end()
+                snippet = full_content[snippet_start:snippet_start+200]
+                ans_match = answer_pattern.search(snippet)
+                correct = ans_match.group(1) if ans_match else 'A'
+                correct_idx = {'A': 1, 'B': 2, 'C': 3, 'D': 4}.get(correct, 1)
+
+                if q_text and opts['A']:
+                    QuizQuestion.objects.create(
+                        day=day,
+                        question_type='mcq',
+                        question_text=q_text,
+                        option_1=opts['A'],
+                        option_2=opts['B'],
+                        option_3=opts['C'],
+                        option_4=opts['D'],
+                        correct_option=correct_idx,
+                        explanation=f"Correct Option: {correct}"
+                    )
+                    count += 1
+            if count > 0:
+                print(f"   - Added {count} quiz questions.")
                 
             # Note: Real mock exams might need specific parsing if they deviate from **Q1** format.
             # But the content is loaded, so the user can read it.

@@ -63,6 +63,7 @@ Focused on moving **Analytics Data** into BigQuery.
 > **Pro Tip:** In the exam, if connectivity is tricky, look for **Reverse SSH Tunnel** as the "safe" way to connect on-prem DBs without opening firewall ports globally.
 
 ## 7️⃣ Checkpoint Questions
+<!--
 **Q1. You are migrating an On-Prem MySQL DB to Cloud SQL. You cannot afford more than 5 minutes of downtime.**
 *   A. Export data to CSV, upload to GCS, import to Cloud SQL.
 *   B. Use `mysqldump` and restore.
@@ -76,3 +77,4 @@ Focused on moving **Analytics Data** into BigQuery.
 *   C. Cloud Pub/Sub
 *   D. Dataprep
 > **Answer: B.** It has built-in connectors for SaaS platforms (Ads, YouTube, S3).
+-->

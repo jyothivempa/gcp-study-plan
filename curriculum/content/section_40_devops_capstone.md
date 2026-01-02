@@ -82,6 +82,7 @@ gcloud builds submit --config=cloudbuild.yaml .
 ```
 
 ## 4️⃣ Checkpoint Questions
+<!--
 **Q1. You get a "Permission Denied" error when Cloud Build tries to deploy to Cloud Run. What is missing?**
 *   A. The developer is banned.
 *   B. The `Cloud Run Admin` role on the Cloud Build Service Account.
@@ -102,3 +103,4 @@ gcloud builds submit --config=cloudbuild.yaml .
 *   C. Use a Webhook manually.
 *   D. It happens automatically.
 > **Answer: B.** Triggers connect the Git Provider (GitHub) to the Build Service.
+-->

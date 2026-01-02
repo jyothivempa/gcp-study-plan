@@ -49,6 +49,7 @@ You don't need your own data. BigQuery hosts public data (Covid, Weather, GitHub
     *   *Answer:* Use the **Streaming API** (insertAll). Note: It costs extra money per GB inserted, unlike batch loading (which is free).
 
 ## 7️⃣ Checkpoint Questions (Exam Style)
+<!--
 **Q1. You accidentally run `SELECT *` on a Petabyte table. What happens?**
 *   A. The query fails.
 *   B. You get a bill for $5,000.
@@ -67,3 +68,4 @@ You don't need your own data. BigQuery hosts public data (Covid, Weather, GitHub
 *   A. Yes, it supports SQL.
 *   B. No, it is a Columnar OLAP warehouse (bad for small frequent updates).
 > **Answer: B.** Use Cloud SQL for transactions (Buying a ticket). Use BigQuery for analytics (Counting how many tickets sold last year).
+-->

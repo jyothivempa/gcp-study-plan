@@ -1,4 +1,4 @@
-# SECTION 42: Mock Exam 1 (Module 10)
+# SECTION 43: Mock Exam 1 (Module 10)
 
 > **Format**: 10 High-Quality Questions replicating the ACE difficulty.
 
@@ -9,7 +9,8 @@
 
 ---
 
-### Question 1: IAM & Groups
+<!--
+**Q1. IAM & Groups**
 **Scenario**: You have 50 developers in the "frontend-team". You need to give them all access to view logs in Project A. A week later, 5 new devs join.
 **Q**: What is the Google Best Practice?
 *   A. Create a Service Account for each dev.
@@ -21,7 +22,7 @@
 
 ---
 
-### Question 2: Storage Classes
+**Q2. Storage Classes**
 **Scenario**: You have 1TB of compliance data. You need to access it once a year for an audit. If you access it, speed doesn't matter much.
 **Q**: Which class is cheapest?
 *   A. Standard.
@@ -33,7 +34,7 @@
 
 ---
 
-### Question 3: Compute Engine
+**Q3. Compute Engine**
 **Scenario**: You need to ensure your web application can survive a generic zonal failure.
 **Q**: What configuration do you need?
 *   A. A single VM with a backup.
@@ -44,6 +45,7 @@
 > **Answer: B.** Regional MIGs distribute VMs across zones (us-central1-a, b, c). If `a` goes down, `b` and `c` keep running.
 
 ---
+-->
 
 *(More questions simulating the 50-question exam would go here in a real app)*
 

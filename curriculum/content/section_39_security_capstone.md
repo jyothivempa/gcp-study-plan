@@ -65,6 +65,7 @@ resource "google_project_iam_binding" "app_permissions" {
 **Why this wins interviews:** You show you understand *custom roles* reducing the attack surface, rather than lazy `roles/viewer` assignments.
 
 ## 4️⃣ Checkpoint Questions
+<!--
 **Q1. You see a bucket policy granting `roles/storage.objectViewer` to `allUsers`. What does this mean?**
 *   A. Only authenticated Google users can view.
 *   B. Only users in your organization can view.
@@ -85,3 +86,4 @@ resource "google_project_iam_binding" "app_permissions" {
 *   C. Use RDP.
 *   D. Use Telnet.
 > **Answer: B.** IAP tunnels traffic through Google's HTTPS load balancers, authenticating you before you reach the VM.
+-->

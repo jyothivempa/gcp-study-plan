@@ -53,6 +53,7 @@ graph LR
     *   *Answer:* Add more subscriber instances (Horizontal Scaling). Pub/Sub handles the fan-out.
 
 ## 7️⃣ Checkpoint Questions (Exam Style)
+<!--
 **Q1. What happens if a subscriber fails to acknowledge (ACK) a message within the deadline?**
 *   A. The message is deleted.
 *   B. The message is redelivered.
@@ -73,3 +74,4 @@ graph LR
 *   C. Forever
 *   D. Until restart
 > **Answer: B.** It is a durable buffer, not a permanent archive.
+-->

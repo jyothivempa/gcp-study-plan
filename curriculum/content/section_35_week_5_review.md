@@ -17,6 +17,7 @@ We moved from "Building Components" to "Designing Solutions".
 
 ## 3️⃣ Mock Questions (Week 5)
 
+<!--
 **Q1. You need to connect your on-premise Oracle database to a Cloud Application with private IP RFC1918 addresses. You cannot use the public internet. Speed is not critical, but budget is low.**
 *   A. Dedicated Interconnect.
 *   B. Carrier Peering.
@@ -36,6 +37,7 @@ We moved from "Building Components" to "Designing Solutions".
 *   B. **Decoupling (If the backend crashes, the frontend can still accept messages).**
 *   C. It encrypts data.
 > **Answer: B.** Reliability pattern: "Fail independently."
+-->
 
 ## ✅ Week 5 Checklist
 <div class="checklist-card" x-data="{ 
