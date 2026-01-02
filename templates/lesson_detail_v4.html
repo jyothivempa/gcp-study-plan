@@ -3,12 +3,25 @@
 {% load markdown_extras %}
 {% load quiz_extras %}
 
-{% block title %}Day {{ day.number }}: {{ day.title }} <!-- V8 FINAL FIX -->{% endblock %}
+{% block title %}Day {{ day.number }}: {{ day.title }}{% endblock %}
 
 {% block content %}
-<div class="flex h-full" x-data="{ sidebarOpen: false }">
+<div class="flex h-full" x-data="{ 
+    sidebarOpen: false, 
+    sidebarData: { week_number: '...', items: [] },
+    loading: true,
+    async loadSidebar() {
+        try {
+            const res = await fetch('/curriculum/api/sidebar_data/{{ course.slug }}/{{ day.number }}/');
+            this.sidebarData = await res.json();
+            this.loading = false;
+        } catch(e) {
+            console.error('Failed to load sidebar', e);
+        }
+    }
+}" x-init="loadSidebar()">
 
-    <!-- 1. SIDEBAR -->
+    <!-- 1. SIDEBAR (API DRIVEN) -->
     <aside
         class="w-80 hidden lg:flex flex-col h-[calc(100vh-5rem)] sticky top-4 ml-4 rounded-3xl glass-panel border border-white/20 shadow-2xl shrink-0 z-30 overflow-hidden transition-colors">
 
@@ -17,47 +30,54 @@
             class="h-16 px-6 flex items-center border-b border-slate-200/50 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
             <div class="flex flex-col">
                 <span class="text-[10px] uppercase tracking-widest font-bold text-brand-600 dark:text-brand-400">Module
-                    {{ day.week.number }}</span>
-                <span class="text-sm font-display font-bold text-slate-900 dark:text-slate-100 truncate w-64">Week {{
-                    day.week.number }} Curriculum</span>
+                    <span x-text="sidebarData.week_number"></span></span>
+                <span class="text-sm font-display font-bold text-slate-900 dark:text-slate-100 truncate w-64">Week <span
+                        x-text="sidebarData.week_number"></span> Curriculum</span>
             </div>
         </div>
 
         <!-- List -->
         <div class="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar">
-            {% for sidebar_day in day.week.days.all %}
-            <a href="{% url 'lesson_detail' course.slug sidebar_day.number %}"
-                class="group relative flex items-center gap-3 p-3 rounded-xl transition-all duration-200 border {% if sidebar_day.number == day.number %}bg-brand-50/80 dark:bg-brand-900/20 border-brand-200 dark:border-brand-500/30 shadow-sm{% else %}hover:bg-slate-100 dark:hover:bg-white/5 border-transparent{% endif %}">
-
-                <div
-                    class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors shrink-0 {% if sidebar_day.number == day.number %}bg-brand-600 text-white shadow-lg shadow-brand-500/30{% elif sidebar_day.number < day.number %}bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400{% else %}bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600{% endif %}">
-                    {% if sidebar_day.number < day.number %}<i class="fa-solid fa-check"></i>{% else %}{{
-                        sidebar_day.number }}{% endif %}
+            <!-- Loading Skeletons -->
+            <template x-if="loading">
+                <div class="space-y-2 animate-pulse">
+                    <div class="h-12 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+                    <div class="h-12 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+                    <div class="h-12 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
                 </div>
+            </template>
 
-                <div class="flex-1 min-w-0">
-                    <p
-                        class="text-sm font-bold truncate {% if sidebar_day.number == day.number %}text-brand-900 dark:text-brand-100{% else %}text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white{% endif %}">
-                        {{ sidebar_day.title }}
-                    </p>
-                </div>
-            </a>
-            {% endfor %}
+            <!-- API Items -->
+            <template x-for="item in sidebarData.items" :key="item.number">
+                <a :href="item.url" :class="item.row_class">
+
+                    <div :class="item.icon_class">
+                        <!-- Only show check if past, number if current/future -->
+                        <template x-if="item.is_past">
+                            <i class="fa-solid fa-check"></i>
+                        </template>
+                        <template x-if="!item.is_past">
+                            <span x-text="item.number"></span>
+                        </template>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <p :class="item.text_class" x-text="item.title"></p>
+                    </div>
+                </a>
+            </template>
         </div>
     </aside>
 
-    <!-- 2. MAIN CONTENT -->
+    <!-- 2. MAIN CONTENT (Standard Django Render) -->
     <main class="flex-1 h-full overflow-y-auto relative scroll-smooth px-4 lg:px-8 py-6">
         <div class="max-w-5xl mx-auto pb-32">
             <!-- HERO HEADER -->
             <header class="relative mb-12 rounded-[2rem] overflow-hidden shadow-2xl group border border-white/10">
                 <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950"></div>
-                <!-- Optional Pattern Overlays -->
                 <div
                     class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay">
                 </div>
-                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full blur-[100px] opacity-20"></div>
-
                 <div class="relative z-10 p-8 lg:p-12 text-white">
                     <div class="flex items-center gap-3 mb-6">
                         <span
@@ -68,6 +88,7 @@
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ day.week.title
                             }}</span>
                     </div>
+
                     <h1
                         class="text-4xl lg:text-6xl font-display font-black leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
                         {{ day.title }}

@@ -124,16 +124,65 @@ def lesson_detail(request, course_slug, day_number):
             progress_percentage = int((completed_count / total) * 100)
 
     context = {
-        'day': day,
         'course': course,
+        'day': day,
         'next_day': next_day,
         'prev_day': prev_day,
-        'is_completed': is_completed,
-        'user_progress_percentage': progress_percentage,
-        'user_note': UserNote.objects.filter(user=request.user, day=day).first() if request.user.is_authenticated else None,
-        'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45] # Hardcoded logic for now, or import from verification.py
+        'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45],
+        # 'sidebar_data' REMOVED: Fetched via API
     }
-    return render(request, 'lesson_detail.html', context)
+    return render(request, 'lesson_detail_v4.html', context)
+
+def get_sidebar_data(request, course_slug, day_number):
+    """
+    API Endpoint to fetch sidebar data as JSON.
+    Separates UI rendering from Data Logic.
+    """
+    day = get_object_or_404(Day, number=day_number, week__course__slug=course_slug)
+    
+    sidebar_data = []
+    week_days = day.week.days.all().order_by('number')
+    
+    for d in week_days:
+        is_active = (d.number == day.number)
+        is_past = (d.number < day.number)
+        
+        # Determine CSS classes in Python (Backend Logic)
+        row_class = "group relative flex items-center gap-3 p-3 rounded-xl transition-all duration-200 border "
+        if is_active:
+            row_class += "bg-brand-50/80 dark:bg-brand-900/20 border-brand-200 dark:border-brand-500/30 shadow-sm"
+        else:
+            row_class += "hover:bg-slate-100 dark:hover:bg-white/5 border-transparent"
+            
+        icon_class = "w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors shrink-0 "
+        if is_active:
+            icon_class += "bg-brand-600 text-white shadow-lg shadow-brand-500/30"
+        elif is_past:
+             icon_class += "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+        else:
+             icon_class += "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600"
+             
+        text_class = "text-sm font-bold truncate "
+        if is_active:
+            text_class += "text-brand-900 dark:text-brand-100"
+        else:
+            text_class += "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+
+        sidebar_data.append({
+            'number': d.number,
+            'title': d.title,
+            'is_active': is_active,
+            'is_past': is_past,
+            'row_class': row_class,
+            'icon_class': icon_class,
+            'text_class': text_class,
+            'url': f"/curriculum/course/{course_slug}/day/{d.number}/" # Pre-calculate URL
+        })
+        
+    return JsonResponse({
+        'week_number': day.week.number,
+        'items': sidebar_data
+    })
 
 @login_required
 def dashboard(request):

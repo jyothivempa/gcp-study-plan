@@ -1,205 +1,128 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Mission Control | GCPMastery{% endblock %}
+{% block title %}Dashboard | GCPMastery{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-        <!-- MISSION HEADER -->
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <!-- 👋 Welcome Header -->
+    <div class="relative mb-12 rounded-3xl overflow-hidden p-8 md:p-12 shadow-2xl">
+        <!-- Background Banner -->
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-900 dark:to-indigo-900 z-0">
+        </div>
+        <div
+            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 z-0">
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">
-                    Mission Control
+                <h1 class="text-3xl md:text-5xl font-display font-black text-white mb-2">
+                    Welcome back, {{ user.username }}!
                 </h1>
-                <p class="text-slate-500 font-medium mt-1">
-                    Welcome back, <span class="text-brand-600">{{ user.username }}</span>. Status: <span
-                        class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs uppercase font-bold tracking-wider">Active</span>
+                <p class="text-brand-100 text-lg font-medium max-w-xl">
+                    You're on a roll! Keep up the momentum to reach your Cloud Engineer certification goals.
                 </p>
             </div>
 
-            <!-- Gamification HUD -->
-            <div class="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex items-center gap-2">
-                    <div
-                        class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500 animate-pulse-slow">
-                        <i class="fa-solid fa-bolt text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Streak</div>
-                        <div class="text-lg font-black text-slate-800">{{ streak_days|default:"0" }} <span
-                                class="text-xs text-slate-400 font-normal">days</span></div>
-                    </div>
-                </div>
-                <div class="w-px h-8 bg-slate-200"></div>
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                        <i class="fa-solid fa-star text-sm"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Level</div>
-                        <div class="text-lg font-black text-slate-800">{{ user_level|default:"1" }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- LEFT COLUMN: ACTIVE MISSION -->
-            <div class="lg:col-span-2 space-y-8">
-
-                <!-- NEXT LESSON CARD (HERO) -->
-                <div class="relative group perspective-1000">
-                    <div
-                        class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
-                    </div>
-                    <div
-                        class="relative bg-white rounded-xl shadow-xl border-t border-white overflow-hidden p-8 flex flex-col md:flex-row items-center gap-8">
-
-                        <div class="flex-1 space-y-4 z-10">
-                            <div
-                                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold uppercase tracking-wider border border-brand-100">
-                                <span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
-                                Current Objective
-                            </div>
-                            <h2 class="text-3xl font-black text-slate-900 leading-tight">
-                                {% if next_lesson_day %}
-                                Day {{ next_lesson_day.number }}: {{ next_lesson_day.title }}
-                                {% else %}
-                                Certification Complete!
-                                {% endif %}
-                            </h2>
-                            <p class="text-slate-600 leading-relaxed">
-                                {% if next_lesson_day %}
-                                {{ next_lesson_day.description|default:"Continue your journey to cloud mastery. This
-                                module covers critical concepts required for the exam." }}
-                                {% else %}
-                                Congratulations! You have completed the entire curriculum.
-                                {% endif %}
-                            </p>
-
-                            <div class="pt-4 flex gap-4">
-                                {% if next_lesson_day %}
-                                <a href="{% url 'lesson_detail' next_lesson_day.number %}"
-                                    class="inline-flex items-center gap-3 bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-brand-500/30 transition-all hover:scale-105 active:scale-95">
-                                    <i class="fa-solid fa-rocket"></i>
-                                    Engage Mission
-                                </a>
-                                {% else %}
-                                <a href="{% url 'certificate' %}"
-                                    class="inline-flex items-center gap-3 bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
-                                    <i class="fa-solid fa-certificate"></i>
-                                    Claim Certificate
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <!-- 3D Illustration Placeholder -->
-                        <div class="hidden md:block w-48 h-48 relative flex-none">
-                            <div class="absolute inset-0 bg-brand-100 rounded-full blur-2xl opacity-50"></div>
-                            <i
-                                class="fa-brands fa-google text-9xl text-slate-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0"></i>
-                            <i
-                                class="fa-solid fa-cloud text-8xl text-brand-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PROGRESS METRICS -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div
-                        class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:border-brand-200 transition-colors group">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Progress</div>
-                        <div
-                            class="text-3xl font-black text-brand-600 group-hover:scale-110 transition-transform origin-left">
-                            {{ completion_percent|default:"0" }}%</div>
-                        <div class="h-1.5 w-full bg-slate-100 rounded-full mt-3 overflow-hidden">
-                            <div class="h-full bg-brand-500 w-[{{ completion_percent }}%]"></div>
-                        </div>
-                    </div>
-
-                    <div
-                        class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:border-brand-200 transition-colors">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Modules Done</div>
-                        <div class="text-3xl font-black text-slate-800">{{ completed_count }}</div>
-                        <div class="text-xs text-slate-500 mt-1">out of 45</div>
-                    </div>
-
-                    <div
-                        class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:border-brand-200 transition-colors">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Time Invested</div>
-                        <div class="text-3xl font-black text-slate-800">24h</div> <!-- Placeholder -->
-                        <div class="text-xs text-slate-500 mt-1">Estimated</div>
-                    </div>
-
-                    <div
-                        class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:border-brand-200 transition-colors">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Next Milestone</div>
-                        <div class="text-3xl font-black text-slate-800">Week {{ current_week }}</div>
-                        <div class="text-xs text-slate-500 mt-1">Review</div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- RIGHT COLUMN: INTEL & RESOURCES -->
-            <div class="space-y-6">
-
-                <!-- Weekly Objective -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full -mr-4 -mt-4"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span
-                                class="w-10 h-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-lg font-bold">
-                                {{ current_week }}
-                            </span>
-                            <div>
-                                <h3 class="font-bold text-slate-900">Weekly Target</h3>
-                                <p class="text-xs text-slate-500">Week {{ current_week }} Directive</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
-                            "{{ current_week_desc }}"
-                        </p>
-                        <button
-                            class="mt-4 w-full py-2.5 text-sm font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200">
-                            View Full Schedule
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
+            <!-- Quick Stats -->
+            <div class="flex gap-4">
                 <div
-                    class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 text-white relative overflow-hidden group">
-                    <div
-                        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10">
-                    </div>
-
-                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2 relative z-10">
-                        <i class="fa-solid fa-toolbox text-brand-400"></i> Field Kit
-                    </h3>
-
-                    <div class="space-y-3 relative z-10">
-                        <a href="https://console.cloud.google.com" target="_blank"
-                            class="flex items-center justify-between p-3 rounded-lg bg-white/10 hover:bg-white/20 transition backdrop-blur-sm border border-white/5">
-                            <span class="text-sm font-medium">GCP Console</span>
-                            <i class="fa-solid fa-external-link-alt text-xs opacity-50"></i>
-                        </a>
-                        <a href="{% url 'ace_guide' %}"
-                            class="flex items-center justify-between p-3 rounded-lg bg-white/10 hover:bg-white/20 transition backdrop-blur-sm border border-white/5">
-                            <span class="text-sm font-medium">Exam Cheatsheet</span>
-                            <i class="fa-solid fa-file-alt text-xs opacity-50"></i>
-                        </a>
-                    </div>
+                    class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[100px]">
+                    <div class="text-2xl font-black text-white">{{ user.profile.current_streak }}</div>
+                    <div class="text-[10px] uppercase tracking-widest text-brand-200 font-bold">Day Streak</div>
                 </div>
-
+                <div
+                    class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[100px]">
+                    <div class="text-2xl font-black text-white">{{ user.profile.xp }}</div>
+                    <div class="text-[10px] uppercase tracking-widest text-brand-200 font-bold">Total XP</div>
+                </div>
             </div>
-
         </div>
     </div>
+
+    <!-- 📚 My Courses Grid -->
+    <h2 class="text-xl font-display font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-graduation-cap text-brand-500"></i> Active Courses
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for course in courses_in_progress %}
+        <!-- Course Card -->
+        <a href="{% url 'course_detail' course.slug %}"
+            class="group relative bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-none hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col h-full">
+
+            <!-- Card Image -->
+            <div
+                class="h-40 bg-slate-100 dark:bg-slate-800 relative overflow-hidden group-hover:h-44 transition-all duration-300">
+                <!-- Fallback Gradient if no image -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800">
+                </div>
+
+                <!-- Icon Overlay -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i
+                        class="{{ course.icon_class }} text-6xl text-slate-400/50 dark:text-white/10 group-hover:scale-110 transition-transform duration-500"></i>
+                </div>
+
+                <!-- Status Badge -->
+                <div
+                    class="absolute top-4 right-4 bg-white/90 dark:bg-black/50 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-white/20">
+                    <span class="text-brand-600 dark:text-brand-400">In Progress</span>
+                </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="mb-4">
+                    <h3
+                        class="text-xl font-display font-bold text-slate-900 dark:text-white leading-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {{ course.title }}
+                    </h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">
+                        {{ course.description }}
+                    </p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mt-auto">
+                    <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">
+                        <span>Progress</span>
+                        <span>{{ course.progress_percent|default:"0" }}%</span>
+                    </div>
+                    <div class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-indigo-500 rounded-full transition-all duration-1000"
+                            style="width: {{ course.progress_percent|default:'0' }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hover Action -->
+            <div
+                class="px-6 py-4 bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300 group-hover:bg-brand-50 dark:group-hover:bg-brand-900/20 group-hover:text-brand-700 dark:group-hover:text-brand-300 transition-colors">
+                <span>Continue Learning</span>
+                <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+        {% empty %}
+        <!-- Empty State -->
+        <div
+            class="col-span-full py-12 text-center bg-slate-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-white/10">
+            <div
+                class="w-16 h-16 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-slate-400">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">No courses started yet</h3>
+            <p class="text-slate-500 dark:text-slate-400 mb-6">Explore the catalog to begin your journey.</p>
+            <a href="{% url 'curriculum_overview' %}"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold transition shadow-lg shadow-brand-500/30">
+                Explore Curriculum <i class="fa-solid fa-rocket"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}

@@ -1,128 +1,104 @@
-﻿# SECTION 7: Week 1 - Comprehensive Review & Capstone
+﻿# Day 7: Week 1 Review & Exam Strategy
 
-> **Goal**: Verify your mastery of Fundamentals, Compute, and Storage.
+**Level:** Review  
+**Milestone:** 🏁 Week 1 Complete!
 
-## 1️⃣ Week 1 Cheat Sheet 📝
+---
 
-| Concept | Definition | Exam Key |
+## 🔁 1. Week 1 Recap
+
+Congratulations! You have set the foundation for your Cloud Career.
+
+| Day | Topic | Key Takeaway |
 | :--- | :--- | :--- |
-| **OpEx vs CapEx** | Operational (Pay-as-you-go) vs Capital (Upfront). | Cloud is **OpEx**. |
-| **Project ID** | `my-app-8821` | Globally unique. Immutable. |
-| **Zone vs Region** | Zone = Building (`us-central1-a`). Region = City (`us-central1`). | Region has 3+ Zones. |
-| **Live Migration** | Moving running VMs without downtime. | GCP Superpower (others reboot). |
-| **Spot VM** | 90% Discount. 30s Warning. | Use for stateless batch jobs. |
-| **MIG** | Managed Instance Group. | Auto-healing (recreates failed VMs). |
-| **Standard PD** | Magnetic Hard Drive. | Backup / Cold data. |
-| **Local SSD** | Ephemeral (Physical). | Fast Cache / Swap. Data dies on stop. |
-| **Storage Class** | Standard ➔ Nearline ➔ Coldline ➔ Archive. | Use **Lifecycle Policies** to move them. |
-| **Signed URL** | Temporary Key. | Secure object upload/download. |
+| **1** | **Foundations** | Cloud = Renting resources. OpEx > CapEx. IaaS/PaaS/SaaS. |
+| **2** | **Projects & Billing** | Projects isolate resources. Budgets prevent bankruptcy. |
+| **3** | **Compute Engine** | IaaS. Zones for HA. Choosing the right Machine Family. |
+| **4** | **Cloud Storage** | Object storage. Buckets are global names. Storage Classes save money. |
+| **5** | **Networking** | VPC is Global. Subnets are Regional. Firewall rules block ingress by default. |
+| **6** | **IAM** | Identity (Who) + Role (What). Least Privilege is King. |
 
 ---
 
-## 2️⃣ The "Connector" Challenge Lab 🏆
-**Scenario:** You need a Web Server (Day 2) that serves an image stored in a Private Bucket (Day 3).
+## 🧪 2. Week 1 Mock Exam (10 Questions)
 
-### Architecture
-```mermaid
-graph LR
-    User --> VM[Compute Engine VM]
-    VM -- "Service Account Auth" --> GCS[Cloud Storage Bucket]
-```
+Test your knowledge. No cheating!
 
-### Steps
-1.  **Create a Bucket:**
-    *   Name: `my-secret-assets-[YOUR_NAME]`
-    *   Upload an image `logo.png`.
-    *   **Do NOT** make it public. (Keep it private!).
-2.  **Create a VM:**
-    *   Name: `connector-vm`
-    *   **Identity and API Access:**
-        *   Service Account: **Compute Engine Default Service Account**.
-        *   Access Scopes: **Allow full access to all Cloud APIs** (easiest for lab).
-3.  **SSH into VM:**
-    *   Run: `gcloud storage cp gs://my-secret-assets-[YOUR_NAME]/logo.png .`
-    *   *Result:* It downloads! Why? Because the VM's Service Account is authorized.
-4.  **Verify:**
-    *   Run `ls`. You see `logo.png`.
-    *   You successfully connected Compute to Storage securely!
+### Question 1
+**You want to deploy a specialized database that requires massive memory (4TB+). Which Compute Engine machine family should you choose?**
+*   A. E2 (General Purpose)
+*   B. C2 (Compute Optimized)
+*   C. **M2 (Memory Optimized)** ✅
+*   D. N1 (General Purpose)
 
----
+### Question 2
+**You need to store audit logs for 7 years to meet legal regulations. You will likely never access them. Which storage class is cheapest?**
+*   A. Standard
+*   B. Nearline
+*   C. **Archive** ✅
+*   D. Coldline
 
-## 3️⃣ Week 1 Mock Exam 🧠
-<form>
-  <!-- Q1 -->
-  <div class="quiz-question" id="q1">
-    <p class="font-bold">1. You have a photo sharing app. You need to store user uploads permanently. You must be able to retrieve them instantly, but 99% of photos are rarely accessed after 30 days. Which strategy is most cost-effective?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q1" value="wrong"> Store all in Standard class.</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Store all in Archive class.</label>
-      <label class="block"><input type="radio" name="q1" value="correct"> Use Standard, then a Lifecycle Rule to move to Nearline/Coldline.</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Use Persistent Disks.</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Lifecycle rules automate cost savings based on object age.
-    </div>
-  </div>
+### Question 3
+**You created a web server VM but cannot reach it via the External IP. You confirmed the web server software is running. what is the most likely cause?**
+*   A. The VM is in the wrong Zone.
+*   B. **You forgot to create a Firewall Rule allowing Port 80.** ✅
+*   C. You need to enable Billing.
+*   D. IAM permissions are missing.
 
-  <!-- Q2 -->
-  <div class="quiz-question mt-6" id="q2">
-    <p class="font-bold">2. Which feature allows you to run a script *automatically* every time a VM creates or reboots?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q2" value="correct"> Startup Script</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> Cloud Functions</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> Cron Job</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> Metadata Server</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Startup scripts (in metadata) execute on boot.
-    </div>
-  </div>
+### Question 4
+**Which GCP resource is Global?**
+*   A. Subnet
+*   B. VM Instance
+*   C. **VPC Network** ✅
+*   D. Persistent Disk
 
-  <!-- Q3 -->
-  <div class="quiz-question mt-6" id="q3">
-    <p class="font-bold">3. You deleted a VM. You checked "Delete boot disk" when creating it. Is the data on the boot disk recoverable?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q3" value="wrong"> Yes, simple undelete operation.</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Yes, in the "Recycle Bin".</label>
-      <label class="block"><input type="radio" name="q3" value="correct"> No, unless you took a Snapshot beforehand.</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Deleting a disk is permanent. Snapshots are your only safety net.
-    </div>
-  </div>
+### Question 5
+**You need to give a contractor access to upload files to a bucket, but nothing else. What should you do?**
+*   A. Make them a Project Editor.
+*   B. **Assign the 'Storage Object Creator' role to their email on that specific bucket.** ✅
+*   C. Share your password.
+*   D. Make the bucket public.
 
-  <!-- Q4 -->
-  <div class="quiz-question mt-6" id="q4">
-    <p class="font-bold">4. A Global application needs to survive the failure of an entire Region (e.g. us-central1 goes offline). Where should you deploy?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q4" value="wrong"> Single Zone</label>
-      <label class="block"><input type="radio" name="q4" value="wrong"> Regional (Multiple Zones)</label>
-      <label class="block"><input type="radio" name="q4" value="correct"> Multi-Regional (Multiple Regions)</label>
-      <label class="block"><input type="radio" name="q4" value="wrong"> Edge PoP</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Only Multi-Region deployments survive regional failures.
-    </div>
-  </div>
-</form>
+### Question 6
+**Which pricing model offers the best discount for running a VM 24/7 for 3 years?**
+*   A. Preemptible Instances
+*   B. **Committed Use Discounts** ✅
+*   C. Sustained Use Discounts
+*   D. Free Tier
+
+### Question 7
+**True or False: A single Project can be linked to multiple Billing Accounts.**
+*   A. True
+*   B. **False** (One Project -> One Billing Account) ✅
+
+### Question 8
+**What is the difference between IaaS and PaaS?**
+*   A. IaaS is cheaper.
+*   B. **IaaS manages Infrastructure (OS/Hardware); PaaS manages the Runtime/Platform (just Code).** ✅
+*   C. PaaS is for storage only.
+
+### Question 9
+**Which firewall rule allows traffic from ANYWHERE?**
+*   A. Source: 127.0.0.1
+*   B. **Source: 0.0.0.0/0** ✅
+*   C. Source: 192.168.0.0/16
+
+### Question 10
+**What is a Service Account?**
+*   A. A support ticket.
+*   B. **A special account used by an application or VM/Robot to interact with GCP.** ✅
+*   C. An administrator account.
 
 ---
 
-### 🎓 Congratulations!
-You have completed **Week 1** of the GCP Master Plan.
-**Next Week:** We construct the piping of the cloud: **VPC Networking (Sections 8-12)**.
+## 🏆 3. What's Next? Week 2!
 
-<!-- FLASHCARDS
-[
-  {"term": "CapEx", "def": "Capital Expenditure. Upfront cost (like buying a server)."},
-  {"term": "OpEx", "def": "Operational Expenditure. Pay-as-you-go (like Cloud)."},
-  {"term": "Zone", "def": "A deployment area within a region (e.g., us-central1-a)."},
-  {"term": "Region", "def": "A geographical location containing 3+ Zones (e.g., us-central1)."},
-  {"term": "Project ID", "def": "Globally unique, immutable identifier for your project."},
-  {"term": "IAM Role", "def": "A collection of permissions. You grant Roles to Principals."},
-  {"term": "Spot VM", "def": "highly discounted VM that can be preempted with 30s notice."},
-  {"term": "Live Migration", "def": "GCP ability to move running VMs to new hardware without downtime."},
-  {"term": "Standard Storage", "def": "Hot data, no retrieval cost, expensive storage."},
-  {"term": "Nearline Storage", "def": "Backup data, 30-day minimum, low retrieval cost."}
-]
--->
+Week 2 gets serious. We move from "Basics" to "Management".
+
+*   **Managed Instance Groups (MIGs):** Auto-scaling your VMs.
+*   **Load Balancing:** Distributing traffic globally.
+*   **Cloud SQL:** Managed Databases.
+*   **App Engine & Cloud Run:** Serverless computing.
+
+> **🎉 Take a break! You earned it.**
+

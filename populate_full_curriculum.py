@@ -1,6 +1,11 @@
 import os
 import django
 import sys
+import codecs
+
+# Force utf-8 for stdout/stderr to handle emojis on Windows
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
 
 # Setup Django Environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gcp_study_plan.settings')
