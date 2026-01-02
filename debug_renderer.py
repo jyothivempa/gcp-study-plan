@@ -35,17 +35,26 @@ def debug_view():
             else:
                  print("TEMPLATE VERIFICATION: FAIL (Did not find Alpine.js code)")
 
-            # Check for raw tags cleaning (Sidebar & Header)
-            if "{{ day.week.number }}" in content or "{{ day.week.title }}" in content:
-                 print("CLEANLINESS VERIFICATION: FAIL (Found raw template tag)")
+            # REDESIGN VERIFICATION
+            if '<link rel="stylesheet" href="/static/css/reader.css">' in content:
+                 print("DESIGN VERIFICATION: PASS (Found reader.css)")
             else:
-                 print("CLEANLINESS VERIFICATION: PASS (No raw tags found)")
-                 
-            # HEADER VERIFICATION
-            if '<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Week 1</span>' in content:
-                 print("HEADER VERIFICATION: PASS (Found 'Week 1' title)")
+                 print("DESIGN VERIFICATION: FAIL (Missing reader.css)")
+
+            if 'reader-container' in content:
+                 print("LAYOUT VERIFICATION: PASS (Found 'reader-container' class)")
             else:
-                 print("HEADER VERIFICATION: FAIL (Did not find correct Week Title in header)")
+                 print("LAYOUT VERIFICATION: FAIL (Missing 800px reader container)")
+
+            if 'id="toc-nav"' in content:
+                 print("TOC VERIFICATION: PASS (Found Table of Contents container)")
+            else:
+                  print("TOC VERIFICATION: FAIL (Missing TOC)")
+
+            if 'id="reading-progress"' in content:
+                 print("PROGRESS VERIFICATION: PASS (Found Reading Progress Bar)")
+            else:
+                 print("PROGRESS VERIFICATION: FAIL (Missing Progress Bar)")
         else:
             print("Render Failed (Status != 200)")
             print(response.content.decode()[:500])

@@ -132,7 +132,7 @@ def lesson_detail(request, course_slug, day_number):
         'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45],
         'week_title': f"Week {day.week.number}" # Fix for missing title field on Week model
     }
-    return render(request, 'lesson_detail_v4.html', context)
+    return render(request, 'lesson_detail_v5.html', context)
 
 def get_sidebar_data(request, course_slug, day_number):
     """
