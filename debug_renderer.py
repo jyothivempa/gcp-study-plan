@@ -14,9 +14,9 @@ def debug_view():
     c = Client()
     
     # 1. PAGE VERIFICATION
-    print("\n[1] Fetching Lesson Page (Day 1)...")
+    print("\n[1] Fetching Lesson Page (Day 7)...")
     try:
-        response = c.get('/curriculum/course/gcp/day/1/', HTTP_HOST='127.0.0.1')
+        response = c.get('/curriculum/course/gcp/day/7/', HTTP_HOST='127.0.0.1')
         print(f"Status Code: {response.status_code}")
         
         if response.status_code == 200:
@@ -55,6 +55,17 @@ def debug_view():
                  print("PROGRESS VERIFICATION: PASS (Found Reading Progress Bar)")
             else:
                  print("PROGRESS VERIFICATION: FAIL (Missing Progress Bar)")
+
+            # CONTENT RESTORATION VERIFICATION
+            if 'id="labs"' in content:
+                 print("LABS VERIFICATION: PASS (Found Hands-on Lab Section)")
+            else:
+                 print("LABS VERIFICATION: FAIL (Missing Labs)")
+                 
+            if 'id="quiz"' in content:
+                 print("QUIZ VERIFICATION: PASS (Found Quiz Section)")
+            else:
+                 print("QUIZ VERIFICATION: FAIL (Missing Quiz)")
         else:
             print("Render Failed (Status != 200)")
             print(response.content.decode()[:500])
