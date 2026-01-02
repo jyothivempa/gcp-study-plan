@@ -6,11 +6,30 @@
 {% block title %}Day {{ day.number }}: {{ day.title }} <!-- V8 FINAL FIX -->{% endblock %}
 
 {% block content %}
-<div class="flex h-full" x-data="{ sidebarOpen: false }">
+<div class="flex h-full" x-data="{ mobileSidebarOpen: false }">
+
+    <!-- MOBILE HAMBURGER BUTTON -->
+    <button @click="mobileSidebarOpen = !mobileSidebarOpen"
+        class="fixed top-20 left-4 z-50 lg:hidden w-12 h-12 rounded-xl bg-brand-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+        :aria-label="mobileSidebarOpen ? 'Close menu' : 'Open menu'" :class="mobileSidebarOpen ? 'rotate-90' : ''">
+        <i class="fa-solid" :class="mobileSidebarOpen ? 'fa-times' : 'fa-bars'"></i>
+    </button>
+
+    <!-- MOBILE OVERLAY -->
+    <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false"
+        x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" style="display: none;"></div>
 
     <!-- 1. SIDEBAR -->
     <aside
-        class="w-80 hidden lg:flex flex-col h-[calc(100vh-5rem)] sticky top-4 ml-4 rounded-3xl glass-panel border border-white/20 shadow-2xl shrink-0 z-30 overflow-hidden transition-colors">
+        class="w-80 flex flex-col h-[calc(100vh-5rem)] sticky top-4 ml-4 rounded-3xl glass-panel border border-white/20 shadow-2xl shrink-0 overflow-hidden transition-all duration-300"
+        :class="{
+            'fixed left-0 top-0 h-screen m-4 z-50 lg:static lg:z-30': true,
+            '-translate-x-[calc(100%+2rem)] lg:translate-x-0': !mobileSidebarOpen,
+            'translate-x-0': mobileSidebarOpen
+        }">
 
         <!-- Header -->
         <div
@@ -220,4 +239,4 @@
 <!-- Scripts -->
 <script src="{% static 'js/course_player_v4.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-{% endblock %}
+{% endblock %}02-01-2026 18:25:44
