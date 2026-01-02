@@ -17,7 +17,9 @@ from curriculum.models import Day, QuizQuestion
 def update_day_1():
     print("🚀 Updating Day 1 Content (Polished Version)...")
     
-    file_path = r"d:\ultimateCode\gcp_study_plan\curriculum\content\section_1_cloud_foundations.md"
+    # Calculate base path relative to this script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, "curriculum", "content", "section_1_cloud_foundations.md")
     
     if not os.path.exists(file_path):
         print(f"❌ File not found: {file_path}")

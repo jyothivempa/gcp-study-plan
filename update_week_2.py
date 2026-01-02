@@ -101,7 +101,9 @@ DAYS_CONFIG = {
 
 def update_week2():
     print("🚀 Updating Week 2 Content (Days 8-14)...")
-    base_path = r"d:\ultimateCode\gcp_study_plan\curriculum\content"
+    # Calculate base path relative to this script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(current_dir, "curriculum", "content")
     
     for day_num, config in DAYS_CONFIG.items():
         print(f"\nProcessing Day {day_num}...")
