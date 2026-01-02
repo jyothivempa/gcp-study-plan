@@ -100,9 +100,29 @@ It runs **Stateless Containers**.
 
 ---
 
-## ✅ Day 13 Checklist
-
-- [ ] I know what Serverless means.
-- [ ] I understand why Containers are portable.
-- [ ] I deployed the `hello` container on Cloud Run.
-- [ ] I accessed the public URL.
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I know what Serverless means.', checked: false },
+        { text: 'I understand why Containers are portable.', checked: false },
+        { text: 'I deployed the hello container on Cloud Run.', checked: false },
+        { text: 'I accessed the public URL.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 13 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

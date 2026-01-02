@@ -184,10 +184,30 @@ Don't fall for these common misconceptions on the ACE exam:
 
 ---
 
-## ✅ Day 2 Checklist
-
-- [ ] I can explain what a GCP Project is.
-- [ ] I understand how Billing Accounts link to Projects.
-- [ ] I have created my first Project (`gcp-learning-day2`).
-- [ ] I have set up a Budget to track spending.
-- [ ] I completed the Quiz.
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I can explain what a GCP Project is.', checked: false },
+        { text: 'I understand how Billing Accounts link to Projects.', checked: false },
+        { text: 'I have created my first Project (gcp-learning-day2).', checked: false },
+        { text: 'I have set up a Budget to track spending.', checked: false },
+        { text: 'I completed the Quiz.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 2 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

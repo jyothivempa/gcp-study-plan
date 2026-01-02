@@ -107,9 +107,29 @@ You need rules to open ports.
 
 ---
 
-## ✅ Day 24 Checklist
-
-- [ ] I understand how Priorities work.
-- [ ] I created a VM with no Public IP.
-- [ ] I set up the IAP firewall rule (`35.235.240.0/20`).
-- [ ] I used IAP to SSH.
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I understand how Priorities work.', checked: false },
+        { text: 'I created a VM with no Public IP.', checked: false },
+        { text: 'I set up the IAP firewall rule (35.235.240.0/20).', checked: false },
+        { text: 'I used IAP to SSH.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 24 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

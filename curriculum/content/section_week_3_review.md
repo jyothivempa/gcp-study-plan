@@ -109,11 +109,32 @@ We covered a lot of advanced ground this week. Here is the translation guide:
 *   D. Yes, by using a cron job to delete the user every night.
 > **Correct Answer: B.** *IAM Conditions allows you to add logic (Time, Date, IP) to allowance policies.*
 
-## ✅ Confidence Checklist
-*   [ ] I know the difference between a Principal, a Role, and a Policy.
-*   [ ] I know WHY using JSON keys is dangerous (and what to do instead).
-*   [ ] I can write a basic Log-Based Alert.
-*   [ ] I passed the mock exam (8/10).
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I know the difference between a Principal, a Role, and a Policy.', checked: false },
+        { text: 'I know WHY using JSON keys is dangerous (and what to do instead).', checked: false },
+        { text: 'I can write a basic Log-Based Alert.', checked: false },
+        { text: 'I passed the mock exam (8/10).', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Confidence Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>
 
 **READY?**
 If you passed, get ready for **Week 4: Serverless & Data**. We are leaving infrastructure behind and moving to pure code!
