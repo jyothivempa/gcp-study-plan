@@ -81,6 +81,7 @@ graph TD
 
 ---
 
+<!--
 ## 5️⃣ Checkpoint Quiz
 <form>
   <!-- Q1 -->
@@ -124,6 +125,7 @@ graph TD
     </div>
   </div>
 </form>
+-->
 
 ---
 
