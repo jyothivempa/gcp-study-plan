@@ -12,13 +12,13 @@ days:
   # --- WEEK 1: Core Infrastructure (Days 1-7) ---
   - number: 1
     week: 1
-    file: "section_1_cloud_fundamentals.md"
+    file: "section_1_cloud_foundations.md"
     title: "Cloud Fundamentals & The Google Difference"
     outcome: "Understand Cloud Computing Models"
     
   - number: 2
     week: 1
-    file: "section_2_gcp_hierarchy.md"
+    file: "section_2_gcp_structure.md"
     title: "Global Infrastructure & Resource Hierarchy"
     outcome: "Navigate GCP Resource Hierarchy"
     
@@ -61,7 +61,7 @@ days:
     
   - number: 9
     week: 2
-    file: "section_9_load_balancers.md"
+    file: "section_9_load_balancing.md"
     title: "Load Balancing & CDN"
     outcome: "Configure Load Balancers & Cloud CDN"
     
@@ -73,9 +73,9 @@ days:
     
   - number: 11
     week: 2
-    file: "section_11_networking.md"
-    title: "VPC Networking Deep Dive"
-    outcome: "Configure VPCs, Subnets & Firewalls"
+    file: "section_11_storage_advanced.md"
+    title: "Storage Advanced (Lifecycle, Transfer, Signed URLs)"
+    outcome: "Optimize Storage & Secure Access"
     
   - number: 12
     week: 2
@@ -104,7 +104,7 @@ days:
     
   - number: 16
     week: 3
-    file: "section_16_gke_intro.md"
+    file: "section_16_kubernetes_arch.md"
     title: "GKE (Google Kubernetes Engine) Intro"
     outcome: "Understand Kubernetes & GKE Basics"
     
@@ -116,19 +116,19 @@ days:
     
   - number: 18
     week: 3
-    file: "section_18_deployments.md"
+    file: "section_18_workloads.md"
     title: "Deployments & Services in GKE"
     outcome: "Deploy & Expose Applications in GKE"
     
   - number: 19
     week: 3
-    file: "section_19_stateful_sets.md"
+    file: "section_19_services.md"
     title: "StatefulSets & Persistent Volumes"
     outcome: "Manage Stateful Workloads in Kubernetes"
     
   - number: 20
     week: 3
-    file: "section_20_configmaps.md"
+    file: "section_20_config_secrets.md"
     title: "ConfigMaps & Secrets"
     outcome: "Manage Configuration & Sensitive Data"
     
@@ -165,7 +165,7 @@ days:
     
   - number: 26
     week: 4
-    file: "section_26_billing.md"
+    file: "section_26_billing_management.md"
     title: "Billing & Resource Management"
     outcome: "Manage Costs & Budgets"
     
@@ -202,7 +202,7 @@ days:
     
   - number: 32
     week: 5
-    file: "section_32_dataflow.md"
+    file: "section_32_dataflow_dataproc.md"
     title: "Dataflow (Stream/Batch Processing)"
     outcome: "Process Data Pipelines"
     
@@ -282,6 +282,6 @@ days:
     
   - number: 45
     week: 7
-    file: "section_45_exam_tips.md"
+    file: "section_45_exam_strategy.md"
     title: "Final Exam Tips & Resources"
     outcome: "Prepare for Certification Exam"
