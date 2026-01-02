@@ -123,13 +123,14 @@ def lesson_detail(request, course_slug, day_number):
             ).count()
             progress_percentage = int((completed_count / total) * 100)
 
+
     context = {
         'course': course,
         'day': day,
         'next_day': next_day,
         'prev_day': prev_day,
         'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45],
-        # 'sidebar_data' REMOVED: Fetched via API
+        'week_title': f"Week {day.week.number}" # Fix for missing title field on Week model
     }
     return render(request, 'lesson_detail_v4.html', context)
 

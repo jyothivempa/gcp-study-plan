@@ -35,11 +35,17 @@ def debug_view():
             else:
                  print("TEMPLATE VERIFICATION: FAIL (Did not find Alpine.js code)")
 
-            # Check for raw tags cleaning
-            if "{{ day.week.number }}" in content:
+            # Check for raw tags cleaning (Sidebar & Header)
+            if "{{ day.week.number }}" in content or "{{ day.week.title }}" in content:
                  print("CLEANLINESS VERIFICATION: FAIL (Found raw template tag)")
             else:
-                 print("CLEANLINESS VERIFICATION: PASS (No raw sidebar tags found)")
+                 print("CLEANLINESS VERIFICATION: PASS (No raw tags found)")
+                 
+            # HEADER VERIFICATION
+            if '<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Week 1</span>' in content:
+                 print("HEADER VERIFICATION: PASS (Found 'Week 1' title)")
+            else:
+                 print("HEADER VERIFICATION: FAIL (Did not find correct Week Title in header)")
         else:
             print("Render Failed (Status != 200)")
             print(response.content.decode()[:500])
