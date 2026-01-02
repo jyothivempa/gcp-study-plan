@@ -317,7 +317,31 @@
     <!-- Mermaid -->
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+
+        // Initialize Mermaid with custom config
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: document.documentElement.classList.contains('dark') ? 'dark' : 'neutral'
+        });
+
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Find all code blocks with class 'language-mermaid'
+            const mermaidBlocks = document.querySelectorAll('code.language-mermaid');
+
+            mermaidBlocks.forEach((block, index) => {
+                // Create a new div to hold the rendered diagram
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mermaid';
+                wrapper.textContent = block.textContent;
+
+                // Replace the code block with the mermaid div
+                block.parentElement.replaceWith(wrapper);
+            });
+
+            // Render all mermaid diagrams
+            mermaid.run();
+        });
     </script>
 
     {% block extra_js %}{% endblock %}
