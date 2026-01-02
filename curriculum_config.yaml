@@ -1,0 +1,287 @@
+# GCP Study Plan Curriculum Configuration
+# This file defines the structure of the 45-day GCP certification curriculum
+
+course:
+  slug: "gcp"
+  name: "GCP Associate Cloud Engineer"
+  description: "Master Google Cloud in 45 Days"
+
+# Week and Day configuration
+# Days are numbered 1-45, organized into 7 weeks
+days:
+  # --- WEEK 1: Core Infrastructure (Days 1-7) ---
+  - number: 1
+    week: 1
+    file: "section_1_cloud_fundamentals.md"
+    title: "Cloud Fundamentals & The Google Difference"
+    outcome: "Understand Cloud Computing Models"
+    
+  - number: 2
+    week: 1
+    file: "section_2_gcp_hierarchy.md"
+    title: "Global Infrastructure & Resource Hierarchy"
+    outcome: "Navigate GCP Resource Hierarchy"
+    
+  - number: 3
+    week: 1
+    file: "section_3_compute_engine.md"
+    title: "Compute Engine (VMs) & Machine Types"
+    outcome: "Deploy & Manage Compute Engine VMs (IaaS)"
+    
+  - number: 4
+    week: 1
+    file: "section_4_cloud_storage.md"
+    title: "Cloud Storage (GCS) & Storage Classes"
+    outcome: "Manage Cloud Storage Buckets & Objects"
+    
+  - number: 5
+    week: 1
+    file: "section_5_storage_basics.md"
+    title: "Block Storage (Disks)"
+    outcome: "Understand Block Storage (Persistent Disks & Local SSD)"
+    
+  - number: 6
+    week: 1
+    file: "section_6_iam_identity.md"
+    title: "IAM (Identity & Access Management)"
+    outcome: "Manage IAM Principals, Roles & Policies"
+    
+  - number: 7
+    week: 1
+    file: "section_7_week_1_review.md"
+    title: "Week 1 Review & Exam Strategy"
+    outcome: "Week 1 Review & Exam Readiness"
+    
+  # --- WEEK 2: Compute & Containerization (Days 8-14) ---
+  - number: 8
+    week: 2
+    file: "section_8_instance_groups.md"
+    title: "Instance Groups & Auto-healing"
+    outcome: "Manage Instance Groups & Auto-scaling"
+    
+  - number: 9
+    week: 2
+    file: "section_9_load_balancers.md"
+    title: "Load Balancing & CDN"
+    outcome: "Configure Load Balancers & Cloud CDN"
+    
+  - number: 10
+    week: 2
+    file: "section_10_cloud_sql.md"
+    title: "Cloud SQL (Managed Relational Databases)"
+    outcome: "Deploy & Manage Cloud SQL Instances"
+    
+  - number: 11
+    week: 2
+    file: "section_11_networking.md"
+    title: "VPC Networking Deep Dive"
+    outcome: "Configure VPCs, Subnets & Firewalls"
+    
+  - number: 12
+    week: 2
+    file: "section_12_app_engine.md"
+    title: "App Engine (Standard vs Flexible)"
+    outcome: "Deploy Applications on App Engine (PaaS)"
+    
+  - number: 13
+    week: 2
+    file: "section_13_cloud_run.md"
+    title: "Cloud Run (Serverless Containers)"
+    outcome: "Deploy Containerized Apps on Cloud Run"
+    
+  - number: 14
+    week: 2
+    file: "section_14_week_2_review.md"
+    title: "Week 2 Review & Azure/AWS Comparison"
+    outcome: "Week 2 Review & Cross-Cloud Mapping"
+    
+  # --- WEEK 3: Containerization & Orchestration (Days 15-21) ---
+  - number: 15
+    week: 3
+    file: "section_15_containers.md"
+    title: "Docker & Containers 101"
+    outcome: "Build & Run Docker Containers"
+    
+  - number: 16
+    week: 3
+    file: "section_16_gke_intro.md"
+    title: "GKE (Google Kubernetes Engine) Intro"
+    outcome: "Understand Kubernetes & GKE Basics"
+    
+  - number: 17
+    week: 3
+    file: "section_17_gke_modes.md"
+    title: "GKE Modes (Standard vs Autopilot)"
+    outcome: "Compare GKE Standard & Autopilot Modes"
+    
+  - number: 18
+    week: 3
+    file: "section_18_deployments.md"
+    title: "Deployments & Services in GKE"
+    outcome: "Deploy & Expose Applications in GKE"
+    
+  - number: 19
+    week: 3
+    file: "section_19_stateful_sets.md"
+    title: "StatefulSets & Persistent Volumes"
+    outcome: "Manage Stateful Workloads in Kubernetes"
+    
+  - number: 20
+    week: 3
+    file: "section_20_configmaps.md"
+    title: "ConfigMaps & Secrets"
+    outcome: "Manage Configuration & Sensitive Data"
+    
+  - number: 21
+    week: 3
+    file: "section_21_week_3_review.md"
+    title: "Week 3 Review & Exam Strategy"
+    outcome: "Kubernetes Deep Dive Review"
+    
+  # --- WEEK 4: Cloud Operations & Management (Days 22-28) ---
+  - number: 22
+    week: 4
+    file: "section_22_cloud_ops.md"
+    title: "Cloud Operations (Monitoring & Logging)"
+    outcome: "Monitor & Log Applications"
+    
+  - number: 23
+    week: 4
+    file: "section_23_cloud_functions.md"
+    title: "Cloud Functions (Serverless Functions)"
+    outcome: "Build Event-Driven Functions"
+    
+  - number: 24
+    week: 4
+    file: "section_24_network_security.md"
+    title: "Network Security (Firewalls & IAP)"
+    outcome: "Secure Network Traffic & Access"
+    
+  - number: 25
+    week: 4
+    file: "section_25_cloud_armor.md"
+    title: "Cloud Armor & DDoS Protection"
+    outcome: "Protect Applications from Attacks"
+    
+  - number: 26
+    week: 4
+    file: "section_26_billing.md"
+    title: "Billing & Resource Management"
+    outcome: "Manage Costs & Budgets"
+    
+  - number: 27
+    week: 4
+    file: "section_27_cloud_build.md"
+    title: "Cloud Build & CI/CD"
+    outcome: "Automate Build & Deployment Pipelines"
+    
+  - number: 28
+    week: 4
+    file: "section_28_week_4_review.md"
+    title: "Week 4 Review & Exam Strategy"
+    outcome: "Operations & Security Review"
+    
+  # --- WEEK 5: Advanced Services & Data (Days 29-35) ---
+  - number: 29
+    week: 5
+    file: "section_29_architect_case_studies.md"
+    title: "Architect Case Studies"
+    outcome: "Analyze Real-World GCP Architectures"
+    
+  - number: 30
+    week: 5
+    file: "section_30_bigquery.md"
+    title: "BigQuery (Data Warehouse)"
+    outcome: "Query & Analyze Big Data"
+    
+  - number: 31
+    week: 5
+    file: "section_31_pubsub.md"
+    title: "Pub/Sub (Messaging)"
+    outcome: "Build Event-Driven Architectures"
+    
+  - number: 32
+    week: 5
+    file: "section_32_dataflow.md"
+    title: "Dataflow (Stream/Batch Processing)"
+    outcome: "Process Data Pipelines"
+    
+  - number: 33
+    week: 5
+    file: "section_33_hybrid_connectivity.md"
+    title: "Hybrid & Multi-Cloud Connectivity"
+    outcome: "Connect On-Premises to GCP"
+    
+  - number: 34
+    week: 5
+    file: "section_34_db_migration.md"
+    title: "Database Migration Service"
+    outcome: "Migrate Databases to GCP"
+    
+  - number: 35
+    week: 5
+    file: "section_35_week_5_review.md"
+    title: "Week 5 Review & Advanced Topics"
+    outcome: "Data & Hybrid Cloud Review"
+    
+  # --- WEEK 6: Capstone Projects (Days 36-42) ---
+  - number: 36
+    week: 6
+    file: "section_36_sre_ops.md"
+    title: "SRE & Operations Best Practices"
+    outcome: "Apply Site Reliability Engineering Principles"
+    
+  - number: 37
+    week: 6
+    file: "section_37_finops.md"
+    title: "FinOps & Cost Optimization"
+    outcome: "Optimize Cloud Spending"
+    
+  - number: 38
+    week: 6
+    file: "section_38_network_capstone.md"
+    title: "Network Capstone Project"
+    outcome: "Design Multi-Region Network Architecture"
+    
+  - number: 39
+    week: 6
+    file: "section_39_security_capstone.md"
+    title: "Security Capstone Project"
+    outcome: "Implement Defense-in-Depth Security"
+    
+  - number: 40
+    week: 6
+    file: "section_40_devops_capstone.md"
+    title: "DevOps Capstone Project"
+    outcome: "Build Complete CI/CD Pipeline"
+    
+  - number: 41
+    week: 6
+    file: "section_41_data_capstone.md"
+    title: "Data Engineering Capstone"
+    outcome: "Design Data Processing Pipeline"
+    
+  - number: 42
+    week: 6
+    file: "section_42_week_6_review.md"
+    title: "Week 6 Review & Capstone Retrospective"
+    outcome: "Reflect on Capstone Projects"
+    
+  # --- WEEK 7: Exam Preparation (Days 43-45) ---
+  - number: 43
+    week: 7
+    file: "section_43_mock_exam_1.md"
+    title: "Mock Exam #1"
+    outcome: "Full-Length Practice Exam"
+    
+  - number: 44
+    week: 7
+    file: "section_44_mock_exam_2.md"
+    title: "Mock Exam #2"
+    outcome: "Additional Practice Exam"
+    
+  - number: 45
+    week: 7
+    file: "section_45_exam_tips.md"
+    title: "Final Exam Tips & Resources"
+    outcome: "Prepare for Certification Exam"
