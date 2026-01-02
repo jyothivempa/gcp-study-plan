@@ -129,7 +129,9 @@ Now any VM in this VPC can receive web traffic!
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">
             <div class="checklist-box" :class="{ 'checked': item.checked }">
-                <i class="fa-solid fa-check text-white text-xs"></i>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
             </div>
             <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
         </div>

@@ -265,11 +265,12 @@
 .checklist-box.checked {
     background: #635bff;
     border-color: #635bff;
+    box-shadow: 0 2px 5px rgba(99, 91, 255, 0.4);
 }
 
 .checklist-box svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     color: white;
     opacity: 0;
     transform: scale(0.5);
