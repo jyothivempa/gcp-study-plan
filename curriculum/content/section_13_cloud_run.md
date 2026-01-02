@@ -2,110 +2,130 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (The future of Google Cloud)
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (The Future of Computing)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 13, learners will be able to:
-*   **Explain** what "Serverless Container" means.
-*   **Compare** Cloud Run vs App Engine.
-*   **Deploy** a pre-built container image.
+By the end of Day 13, you will be able to:
+*   **Explain** the "Serverless Container" model.
+*   **Compare** Cloud Run with App Engine and GKE.
+*   **Deploy** applications from container images.
+*   **Manage** concurrency and scaling settings.
 
 ---
 
-## 🧠 1. What Is Cloud Run?
+## 🧠 1. What is Cloud Run?
 
-**Cloud Run** is the modern sweet spot between App Engine (easy) and Kubernetes (powerful).
+**Cloud Run** is the "sweet spot" of Google Cloud. It gives you the flexibility of containers (Docker) with the ease of serverless (App Engine).
 
-It runs **Stateless Containers**.
-*   **Serverless:** No servers to manage. Scales to zero.
-*   **Containerized:** You bring a Docker container. Google runs it.
+### The Developer Workflow
+Unlike App Engine, you don't send source code. You send a **Container Image**.
 
-**Why is it popular?** You can write code in ANY language, package it as a container, and Google runs it just like App Engine, but without the "Sandbox" restrictions.
+```mermaid
+graph LR
+    Code[💻 Your Code] --> Docker[🐳 Docker Build]
+    Docker --> Registry[📦 Artifact Registry]
+    Registry --> Run[🚀 Cloud Run]
+    
+    style Registry fill:#fdf4ff,stroke:#a21caf
+    style Run fill:#ecfdf5,stroke:#10b981,stroke-width:2px
+```
 
----
-
-## 🏪 2. Real-World Analogy: The Pop-Up Store
-
-*   **App Engine:** Detailed Resort. You follow their rules (Dinner at 7 PM).
-*   **Kubernetes (GKE):** Buying a Mall. You manage electricity, security, rent.
-*   **Cloud Run:** A **Pop-Up Store**.
-    *   You bring your own "Box" (Container) with your goods.
-    *   Google gives you a spot on the street.
-    *   If 100 customers come, Google instantly clones your box 100 times.
-    *   If no customers come, your box disappears (Cost: $0).
-
----
-
-## ⚔️ 3. Cloud Run vs App Engine (Exam Key)
-
-| Feature | App Engine (Standard) | Cloud Run |
-| :--- | :--- | :--- |
-| **Unit of Deployment** | Source Code | **Container Image** |
-| **Portability** | Hard (Google specific) | **Easy** (Run anywhere Docker runs) |
-| **Scaling** | Fast | **Lightning Fast** (Concurrency) |
-| **Recommendation** | Legacy Web Apps | **Modern Microservices** |
-
-> **🎯 ACE Tip:** If the question mentions "Container", "Serverless", and "Portable" → **Cloud Run**.
+**Key Benefits:**
+*   **Portability:** If you hate GCP tomorrow, you can take your container and run it on AWS or your own laptop. No "lock-in".
+*   **Zero Infrastructure:** No clusters to manage. No VMs to patch.
+*   **Scale to Zero:** You only pay while your code is actually running.
 
 ---
 
-## 🛠️ 4. Hands-On Lab: Deploy a Container
+## 🏪 2. The Analogy: The Pop-Up Store
 
-**🧪 Lab Objective:** Deploy a public sample container in 30 seconds.
-
-### ✅ Steps
-
-1.  **Open Console:** Go to **Cloud Run**.
-2.  **Create:** Click **Create Service**.
-3.  **Config:**
-    *   **Container Image URL:** `us-docker.pkg.dev/cloudrun/container/hello` (Google's demo image).
-    *   **Service Name:** `hello-run`.
-    *   **Region:** `us-central1`.
-4.  **Security (Important):**
-    *   Select **"Allow unauthenticated invocations"**. (This makes it public).
-5.  **Create:** Click Create.
-6.  **Verify:** Wait 10 seconds. Click the generated URL.
-    *   Boom! You have a global, auto-scaling website running SSL.
+*   **App Engine:** A managed Food Court. You can only use their kitchens and menus.
+*   **Kubernetes (GKE):** Owning a Restaurant Building. You manage the plumbing, the staff, and the taxes.
+*   **Cloud Run:** A **Pop-Up Food Truck**. 
+    *   You bring your own kitchen (Container).
+    *   Google provides the parking spot and the electricity.
+    *   If no customers show up, the truck disappears and you pay $0.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## ⚡ 3. Scaling & Concurrency
 
-1.  **What is the deployment unit for Cloud Run?**
-    *   A. ZIP file of code
-    *   B. **Container Image** ✅
-    *   C. VM Image
+Cloud Run scales differently than VMs. It uses **Concurrency**.
 
-2.  **Can Cloud Run scale to zero?**
-    *   A. **Yes** ✅
-    *   B. No, min 1 instance.
+```mermaid
+graph TD
+    User([Users]) -- "Request 1 to 80" --> Inst1[Instance 1]
+    User -- "Request 81" --> Inst2[Instance 2]
+    
+    subgraph Scale [Horizontal Scaling]
+        Inst1
+        Inst2
+    end
+    
+    style Inst1 fill:#f0f9ff,stroke:#0369a1
+    style Inst2 fill:#f1f5f9,stroke:#64748b
+```
 
-3.  **What does "Stateless" mean?**
-    *   A. The app has no memory.
-    *   B. **The app doesn't save local data between requests (Files are lost on restart).** ✅
-    *   C. The app runs in US states.
+> [!TIP]
+> **Concurrency:** A single Cloud Run instance can handle up to **1000 requests** at the same time (default is 80). This makes it much faster at scaling than traditional VMs.
 
-4.  **You have a Docker container that listens on Port 8080. You want to run it without managing nodes. Which service?**
-    *   A. GKE (Kubernetes) - (Requires managing cluster)
-    *   B. Compute Engine
-    *   C. **Cloud Run** ✅
+> [!IMPORTANT]
+> **Statelessness:** Your app **must** be stateless. If you save a file to the local disk, it will be DELETED when the instance scales down to zero. Always save data to **Cloud SQL** or **Firestore**.
 
-5.  **Cloud Run is built on which open-source standard?**
-    *   A. Docker Swarm
-    *   B. **Knative** ✅
-    *   C. Terraform
+---
+
+## 🛠️ 4. Hands-Hands Lab: 60-Second Deployment
+
+**🧪 Lab Objective:** Experience the speed of Cloud Run by deploying a public image.
+
+### ✅ Step 1: Create the Service
+1.  Go to **Cloud Run** in the Console.
+2.  Click **CREATE SERVICE**.
+3.  **Container Image:** `us-docker.pkg.dev/cloudrun/container/hello`
+4.  **Service Name:** `hello-gcp-hero`.
+5.  **Region:** Choose your nearest region.
+
+### ✅ Step 2: Configure Traffic
+1.  Authentication: Select **"Allow unauthenticated invocations"**.
+2.  Click **CREATE**.
+
+### ✅ Step 3: Test Scaling
+1.  Once the URL appears, click it. 
+2.  Observe the "Hello World" screen.
+3.  Refresh rapidly. You are seeing the power of a global serverless endpoint.
+
+---
+
+## 📝 5. Checkpoint Quiz
+
+1.  **Which GCP service allows you to run a custom Docker container in a serverless environment that scales to zero?**
+    *   A. App Engine Standard
+    *   B. **Cloud Run** ✅
+    *   C. Compute Engine
+    *   D. GKE Autopilot
+
+2.  **What is the maximum number of concurrent requests a single Cloud Run instance can handle by default?**
+    *   A. 1
+    *   B. **80** ✅
+    *   C. 1000
+    *   D. Unlimited
+
+3.  **You have a legacy Python 2.7 app that doesn't use Docker. Which service is the easiest to "lift and shift"?**
+    *   A. Cloud Run
+    *   B. **App Engine Standard** ✅
+    *   C. Cloud Functions
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I know what Serverless means.', checked: false },
         { text: 'I understand why Containers are portable.', checked: false },
-        { text: 'I deployed the hello container on Cloud Run.', checked: false },
-        { text: 'I accessed the public URL.', checked: false }
+        { text: 'I can explain Clound Runs Scale-to-Zero pricing.', checked: false },
+        { text: 'I successfully deployed a container image.', checked: false },
+        { text: 'I know that Cloud Run is built on Knative.', checked: false }
     ]
 }">
     <h3>

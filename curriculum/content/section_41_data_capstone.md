@@ -1,109 +1,175 @@
-# SECTION 34: Data Capstone (The Slow Report)
+# Day 41: Data Capstone (The $50 Query Rescue)
 
-## 🕵️‍♂️ The Scenario
-The Marketing Director is angry.
-The "Daily Sales Report" dashboard used to load in 5 seconds.
-Now it takes **5 minutes** and costs **$50 per run**.
-The dataset has grown to 10 TB.
+**Duration:** ⏱️ 90 Minutes  
+**Level:** Advanced (Scenario-Based)  
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (Data Analytics & Cost)
 
-## 1️⃣ The "Bad" Query
-```sql
-SELECT * 
-FROM `sales.transactions_all`
-WHERE transaction_date = '2025-01-01'
-ORDER BY customer_id
+---
+
+## 🕵️‍♂️ The Scenario: "The Runaway Dashboard"
+
+A Marketing Director is complaining that their internal dashboard has become "unusable." It used to load in seconds; now it takes minutes and has triggered a "Budget Alert" for the data team. Every time the dashboard refreshes, it costs the company $50 in BigQuery scan fees.
+
+**The Symptom:** 10 TB of data is being scanned per query to find just 10 GB of relevant info.
+**The Goal:** Reduce the scan volume (and cost) by 99% using partitioning and clustering.
+
+---
+
+## 🏗️ 1. Architecture: BigQuery Columnar Storage
+
+BigQuery doesn't store data in rows like Excel. It stores it in **Columns**.
+
+```mermaid
+graph TD
+    subgraph "Columnar Storage"
+        C1[Date Column]
+        C2[Customer ID]
+        C3[Amount]
+        C4[Metadata...]
+    end
+
+    Query[SELECT Amount FROM Table] --> C3
+    Query -.-> |"SKIPS"| C1
+    Query -.-> |"SKIPS"| C2
 ```
-*   **The Problem:** `SELECT *` scans ALL columns. The table is NOT partitioned. It scans the full 10 TB history just to find one day.
 
-## 2️⃣ The Objectives
-1.  **Analyze:** Use `bq query --dry_run` to see the cost.
-2.  **Optimize:** Create a **Partitioned Table**.
-3.  **Verify:** Reduce the scan size from 10 TB to 10 GB (1000x cheaper).
+**The Lesson:** If you `SELECT *`, you pay for **every** column, even the ones you don't use.
 
-## 3️⃣ Lab Steps (Guided) 🛠️
+---
 
-### Step 1: The Diagnosis
-Running the bad query:
-*   "This query will process 10.24 TB." -> Cost: ~$50.
+## 🛠️ 2. The Performance Audit (Dry Run)
 
-### Step 2: The Fix (Partitioning)
-Create a new table partitioned by date.
+Before fixing the query, always calculate the damage. Use the `--dry_run` flag in the CLI:
+
+```bash
+gcloud bq query --use_legacy_sql=false --dry_run \
+"SELECT * FROM sales.transactions_all WHERE date = '2025-01-01'"
+```
+> **Output:** "This query will process **10.2 TB**." -> **Estimated Cost: $51.00**
+
+---
+
+## 🏗️ 3. The "Hero" Solution: Partitioning & Clustering
+
+### Step 1: Create the Partitioned Table
+Partitioning splits the table into "mini-tables" by date.
+
 ```sql
 CREATE TABLE `sales.transactions_optimized`
 PARTITION BY DATE(transaction_date)
+CLUSTER BY customer_id
 AS
 SELECT * FROM `sales.transactions_all`
 ```
-*   *Note:* This takes time to run once, but future queries are fast.
 
-### Step 3: The Fix (Clustering) - Bonus
-Cluster by `customer_id` for faster sorting.
-```sql
-CREATE TABLE `sales.transactions_optimized_clustered`
-PARTITION BY DATE(transaction_date)
-CLUSTER BY customer_id
-AS ...
+### Step 2: The Audit (After Fix)
+Run the same query against the *optimized* table:
+```bash
+gcloud bq query --use_legacy_sql=false --dry_run \
+"SELECT amount FROM sales.transactions_optimized WHERE transaction_date = '2025-01-01'"
 ```
+> **Output:** "This query will process **12 GB**." -> **Estimated Cost: $0.06**
 
-### Step 4: The Job-Ready Solution (Terraform) 📉
-Automate the data pipeline creation to prevent "ClickOps" drift.
+---
+
+## 💰 4. Performance vs. Cost Comparison
+
+| Feature | Without Optimization | With Partitioning | With Partitioning + Clustering |
+| :--- | :--- | :--- | :--- |
+| **Scan Size** | 10.2 TB | 12.5 GB | **2.1 GB** |
+| **Cost** | ~$51.00 | ~$0.06 | **~$0.01** |
+| **Latency** | 240 seconds | 12 seconds | **3 seconds** |
+
+---
+
+## 🏗️ 5. The Job-Ready Solution (Terraform) 📉
+
+Automate the data lifecycle to prevent "Resource Leakage."
 
 ```hcl
-# main.tf
-provider "google" { project = "your-project-id" }
-
-# 1. Pub/Sub Topic (Ingestion)
-resource "google_pubsub_topic" "events_topic" {
-  name = "ingestion-topic"
+# bigquery.tf
+resource "google_bigquery_dataset" "marketing" {
+  dataset_id = "marketing_prod"
+  location   = "US"
 }
 
-# 2. BigQuery Dataset
-resource "google_bigquery_dataset" "analytics_ds" {
-  dataset_id                  = "analytics_ds"
-  location                    = "US"
-  default_table_expiration_ms = 3600000 # 1 Hour (Cost Safe)
-}
+resource "google_bigquery_table" "sales" {
+  dataset_id = google_bigquery_dataset.marketing.dataset_id
+  table_id   = "optimized_sales"
 
-# 3. BigQuery Table (Partitioned Schema)
-resource "google_bigquery_table" "events_table" {
-  dataset_id = google_bigquery_dataset.analytics_ds.dataset_id
-  table_id   = "raw_events"
-  
-  # PARTITIONING (The Cost Saver)
+  # 1. Partitioning (By Date)
   time_partitioning {
-    type = "DAY"
-    field = "timestamp"
+    type  = "DAY"
+    field = "sale_timestamp"
   }
 
-  schema = <<EOF
-[
-  { "name": "timestamp", "type": "TIMESTAMP", "mode": "REQUIRED" },
-  { "name": "payload", "type": "JSON", "mode": "NULLABLE" }
-]
-EOF
+  # 2. Clustering (By High-Cardinality Columns)
+  clustering = ["customer_id", "store_id"]
+
+  # 3. Expiration (Compliance/Cost)
+  expiration_time = 31536000000 # 365 Days
 }
 ```
 
-## 4️⃣ Checkpoint Questions
-<!--
-**Q1. Why is `SELECT *` considered a BigQuery anti-pattern?**
-*   A. It looks ugly.
-*   B. It returns too many rows.
-*   C. It scans every column, maximizing the cost (which uses Columnar storage).
-*   D. It deletes data.
-> **Answer: C.** BigQuery is Columnar. Reading one column is cheap. Reading all columns is expensive.
+---
 
-**Q2. Partitioning a table by Date allows the query engine to:**
-*   A. Compress the data better.
-*   B. **Prune** (skip) files that don't match the date filter.
-*   C. Delete old data automatically.
-*   D. Encrypt the data.
-> **Answer: B.** Partition Pruning is the #1 cost saver.
+## 📝 6. Knowledge Check
 
-**Q3. If you frequently filter by `User_ID` *within* a specific Date, what should you add?**
-*   A. An Index.
-*   B. A Foreign Key.
-*   C. **Clustering** on `User_ID`.
-*   D. Nothing.
-> **Answer: C.** Clustering sorts data inside the partition, making lookups faster.
--->
+<!-- QUIZ_START -->
+1.  **Which BigQuery feature allows the query engine to completely skip entire blocks of data that don't match a time-based filter?**
+    *   A. Clustering.
+    *   B. **Partitioning.** ✅ (Pruning happens at the partition level).
+    *   C. Indices.
+    *   D. Materialized Views.
+
+2.  **You want to sort data within a partition to make filters like `WHERE customer_id = 123` faster. What should you use?**
+    *   A. Primary Key.
+    *   B. **Clustering.** ✅ (Clustering organizes data within partitions).
+    *   C. Row Keys.
+    *   D. Cloud SQL.
+
+3.  **True or False: Using `SELECT *` in BigQuery is a recommended practice because the query engine automatically optimizes out unused columns.**
+    *   A. True
+    *   B. **False.** ✅ (BigQuery is columnar; `SELECT *` forces a scan of all columns, increasing cost).
+
+4.  **How can you find out how much a query will cost without actually running it and incurring charges?**
+    *   A. Run it and check the bill tomorrow.
+    *   B. **Use the --dry_run flag in the CLI or 'Query Validator' in the Console.** ✅
+    *   C. Ask Google Support.
+    *   D. Check the Secret Manager.
+
+5.  **What is the best way to handle data that is over 2 years old and no longer needed for daily reports?**
+    *   A. Manually delete it.
+    *   B. **Set a Table or Partition Expiration policy.** ✅ (Automated lifecycle management).
+    *   C. Move it to a different project.
+    *   D. Encrypt it and forget the key.
+<!-- QUIZ_END -->
+
+---
+
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I understand the performance impact of Columnar Storage.', checked: false },
+        { text: 'I can distinguish between Partitioning and Clustering.', checked: false },
+        { text: 'I know how to use --dry_run to estimate query costs.', checked: false },
+        { text: 'I can implement table expiration for data lifecycle management.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 41 Mastery Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

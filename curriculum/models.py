@@ -24,7 +24,7 @@ class Week(models.Model):
 
 class Day(models.Model):
     week = models.ForeignKey(Week, related_name='days', on_delete=models.CASCADE)
-    number = models.PositiveIntegerField(help_text="Day number (1-30)")
+    number = models.PositiveIntegerField(help_text="Day number (1-45)")
     title = models.CharField(max_length=200, help_text="Title of the day's topic")
     description = models.TextField(blank=True, help_text="Short description for the curriculum card")
     

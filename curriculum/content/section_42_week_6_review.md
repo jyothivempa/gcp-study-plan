@@ -1,52 +1,114 @@
-# WEEK 6 REVIEW: The Capstone Experience
+# Week 6 Review: The Capstone Experience & SRE Mindset
 
-## 1️⃣ You Are Now a Builder
-This week was different. No theory. Pure building.
-*   **Network Capstone:** Debugging connectivity (Firewalls, Routes).
-*   **Security Capstone:** Checking permissions (IAM, Buckets).
-*   **DevOps Capstone:** Automation (CI/CD).
-*   **Data Capstone:** Pipelines (ETL).
+**Duration:** ⏱️ 60 Minutes  
+**Level:** Comprehensive  
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (Scenario Synthesis)
 
-## 2️⃣ Mental Shift: The "SRE" Mindset
-We touched on **Site Reliability Engineering (SRE)** this week.
-*   **SLO (Objective):** "We settle for 99.9%."
-*   **SLA (Agreement):** "If we perform below 99.0%, we pay you money."
-*   **Error Budget:** The difference. "We can fail for 43 minutes this month. Let's use it to ship features fast."
+---
 
-## 3️⃣ FinOps Recap
-*   **CUDs (Committed Use Discounts):** 1 year or 3 year contract. massive savings.
-*   **Spot Instances:** 60-91% off, but Google can kill them. Best for Batch jobs (Dataflow/Dataproc).
+## 🏗️ 1. The Capstone Skills Tree
 
-## 4️⃣ Mock Questions (Week 6)
+This week, you transitioned from a "student" to a "builder." You solved four real-world scenarios that mirrored the complexity of the ACE exam's highest-weighted questions.
 
-<!--
-**Q1. Your team wants to safely experiment with a new feature, but they are afraid of breaking Production. You have plenty of "Error Budget" left. What does an SRE say?**
-*   A. "No."
-*   B. **"Go ahead. We have budget to burn."**
-*   C. "Ask the CEO."
-> **Answer: B.** Error Budgets are meant to be used to increase velocity.
+```mermaid
+mindmap
+  root((Week 6 Mastery))
+    Networking
+      "Custom VPC Flow"
+      "Cloud NAT/Router"
+      "Firewall Tagging"
+    Security
+      "Least Privilege IAM"
+      "Custom Roles"
+      "IAP Tunnels"
+    DevOps
+      "Cloud Build YAML"
+      "Artifact Registry"
+      "Deployment Strategies"
+    Data
+      "BigQuery Partitioning"
+      "Dry Run Auditing"
+      "Columnar Optimization"
+```
 
-**Q2. You are auditing a project. You see a Service Account Key exported 400 days ago. What is the risk?**
-*   A. Key rotation is missing. If an employee left with that key, they still have access.
-*   B. The key is expired.
-*   C. Google will delete it.
-> **Answer: A.** Long-lived keys are the #1 security hole.
--->
+---
 
-## ✅ Week 6 Checklist
+## 📈 2. SRE: Balancing Reliability vs. Agility
+
+Site Reliability Engineering (SRE) is the "secret sauce" of Google's operations. The ACE exam expects you to understand how to balance innovation with stability.
+
+| Concept | The "Human" Definition | The "Exam" Definition |
+| :--- | :--- | :--- |
+| **SLI** | "How are we doing right now?" | A specific metric (Latency, Error Rate). |
+| **SLO** | "The goal we usually hit." | A target value for an SLI (99.9% success). |
+| **SLA** | "The contract with legal teeth." | A business agreement with financial penalties. |
+| **Error Budget** | "Permission to break things." | The amount of downtime allowed before stopping new features. |
+
+**Pro Tip:** If you have 100% of your Error Budget left, you are moving too slowly! Use that budget to push new features or perform risky migrations.
+
+---
+
+## 💼 3. Career Pivot: Building Your Portfolio
+
+The projects you built this week aren't just for learning; they are for your resume.
+
+*   **Network Fix:** Showcases your ability to troubleshoot complex hybrid-cloud connectivity.
+*   **Hardened IAM:** Demonstrates that you are a "Security-First" engineer.
+*   **Automated Pipeline:** Proves you can scale infrastructure without "ClickOps."
+*   **Optimized BigQuery:** Shows you understand cloud costs (FinOps).
+
+---
+
+## 📝 4. Advanced Mock Exam (Week 6)
+
+<!-- QUIZ_START -->
+1.  **Your application has an SLO of 99.9% availability per month. You have experienced 40 minutes of downtime this month. Your monthly 'Error Budget' is 43 minutes. What should you do?**
+    *   A. Stop all new feature releases immediately.
+    *   B. **Proceed with caution. You have 3 minutes of budget left.** ✅
+    *   C. Ignore it; 40 minutes is close enough.
+    *   D. Delete the project and restart.
+
+2.  **A team is using a basic 'roles/editor' permission for their Service Accounts. You recommend 'Custom Roles.' What is the primary benefit?**
+    *   A. It reduces the monthly bill.
+    *   B. **It reduces the 'Attack Surface' by following the Principle of Least Privilege.** ✅
+    *   C. It makes the build process faster.
+    *   D. It allows access to the Free Tier.
+
+3.  **Which combination of services allows a private VM to download internet updates while blocking all direct inbound traffic?**
+    *   A. VPC Peering + Cloud SQL.
+    *   B. **Cloud NAT + Cloud Router + VPC Firewall (Default Egress).** ✅
+    *   C. Global Load Balancer + Cloud Armor.
+    *   D. App Engine + Secret Manager.
+
+4.  **How does 'Partitioning' in BigQuery directly contribute to FinOps goals?**
+    *   A. It encrypts data for free.
+    *   B. **It allows the query engine to prune unrelated data, reducing the bytes scanned and thus lowering cost.** ✅
+    *   C. It makes the dashboard look better.
+    *   D. It increases the throughput of the API.
+
+5.  **A developer committed a Service Account JSON key to a public GitHub repo. What is the immediate 'SRE' response?**
+    *   A. Ask the developer to delete the file from Git.
+    *   B. **Disable/Delete the key in GCP Console and rotate the credentials immediately.** ✅
+    *   C. Change the developer's password.
+    *   D. Do nothing; the repo is private now.
+<!-- QUIZ_END -->
+
+---
+
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I completed all 4 Capstone projects.', checked: false },
-        { text: 'I know what SLO, SLA, and SLI stand for.', checked: false },
-        { text: 'I understand Spot Instances.', checked: false }
+        { text: 'I can explain the relationship between SLIs and SLOs.', checked: false },
+        { text: 'I know when to use an Error Budget to push features.', checked: false },
+        { text: 'I understand why long-lived JSON keys are a security risk.', checked: false },
+        { text: 'I can articulate the value of my capstone projects to an employer.', checked: false }
     ]
 }">
     <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Week 6 Confidence Checklist
+        Week 6 Mastery Checklist
     </h3>
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">

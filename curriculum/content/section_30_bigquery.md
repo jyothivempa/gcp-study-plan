@@ -1,71 +1,167 @@
-# SECTION 21: BigQuery (Data Warehouse)
+# Day 30: BigQuery & Data Warehousing
 
-> **Official Doc Reference**: [BigQuery Documentation](https://cloud.google.com/bigquery/docs)
+**Duration:** ⏱️ 60 Minutes  
+**Level:** Intermediate  
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical
 
-## 1️⃣ Overview: serverless Analytics
-*   **What is it?** A Petabyte-scale Data Warehouse.
-*   **The Magic:** You can query 1 TB of data in seconds using standard SQL.
-*   **Serverless:** No provisioning. No disks to manage. Just upload data and run `SELECT *`.
+---
 
-## 2️⃣ Architecture: Separation of Storage & Compute
-BigQuery is two services in a trench coat.
-1.  **Colossus (Storage):** Cheap. Stores data in a columnar format (Capacitor).
-2.  **Dremel (Compute):** Fast. Thousands of servers connect to storage, process the query, and vanish.
-*   **Benefit:** You pay for storage (cheap) separately from analysis (queries).
+## 🎯 Learning Objectives
 
-## 3️⃣ Cost Model: Slots vs On-Demand 💰
-How do you pay?
+By the end of Day 30, you will be able to:
+*   **Explain** the serverless architecture of BigQuery (Colossus vs. Dremel).
+*   **Execute** queries on massive public datasets with zero provisioning.
+*   **Optimize** query performance and cost using Partitioning and Clustering.
+*   **Differentiate** between On-Demand and Capacity (Slots) pricing models.
+*   **Implement** data ingestion strategies (Streaming vs. Batch).
 
-| Model | Pricing | Pros | Cons |
-| :--- | :--- | :--- | :--- |
-| **On-Demand** | **$5 per TB** scanned. | Pay only for what you run. Easy. | Can get expensive if you run `SELECT *` on huge tables. |
-| **Capacity (Slots)** | **Fixed $/hour** (e.g. $1000/mo). | Predictable bill. No surprises. | You pay even if you don't run queries. |
+---
 
-## 4️⃣ Zero-to-Hero: Partitioning & Clustering ⚡
-*   **The Problem:** Scanning a full table costs money ($5/TB).
-*   **Solution 1: Partitioning:** Divide the table by **Date**.
-    *   *Query:* `WHERE date = '2025-01-01'`.
-    *   *Effect:* BQ only scans that one day's file. Massive savings.
-*   **Solution 2: Clustering:** Sort the data inside the partition (e.g., by `CustomerID`).
-    *   *Effect:* Faster lookups for specific customers.
+## 🏗️ 1. Architecture: The Power of Separation
 
-## 5️⃣ Hands-On Lab: Public Datasets 📊
-You don't need your own data. BigQuery hosts public data (Covid, Weather, GitHub).
-1.  **Open:** BigQuery Console.
-2.  **Add Data:** Public Datasets > "USA Names".
-3.  **Run Query:**
+BigQuery is not a traditional database. Its performance comes from the total separation of **Compute** and **Storage**, connected by a high-speed "Jupiter" network.
+
+```mermaid
+graph LR
+    subgraph "Dremel (Compute Tier)"
+        S1[Slot 1]
+        S2[Slot 2]
+        S3[Slot 3]
+    end
+
+    subgraph "Jupiter Network (Petabit/s)"
+        N[High-Speed Fabric]
+    end
+
+    subgraph "Colossus (Storage Tier)"
+        C1[(Columnar File 1)]
+        C2[(Columnar File 2)]
+        C3[(Columnar File 3)]
+    end
+
+    S1 <--> N
+    S2 <--> N
+    S3 <--> N
+    N <--> C1
+    N <--> C2
+    N <--> C3
+```
+
+*   **Colossus (Storage):** Stores data in **Capacitor** (columnar) format. Because it's columnar, BigQuery only reads the specific columns your query requests, drastically reducing I/O.
+*   **Dremel (Compute):** A massive distributed query engine that compiles your SQL into an execution tree across thousands of "slots" (CPUs).
+
+---
+
+## 💰 2. Cost Management: Avoid the "Bill Shock"
+
+BigQuery charges for two things: **Storage** (very cheap) and **Analysis** (can be expensive).
+
+### Pricing Models
+1.  **On-Demand:** $5 per TB scanned. Great for unpredictable workloads.
+2.  **Edition Pricing (Slots):** You buy capacity (Autoscaling slots). Best for large enterprises with steady workloads.
+
+### 🛡️ Guardrails
+> [!IMPORTANT]
+> **ACE Exam Alert: The Validator**
+> Before you hit "Run", always check the **Query Validator** in the bottom right of the BigQuery UI. It tells you exactly how many gigabytes or terabytes will be processed. **`LIMIT 10` does NOT reduce cost!** It filters the results *after* the scan is complete.
+
+---
+
+## ⚡ 3. Optimization Tier: Partitioning & Clustering
+
+To save money and increase speed, you must reduce the amount of data Dremel reads from Colossus.
+
+| Technique | How it Works | Analogy |
+| :--- | :--- | :--- |
+| **Partitioning** | Divides the table by **Date** or **Integer ID**. | A bookshelf with 12 sections (one per month). |
+| **Clustering** | Sorts data *within* the partition based on columns (like `CustomerID`). | Each monthly section is sorted alphabetically by name. |
+
+**Performance Rule:** Always use `WHERE` clauses on partitioned columns to enable **Pruning** (skipping files).
+
+---
+
+## 🛠️ 4. Hands-On Lab: Querying the Planet
+
+### 🧪 Lab Objective
+Query a 100GB+ public dataset using partitioning logic to keep costs zero.
+
+### ✅ Steps
+
+1.  **Open BigQuery Console**: Search for "Public Datasets".
+2.  **Explore**: Find `bigquery-public-data.ghcn_d` (Global Historical Climatology Network).
+3.  **Run an Inefficient Query** (DO NOT actually run, just look at the validator):
     ```sql
-    SELECT name, sum(number) as total
-    FROM `bigquery-public-data.usa_names.usa_1910_2013`
-    WHERE name = 'Alice'
-    GROUP BY name
+    SELECT id, date, element, value 
+    FROM `bigquery-public-data.ghcn_d.ghcnd_2024` 
+    -- This scans the whole year! (e.g., 80 GB)
     ```
-4.  **Result:** 200ms duration. 10MB processed. Cost: $0.00.
+4.  **Run an Optimized Query**:
+    ```sql
+    SELECT id, element, value 
+    FROM `bigquery-public-data.ghcn_d.ghcnd_2024` 
+    WHERE date = '2024-06-01'
+    -- If partitioned by date, this scans < 1 GB.
+    ```
 
-## 6️⃣ Exam Traps 🚨
-*   **Trap:** "I want to save money on queries. Should I use `LIMIT 10`?"
-    *   *Answer:* **NO!** `LIMIT` only affects the output *after* scanning the full table. BigQuery charges for bytes *scanned*. Use **Partition filters** (`WHERE date=...`) to verify cost.
-*   **Trap:** "I need real-time data streaming into BigQuery."
-    *   *Answer:* Use the **Streaming API** (insertAll). Note: It costs extra money per GB inserted, unlike batch loading (which is free).
+---
 
-## 7️⃣ Checkpoint Questions (Exam Style)
-<!--
-**Q1. You accidentally run `SELECT *` on a Petabyte table. What happens?**
-*   A. The query fails.
-*   B. You get a bill for $5,000.
-*   C. Google warns you first.
-*   D. Nothing, it's free.
-> **Answer: B.** BigQuery charges per Byte Scanned. Always check the "This query will process X GB" validator before running!
+## 📝 5. Knowledge Check
 
-**Q2. Which optimization technique divides a table into segments based on a timestamp column?**
-*   A. Sharding
-*   B. Clustering
-*   C. Partitioning
-*   D. Indexing
-> **Answer: C.** Partitioning enables "Pruning" (skipping irrelevant files).
+<!-- QUIZ_START -->
+1.  **You are charged $5,000 for a single query. What is the most likely reason?**
+    *   A. You used too many `JOIN` statements.
+    *   B. **The query scanned a massive amount of data on a non-partitioned table.** ✅
+    *   C. You forgot to use `LIMIT 10`.
+    *   D. You streamed the data into the table.
 
-**Q3. Is BigQuery a relational database (OLTP) replacement for Cloud SQL?**
-*   A. Yes, it supports SQL.
-*   B. No, it is a Columnar OLAP warehouse (bad for small frequent updates).
-> **Answer: B.** Use Cloud SQL for transactions (Buying a ticket). Use BigQuery for analytics (Counting how many tickets sold last year).
--->
+2.  **A company wants a set, predictable monthly bill for their BigQuery usage. Which pricing model should they choose?**
+    *   A. On-Demand Pricing.
+    *   B. **Capacity Pricing (Slots).** ✅
+    *   C. Flat-rate Storage.
+    *   D. Bigtable Tiers.
+
+3.  **Which architectural component of BigQuery is responsible for storing data in a columnar format?**
+    *   A. Dremel.
+    *   B. **Colossus.** ✅
+    *   C. Borg.
+    *   D. BigTable.
+
+4.  **You need to stream real-time events into BigQuery for immediate analysis. Is it possible?**
+    *   A. No, BigQuery only supports batch loading.
+    *   B. **Yes, using the Streaming API (via Dataflow or direct API calls).** ✅
+    *   C. Yes, but only for tables smaller than 10GB.
+    *   D. Yes, by using Cloud SQL as a proxy.
+
+5.  **True or False: Using 'SELECT *' is generally considered a best practice in BigQuery to ensure all data is cached.**
+    *   A. True.
+    *   B. **False. Only select the columns you need to save on bytes scanned.** ✅
+<!-- QUIZ_END -->
+
+---
+
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I understand that Compute and Storage are separate in BigQuery.', checked: false },
+        { text: 'I know how to use the Query Validator to estimate costs.', checked: false },
+        { text: 'I can explain why LIMIT does not save money on scanning costs.', checked: false },
+        { text: 'I understand the performance benefits of Clustering.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 30 Mastery Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

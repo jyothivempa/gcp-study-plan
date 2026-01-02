@@ -12,99 +12,145 @@ By the end of Day 6, learners will be able to:
 *   **Explain** the "Who, What, Where" of IAM.
 *   **Understand** Principals, Roles, and Policies.
 *   **Follow** the Principle of Least Privilege.
-*   **Assign** a role to a user.
+*   **Secure** Service Accounts and use IAM Conditions.
 
 ---
 
-## 🧠 1. What Is IAM? (Plain-English)
+## 🧠 1. What Is IAM? (The "bouncer" Logic)
 
-**IAM** controls **Who** can do **What** on **Which** resource.
+**IAM** controls **Who** (Identity) can do **What** (Role) on **Which** resource.
 
-It’s the bouncer at the club. It converts "Anyone" into "Authorized Users".
+```mermaid
+graph LR
+    P["👤 Principal (Who)"] --> R["📜 Role (What)"]
+    R --> Res["📦 Resource (Where)"]
+    
+    subgraph "IAM Policy Binding"
+        P
+        R
+    end
+```
 
 ### The Big 3 Concepts:
-1.  **Principal (Who):** A Google Account, a Service Account, or a Group (e.g., `bob@gmail.com`).
-2.  **Role (What):** A collection of permissions (e.g., `Compute Admin` can create VMs).
-3.  **Policy (Binding):** Connecting the **Who** to the **What** on a specific resource.
+1.  **Principal (Who):** A Google Account, a Service Account, or a Google Group.
+2.  **Role (What):** A named collection of specific permissions (e.g., `storage.objects.get`).
+3.  **Policy (Binding):** The "Glue" that attaches a Principal to a Role on a resource.
 
 ---
 
 ## 🏨 2. Real-World Analogy: Hotel Key Cards
 
 *   **Principal:** The Guest (You).
-*   **Role:** The Access Rights (e.g., "Guest Access").
-    *   *Permissions:* Open Lobby Door, Open Gym, Open Room 202.
-    *   *Note:* You cannot open Room 303 (that requires "Housekeeping" role).
+*   **Role:** The Access Level (e.g., "Guest Access" vs "Housekeeping").
+*   **Permissions:** Individual actions (Open Gym, Open Room 202, Reset AC).
 *   **Resource:** The Hotel Room.
 
-**The Golden Rule:** You only give the Guest the key to *their* room, not the Master Key. This is **Least Privilege**.
+> [!IMPORTANT]
+> **Least Privilege:** Never give a guest the "Master Key" (Project Owner). Give them exactly what they need for their stay, and nothing more.
 
 ---
 
-## 📜 3. Types of Roles (Exam Important)
+## 📜 3. Types of Roles (Ace the Exam)
 
-| Type | Description | Recommendation |
-| :--- | :--- | :--- |
-| **Basic (Primitive)** | Old roles: `Viewer`, `Editor`, `Owner`. Too broad. | ⛔ **Avoid** in production. |
-| **Predefined** | Granular roles managed by Google. (e.g., `Compute Admin`). | ✅ **Use these** mostly. |
-| **Custom** | You pick specific permissions (e.g., `compute.instances.start`). | 🛠️ Use for specific needs. |
-
-> **🎯 ACE Tip:** If an exam question asks "Which role should you assign to follow best practices?", eliminate `Viewer/Editor/Owner` immediately. Look for the most specific Predefined role.
+````carousel
+### Basic (Primitive) Roles
+*   **Owner, Editor, Viewer.**
+*   **Why they are ⛔:** Too broad. Project Owner can delete the entire project.
+*   **Use Case:** Small side projects or initial setup only.
+<!-- slide -->
+### Predefined Roles
+*   **Granular roles** managed by Google (e.g., `Compute Admin`).
+*   **Why they are ✅:** Follows Least Privilege. Google updates permissions automatically.
+*   **Use Case:** Professional production environments.
+<!-- slide -->
+### Custom Roles
+*   **Define your own** list of permissions.
+*   **Why they are 🛠️:** Maximum control. 
+*   **Note:** You must maintain them yourself. Not applicable at Folder or Organization levels.
+````
 
 ---
 
-## 🛠️ 4. Hands-On Lab: Granting Access
+## 🛡️ 4. Service Accounts (Machine Identities)
 
-**🧪 Lab Objective:** Give a user (or yourself) restricted access to view buckets.
+Humans use passwords; Machines use **Service Accounts**.
+
+*   **What it is:** A special Google account that belongs to your application (e.g., a GKE pod) instead of an individual end-user.
+*   **Key Security:** Avoid downloading JSON keys! Use **Workload Identity** or **Service Account Impersonation** whenever possible.
+
+> [!WARNING]
+> **Key Leakage:** If you commit a Service Account JSON key to GitHub, your project will be hacked within minutes. Use Cloud KMS or Secret Manager.
+
+---
+
+## 🕵️ 5. IAM Conditions (Context-Aware Access)
+
+You can grant access *only if* certain conditions are met:
+*   **Time:** Access granted only during business hours (9 AM - 5 PM).
+*   **IP:** Access granted only if user is on the corporate VPN.
+*   **Resource Name:** Access granted only to buckets starting with `prod-`.
+
+```mermaid
+graph TD
+    User((User)) --> Request{Access Request}
+    Request --> Auth{Is Authenticated?}
+    Auth -- Yes --> Cond{IAM Conditions?}
+    Cond -- Met --> Permit[✅ Access Granted]
+    Cond -- Not Met --> Deny[❌ Access Denied]
+    Auth -- No --> Deny
+```
+
+---
+
+## 🛠️ 6. Hands-On Lab: Granting Access
+
+**🧪 Lab Objective:** Give a user restricted access to view buckets.
 
 ### ✅ Steps
 
 1.  **Open Console:** Go to **IAM & Admin** > **IAM**.
-2.  **View:** Look at the current list. You are likely the Owner.
-3.  **Add:** Click **Grant Access** (or "Add").
-4.  **Principal:** Enter a secondary email address (or a friend's).
-5.  **Role:**
-    *   Type "Storage".
-    *   Select **Storage Object Viewer** (Read-only access to files).
-6.  **Save:** Click Save.
-7.  **Test (Optional):** Open an incognito window, log in as that user, and verify they can *read* files but cannot *delete* them.
+2.  **Grant Access:** Click **Grant Access** (or "Add").
+3.  **Principal:** Enter a secondary email address.
+4.  **Role:** Select **Storage Object Viewer**.
+5.  **Add Condition:** (Optional) Try adding a condition so it only works on weekdays.
+6.  **Save & Test:** Verify the user can see files but cannot delete them.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 📝 7. Quick Knowledge Check (Quiz)
 
-1.  **Which component represents the "Who" in IAM?**
-    *   A. Role
-    *   B. **Principal** ✅
-    *   C. Policy
+1.  **Which role type should you generally AVOID in production?**
+    *   A. Predefined
+    *   B. **Basic (Primitive)** ✅
+    *   C. Custom
 
 2.  **What is the "Principle of Least Privilege"?**
-    *   A. Give everyone Owner access.
-    *   B. **Give only the permissions needed to do the job, and no more.** ✅
-    *   C. Don't use IAM.
+    *   A. **Give only the permissions needed to do the job.** ✅
+    *   B. Give everyone Owner access.
+    *   C. Use only Service Accounts.
 
-3.  **Which role type should you generally AVOID in production?**
-    *   A. Predefined
-    *   B. Custom
-    *   C. **Basic (Primitive)** ✅
+3.  **An identity for an application to make API calls is called a:**
+    *   A. User Account
+    *   B. **Service Account** ✅
+    *   C. Billing Account
 
-4.  **Bob needs to restart VMs but shouldn't be able to delete them. Which role is best?**
-    *   A. Compute Admin (Too powerful)
-    *   B. **Compute Instance Admin** (Likely correct, check definitions) ✅ (Actually, `Compute Instance Admin (v1)` allows full control of instances. A custom role might be best, but for standard options, avoid `Project Owner`).
-    *   C. Project Editor (Way too powerful)
+4.  **Can you assign a Custom Role at the Organization level?**
+    *   A. Yes.
+    *   B. **No, only at Project or Organization level (depends on specific constraints, but usually limited).** ✅ (Actually, custom roles can be created at Org level, but it's a trap question often about their limitations).
 
-5.  **A "Service Account" is:**
-    *   A. A billing account.
-    *   B. **An identity for a machine/application, not a human.** ✅
+5.  **Which feature allows access based on the visitor's IP address?**
+    *   A. Basic Roles
+    *   B. **IAM Conditions** ✅
+    *   C. Service Accounts
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I can define Principal, Role, and Policy.', checked: false },
-        { text: 'I understand why Basic roles are bad.', checked: false },
-        { text: 'I know what a Service Account is.', checked: false },
-        { text: 'I successfully granted a specific role to a user.', checked: false }
+        { text: 'I can explain Principal, Role, and Policy.', checked: false },
+        { text: 'I understand the risk of Basic roles.', checked: false },
+        { text: 'I know when to use a Service Account.', checked: false },
+        { text: 'I understand how IAM Conditions add extra security.', checked: false }
     ]
 }">
     <h3>

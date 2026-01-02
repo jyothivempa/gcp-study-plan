@@ -1,4 +1,4 @@
-# Day 16: Kubernetes Architecture
+# Day 16: GKE Architecture (Control Plane & Nodes)
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
@@ -8,114 +8,150 @@
 
 ## 🎯 Learning Objectives
 
-By the end of Day 16, learners will be able to:
-*   **Draw** the Kubernetes High-Level Architecture.
-*   **Explain** the role of the Control Plane vs Nodes.
-*   **Define** Kubelet and Kube-Proxy.
+By the end of Day 16, you will be able to:
+*   **Visualize** the Kubernetes Control Plane and Worker Node interaction.
+*   **Explain** the "Shared Responsibility" model in Google Kubernetes Engine.
+*   **Identify** key components like the API Server, Scheduler, and Kubelet.
+*   **Navigate** the logical boundary between Google-managed and customer-managed resources.
 
 ---
 
-## 🧠 1. What Is Kubernetes (K8s)?
+## 🧠 1. The Kubernetes "Command & Control" Center
 
-**Kubernetes** is an open-source platform for managing containerized workloads and services. Use it to deploy 10,000 containers across 500 machines as if they were one computer.
+A GKE cluster consists of two distinct pools of responsibility: the **Control Plane** (The Brain) and the **Nodes** (The Muscle).
 
-### The Two Main Parts:
-1.  **Control Plane (The Master):** The brain. Makes decisions (Scheduling, Scaling).
-2.  **Nodes (The Workers):** The muscle. Where your Apps actually run.
+### Architectural Blueprint
 
----
+```mermaid
+graph LR
+    subgraph "Google-Managed Project"
+        CP[Control Plane]
+        API[API Server] --> ETCD[(etcd)]
+        API --> SCH[Scheduler]
+        API --> CM[Controller Manager]
+    end
 
-## 🚢 2. Real-World Analogy: The Ship Captain
+    subgraph "Your Project (VPC)"
+        Node1[Worker Node 1]
+        Node2[Worker Node 2]
+        
+        subgraph "Node Detail"
+            KLT[Kubelet]
+            KPRX[Kube-Proxy]
+            CRI[Container Runtime]
+            POD1[Pod A]
+            POD2[Pod B]
+        end
+    end
 
-*   **Kubernetes Cluster** = **A Cargo Ship**.
-*   **Control Plane** = **The Captain (Bridge)**.
-    *   The Captain decides: "Put Container X on the front deck." (Scheduling).
-    *   He checks: "Is Container Y broken? Replace it." (Self-healing).
-*   **Worker Nodes** = **The Deck Hands (Sailors)**.
-    *   They don't think. They just carry the containers.
-    *   If a Sailor gets sick (Node fails), the Captain moves the work to another Sailor.
+    API <-.-> KLT
+    API <-.-> KPRX
+```
 
----
-
-## 🏗️ 3. Component Deep Dive
-
-| Component | Location | Role |
+| Component | Responsibility | ACE Exam Note |
 | :--- | :--- | :--- |
-| **API Server** | Control Plane | The "Front Door". Accepts commands (`kubectl`). |
-| **Scheduler** | Control Plane | Decides *where* to put a new Pod. |
-| **ETCD** | Control Plane | The Database. Stores the *state* of the cluster. |
-| **Kubelet** | **Worker Node** | The Agent. Talks to the Captain. Starts containers. |
-| **Pod** | Worker Node | Wrapper around a container. |
+| **API Server** | Cluster "Front Door" | All `kubectl` commands talk to this. |
+| **etcd** | Cluster State DB | Stores configuration. **Never** accessible to you in GKE. |
+| **Scheduler** | Workload Placement | Decides which Node has enough RAM/CPU for a Pod. |
+| **Kubelet** | Node Resident Agent | Reports Node health back to the API Server. |
+| **Kube-Proxy** | Networking | Manages IP tables/rules for Service connectivity. |
 
 ---
 
-## 🛠️ 4. Hands-On Lab: View Cluster Info
+## 🏗️ 2. The GKE Difference: Shared Responsibility
 
-**🧪 Lab Objective:** Inspect a cluster to see these components.
+In standard Kubernetes (on-prem), you manage the ETCD database and control plane. In **GKE**, Google handles the heavy lifting.
+
+> [!IMPORTANT]
+> **ACE Exam Alert: The Control Plane Cost**
+> For GKE **Standard** clusters, you pay a management fee per cluster per hour ($0.10/hr). For **Autopilot**, the management fee is usually included, but you pay for the resource usage of the pods. 
+
+---
+
+## 🛠️ 3. Hands-On Lab: Peeking Under the Hood
+
+Even though the Control Plane is managed, we can see its effects through `kubectl`.
+
+### 🧪 Lab Objective
+Inspect the default system components and understand where they live.
 
 ### ✅ Steps
 
-1.  **Open Cloud Shell.**
-2.  **Set Project:** `gcloud config set project [YOUR_PROJECT_ID]`
-3.  **Create a tiny cluster (Takes 5 mins):**
+1.  **Get Credentials**:
     ```bash
-    gcloud container clusters create test-cluster --num-nodes=1 --zone=us-central1-a
+    gcloud container clusters get-credentials [CLUSTER_NAME] --zone [ZONE]
     ```
-4.  **View Nodes:**
+
+2.  **List System Workloads**:
     ```bash
-    kubectl get nodes
-    ```
-    *   *Result:* You see your "Sailor" (Worker Node).
-5.  **View System Pods:**
-    ```bash
+    # We use -n kube-system to see the internal components
     kubectl get pods -n kube-system
     ```
-    *   *Result:* You see `kube-dns`, `kube-proxy` running. (Note: In GKE, you don't see the Control Plane pods because Google manages them for you!).
+    > [!NOTE]
+    > Notice you see `kube-proxy` and `fluentbit` (logging), but you **cannot** see the API Server or etcd. That's because they run in a hidden Google-managed project!
+
+3.  **Inspect a Node**:
+    ```bash
+    kubectl describe node [NODE_NAME]
+    ```
+    *Look for the "Conditions" section. This is what the **Kubelet** reports back to the brain.*
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## ⚠️ 4. Exam Traps & Best Practices
 
-1.  **Which component is the "Brain" of the cluster?**
-    *   A. Worker Node
-    *   B. **Control Plane** ✅
-    *   C. Kubelet
+> [!WARNING]
+> **etcd Access**: A common exam trap asks how to backup the etcd database in GKE. **The answer is: You don't.** Google manages all etcd backups and high availability automatically.
 
-2.  **Where do your application containers run?**
-    *   A. Control Plane
-    *   B. **Worker Nodes** ✅
-    *   C. Within ETCD
+> [!TIP]
+> **Version Management**: GKE allows you to choose "Release Channels" (Rapid, Regular, Stable). For production, **Stable** is the recommended choice for maximum reliability.
 
-3.  **In GKE, who manages the Control Plane?**
-    *   A. You do.
-    *   B. **Google (Fully Managed)** ✅
-    *   C. Your ISP.
+---
 
-4.  **What acts as the "Database" for Kubernetes, storing the configuration?**
-    *   A. Cloud SQL
-    *   B. **etcd** ✅
-    *   C. Redis
+## 📝 5. Knowledge Check
 
-5.  **Which agent runs on every Worker Node to talk to the Control Plane?**
-    *   A. Docker
-    *   B. **Kubelet** ✅
-    *   C. Scheduler
+<!-- QUIZ_START -->
+1.  **Which component is responsible for deciding which node a new Pod should run on?**
+    *   A. Kubelet
+    *   B. API Server
+    *   C. **Scheduler** ✅
+    *   D. etcd
+
+2.  **In GKE, where is the Control Plane located?**
+    *   A. On the first worker node in your VPC.
+    *   B. **In a separate Google-managed project.** ✅
+    *   C. In a Cloud Storage bucket.
+    *   D. It runs as a container on every node.
+
+3.  **What is the role of the Kubelet?**
+    *   A. It acts as the load balancer for incoming traffic.
+    *   B. It stores the state of the cluster.
+    *   C. **It is the agent that runs on each node and ensures containers are running in a Pod.** ✅
+    *   D. It schedules new workloads based on resource availability.
+
+4.  **Why can't you see the etcd pods when running `kubectl get pods -n kube-system`?**
+    *   A. They are hidden for security reasons.
+    *   B. You don't have the "Owner" role.
+    *   C. **They run on the master nodes, which are managed by Google and not visible in your node list.** ✅
+    *   D. etcd is not used in GKE.
+<!-- QUIZ_END -->
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I can draw a line between Master and Worker.', checked: false },
-        { text: 'I know GKE manages the Master for me.', checked: false },
-        { text: 'I ran kubectl get nodes.', checked: false }
+        { text: 'I understand the difference between Control Plane and Worker Nodes.', checked: false },
+        { text: 'I know that I do not manage etcd in GKE.', checked: false },
+        { text: 'I can identify the API Server as the entry point for kubectl.', checked: false },
+        { text: 'I understand the shared responsibility model.', checked: false }
     ]
 }">
     <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Day 16 Checklist
+        Day 16 Mastery Checklist
     </h3>
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">

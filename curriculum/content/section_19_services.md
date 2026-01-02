@@ -1,116 +1,175 @@
-# Day 19: Services & Networking
+# Day 19: Stateful Workloads (PVs, PVCs & StatefulSets)
 
-**Duration:** ⏱️ 45 Minutes  
-**Level:** Intermediate  
+**Duration:** ⏱️ 60 Minutes  
+**Level:** Intermediate/Advanced  
 **ACE Exam Weight:** ⭐⭐⭐⭐ High
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 19, learners will be able to:
-*   **Explain** why Pod IPs are unreliable.
-*   **Compare** ClusterIP, NodePort, and LoadBalancer.
-*   **Expose** an application to the internet.
+By the end of Day 19, you will be able to:
+*   **Manage** persistent data in GKE using PersistentVolumes (PV) and Claims (PVC).
+*   **Differentiate** between Stateless (Deployments) and Stateful (StatefulSets) workloads.
+*   **Understand** Dynamic Provisioning and Storage Classes.
+*   **Architect** a storage solution that survives Pod restarts and Node failures.
 
 ---
 
-## 🧠 1. The Problem: Ephemeral IPs
+## 💾 1. Persistence in a Disposable World
 
-Pods are mortal. They die and get replaced (Day 18 Lab).
-Every time a Pod restarts, it gets a **new IP address**.
-*How can your Frontend talk to your Backend if the Backend's IP keeps changing?*
+By default, data inside a container is **ephemeral**. If the container crashes, the data is gone. To solve this, Kubernetes uses a "Claim" system for storage.
 
-**Solution:** A **Service**.
-A Service provides a **stable** IP and DNS name that never changes. It load balances traffic to the pods behind it.
+### The Storage Hierarchy
 
----
+```mermaid
+graph TD
+    SC[Storage Class: 'standard-rwo'] --> PV[PersistentVolume: Physical Disk]
+    PV --> PVC[PersistentVolumeClaim: Logical Request]
+    PVC --> Pod[Your App Pod]
+```
 
-## 🛎️ 2. Real-World Analogy: The Reception Desk
-
-*   **Pods** = **Doctors** in a hospital. They move rooms, change shifts.
-*   **Service** = **The Reception Desk**.
-    *   Patient calls: "I need a doctor." (Hits Service IP).
-    *   Receptionist connects them to *any* available doctor.
-    *   Patient doesn't need to know the Doctor's personal cell phone number.
-
----
-
-## 🔌 3. Service Types (Cheat Sheet)
-
-| Type | Visibility | Use Case |
+| Component | Responsibility | ACE Exam Note |
 | :--- | :--- | :--- |
-| **ClusterIP** (Default) | **Internal Only** | Frontend talking to Backend DB. |
-| **NodePort** | External (Basic) | Opens a port (30000+) on every Node. (Rarely used in prod). |
-| **LoadBalancer** | **External (Prod)** | Provisions a real GCP Cloud Load Balancer. |
-
-> **Ingress:** Not a service. It's a "Smart Router" (HTTP/S) that sits in front of a Service to handle paths (/api, /web).
+| **StorageClass** | The "Menu" | Defines the *type* of disk (SSD, Standard, etc.). |
+| **PV** | The "Physical Disk" | The actual resource in GCP (Persistent Disk). |
+| **PVC** | The "Voucher" | A request by a user for storage of a certain size/mode. |
 
 ---
 
-## 🛠️ 4. Hands-On Lab: Expose Your App
+## 🏛️ 2. Deployments vs. StatefulSets
 
-**🧪 Lab Objective:** Make your Nginx Deployment accessible from the internet.
+Most apps use Deployments, but databases (MySQL, MongoDB) need **StatefulSets**.
+
+### Critical Differences
+
+```mermaid
+graph LR
+    subgraph "Deployment (Random)"
+        P1[web-as89f]
+        P2[web-92js1]
+    end
+    
+    subgraph "StatefulSet (Ordered)"
+        S1[db-0]
+        S2[db-1]
+    end
+```
+
+*   **Deployments**: Pods are identical and random. If `web-as89f` dies, it's replaced by `web-qwer0`.
+*   **StatefulSets**: Pods have unique, sticky identities. If `db-0` dies, it is replaced by a new `db-0` that re-attaches to the **same** disk.
+
+> [!TIP]
+> **ACE Pro Tip: Dynamic Provisioning**
+> In GKE, you don't need to manually create Persistent Disks. When you create a PVC, GKE uses the **StorageClass** to automatically create the disk in GCP for you. This is "Dynamic Provisioning."
+
+---
+
+## 🛠️ 3. Hands-On Lab: Requesting a Disk
+
+We will create a PersistentVolumeClaim and see GKE provision a disk automatically.
+
+### 🧪 Lab Objective
+Understand the PVC lifecycle and see the GCP Persistent Disk creation.
 
 ### ✅ Steps
 
-1.  **Prerequisite:** Ensure `my-web` deployment is running.
-2.  **Expose Deployment:**
-    ```bash
-    kubectl expose deployment my-web --type=LoadBalancer --port 80 --target-port 80
+1.  **Define a PVC** (`storage-claim.yaml`):
+    ```yaml
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: my-disk-claim
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: standard-rwo
     ```
-    *   *Translation:* "Create a Service connecting external Port 80 to container Port 80."
-3.  **Get External IP:**
+
+2.  **Apply the Claim**:
     ```bash
-    kubectl get services
+    kubectl apply -f storage-claim.yaml
     ```
-    *   *Wait* for `EXTERNAL-IP` to change from `<pending>` to a real IP (e.g., `34.x.x.x`). (Takes 1 min).
-4.  **Test:** Click the IP. You see "Welcome to nginx!".
+
+3.  **Verify Status**:
+    ```bash
+    kubectl get pvc
+    ```
+    *Result: Once status is `Bound`, run the next command.*
+
+4.  **Confirm in GCP**:
+    ```bash
+    gcloud compute disks list
+    ```
+    *You will see a new 10GB disk created specifically for this Kubernetes claim!*
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## ⚠️ 4. Exam Traps & Best Practices
 
-1.  **Why can't you rely on Pod IP addresses?**
-    *   A. They are IPv6.
-    *   B. **They change every time a Pod restarts.** ✅
-    *   C. They are encrypted.
+> [!IMPORTANT]
+> **Access Modes**: 
+> - **ReadWriteOnce (RWO)**: Only 1 node can mount the disk (standard).
+> - **ReadOnlyMany (ROX)**: Many nodes can read (great for shared config).
+> - **ReadWriteMany (RWX)**: Many nodes can read/write. **Note:** GCP Persistent Disks do NOT support RWX. You need **Filestore** for this.
 
-2.  **Which Service type opens your app to the public Internet using a GCP Load Balancer?**
-    *   A. ClusterIP
-    *   B. **LoadBalancer** ✅
-    *   C. Headless
+> [!WARNING]
+> **StatefulSet Replicas**: Never scale down a StatefulSet to zero and expect the disks to be deleted. PVCs are protected and must be deleted manually to avoid accidental data loss (and bills!).
 
-3.  **Which Service type is the default and only allows internal access?**
-    *   A. **ClusterIP** ✅
-    *   B. NodePort
-    *   C. ExternalName
+---
 
-4.  **What object helps you route HTTP traffic based on path (e.g. example.com/blog)?**
-    *   A. Service
-    *   B. **Ingress** ✅
-    *   C. ReplicaSet
+## 📝 5. Knowledge Check
 
-5.  **A Service sends traffic to a set of Pods. How does it know which Pods to pick?**
-    *   A. It guesses.
-    *   B. **Labels and Selectors (e.g., app=my-web).** ✅
-    *   C. It picks all pods.
+<!-- QUIZ_START -->
+1.  **Which Kubernetes object acts as a "request" for storage by a user?**
+    *   A. StorageClass
+    *   B. PersistentVolume (PV)
+    *   C. **PersistentVolumeClaim (PVC)** ✅
+    *   D. ConfigMap
+
+2.  **You are deploying a database that requires a stable network identifier and a sticky disk. Which workload type should you use?**
+    *   A. Deployment
+    *   B. **StatefulSet** ✅
+    *   C. DaemonSet
+    *   D. ReplicaSet
+
+3.  **What is the benefit of using a 'StorageClass' in GKE?**
+    *   A. It encrypts the disk.
+    *   B. **It enables Dynamic Provisioning, so GKE creates disks on-demand.** ✅
+    *   C. It allows Pods to run without a kernel.
+    *   D. It increases the CPU limit of the Pod.
+
+4.  **A Pod in a StatefulSet named 'my-db-1' crashes. What will its replacement be named?**
+    *   A. 'my-db-2'
+    *   B. 'my-db-random-id'
+    *   C. **'my-db-1'** ✅
+    *   D. 'my-db-0'
+
+5.  **You need multiple nodes to be able to read and write to the same shared directory simultaneously. Can you use a standard GCP Persistent Disk?**
+    *   A. Yes, using ReadWriteMany mode.
+    *   B. **No, standard PDs do not support ReadWriteMany. Use Google Cloud Filestore instead.** ✅
+    *   C. Yes, if the nodes are in the same zone.
+<!-- QUIZ_END -->
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I describe why we need a Stable IP.', checked: false },
-        { text: 'I exposed a deployment using Type=LoadBalancer.', checked: false },
-        { text: 'I accessed Nginx from my browser.', checked: false }
+        { text: 'I understand the difference between PV and PVC.', checked: false },
+        { text: 'I can explain why databases use StatefulSets instead of Deployments.', checked: false },
+        { text: 'I know that GKE handles Dynamic Provisioning automatically.', checked: false },
+        { text: 'I recall that standard GCP disks only support ReadWriteOnce.', checked: false }
     ]
 }">
     <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Day 19 Checklist
+        Day 19 Mastery Checklist
     </h3>
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">

@@ -5,142 +5,141 @@
 
 ---
 
-## 🔁 1. Week 2 Recap (Management & Scale)
+## 🎯 1. Week 2 Recap: Management & Scale
 
-You have graduated from single VMs to massive, auto-scaling architecture.
+You've moved from managing single servers to architecting global systems that heal and scale themselves.
 
 | Day | Topic | Key Takeaway |
 | :--- | :--- | :--- |
-| **8** | **Instance Groups** | MIGs = Cattle (Stateless). Auto-healing & Auto-scaling. |
-| **9** | **Load Balancing** | Global HTTP(S) LB is Layer 7. Health Checks determine routing. |
-| **10** | **Cloud SQL** | Managed MySQL/Postgres. HA is for reliability, Read Replicas are for speed. |
-| **11** | **VPC Deep Dive** | Shared VPC (central control) vs VPC Peering (decentralized). |
-| **12** | **App Engine** | PaaS. Standard (Scale to 0) vs Flexible (Docker). Traffic Splitting. |
-| **13** | **Cloud Run** | Serverless Containers. Portable. Best for modern microservices. |
+| **8** | **MIGs** | Cattle philosophy. Templates + Auto-healing = Resilience. |
+| **9** | **LB & CDN** | Layer 7 vs Layer 4. One Anycast IP for the whole world. |
+| **10** | **Cloud SQL** | Managed DBs. HA for failover, Read Replicas for scale. |
+| **11** | **Storage Adv.** | Lifecycle policies for cost. Signed URLs for security. |
+| **12** | **App Engine** | PaaS. Standard (Scale to 0) vs Flexible (Docker). |
+| **13** | **Cloud Run** | Serverless Containers. Portability + Lightning speed. |
 
 ---
 
-## dart 2. Exam Focus Areas
+## 🏗️ 2. Visual Decision Matrices (Exam Power-Ups)
 
-### Critical Concepts for ACE Exam
+### The Serverless Showdown
+Which serverless product should you use?
 
-#### Managed Instance Groups (MIGs)
-- **Stateless (Cattle):** VMs can be deleted/recreated at any time.
-- **Auto-healing:** Replaces unhealthy VMs automatically (requires Health Check).
-- **Auto-scaling:** Scales based on CPU, Load Balancing Capacity, or Custom Metrics.
-- **Regional vs Zonal:** Regional MIGs survive zone failures (HA).
+```mermaid
+graph TD
+    Start{What are you deploying?} --> Source[Source Code]
+    Start --> Container[Container Image]
+    Source -- "Simple Function" --> Functions[⚡ Cloud Functions]
+    Source -- "Full Web App" --> GAE[🏗️ App Engine Standard]
+    Container -- "Portability Needed" --> Run[🚀 Cloud Run]
+    Container -- "Custom OS/Kernel" --> GAEFlex[🐳 App Engine Flex]
+    
+    style Run fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style GAE fill:#f0f9ff,stroke:#0369a1
+```
 
-**Exam Tip:** "VMs need to process distinct tasks from a queue and shut down" → Use MIG with Scaling based on Pub/Sub queue depth.
-
-#### Load Balancing Tree
-Quick decision guide for the exam:
-1. **HTTP/HTTPS Traffic?** → **External HTTP(S) LB** (Global, Layer 7)
-2. **TCP/UDP (Non-HTTP)?** → **Network Load Balancer** (Regional, Layer 4)
-3. **Internal Only?** → **Internal TCP/UDP LB** (for internal apps)
-4. **SSL Offloading?** → **SSL Proxy LB**
-
-**Exam Tip:** If the question mentions "Global" and "Single Anycast IP", think HTTP(S) Global LB.
-
-#### Cloud SQL High Availability
-- **HA configuration:** Active instance (Zone A) + Standby instance (Zone B).
-- **Read Replicas:** Scale READ traffic only. Does NOT provide failover by default (unless promoted).
-- **Backups:** Automated vs On-demand. Point-in-time recovery requires binary logging.
-
-**Exam Trap:** "Need to handle more write traffic?" → Cloud SQL cannot horizontally scale writes (easily). Vertical scale (bigger machine) or migrate to Spanner for massive write scale.
-
-#### Serverless Showdown: App Engine vs Cloud Run vs Functions
-
-| Feature | App Engine Standard | App Engine Flex | Cloud Run | Cloud Functions |
-| :--- | :--- | :--- | :--- | :--- |
-| **Code** | Language Specific (Py, Java, Go) | Docker Container | Docker Container | Small Code Snippets |
-| **Startup** | Seconds (Fast) | Minutes (Slow) | Seconds (Fast) | Seconds (Fast) |
-| **Scale to 0** | Yes (Free tier) | No (Min 1 instance) | Yes | Yes |
-| **Max Timeout** | 10 mins (HTTP) | 60 mins | 60 mins | 9 mins |
-
-**Exam Tip:** "Deploy existing container" + "HTTP" → **Cloud Run**. "Legacy Java 8 app" -> **App Engine**.
+### The Load Balancing Tree
+```mermaid
+graph TD
+    Traffic{Traffic Type?} --> HTTP[HTTP/S]
+    Traffic --> TCP[TCP/UDP]
+    HTTP -- "Global" --> GHTTP[🌐 Global HTTP/S LB]
+    HTTP -- "Internal" --> IHTTP[🔒 Internal HTTP/S LB]
+    TCP -- "External" --> NetLB[🌍 Network LB]
+    TCP -- "Internal" --> IntLB[🔐 Internal TCP LB]
+    
+    style GHTTP fill:#fee2e2,stroke:#ef4444,stroke-width:2px
+```
 
 ---
 
-## ⚠️ 3. Common Mistakes
+## ⚠️ 3. Critical Exam "Gotchas"
 
-### Mistake #1: Confusing HA with Read Replicas
-**Wrong:** "I added a Read Replica for Disaster Recovery."  
-**Right:** "I enabled High Availability (HA) for failover. I added Read Replicas to offload reporting queries."
+> [!IMPORTANT]
+> **Trap #1: The Health Check Firewall**
+> If you create a Load Balancer and it returns `502 Bad Gateway`, check your firewall! You MUST allow traffic from Google's probe ranges: `130.211.0.0/22` and `35.191.0.0/16`.
 
-### Mistake #2: Configuring the Wrong Load Balancer
-**Wrong:** Using HTTP LB for a gaming UDP server.  
-**Right:** Use Network Load Balancer (UDP supported).
+> [!TIP]
+> **Trap #2: Scaling to Zero**
+> Only **App Engine Standard** and **Cloud Run** can scale down to zero instances. **App Engine Flexible** and **GKE** always have a minimum of 1 instance running (and costing money).
 
-### Mistake #3: Ignoring Health Checks
-- If a firewall blocks the Health Check IP ranges (`130.211.0.0/22`, `35.191.0.0/16`), the LB considers ALL instances dead.
-- **Result:** 502 Bad Gateway errors.
-
-### Mistake #4: App Engine Flex Scaling
-- People forget Flex CANNOT scale to zero. It always costs money for at least 1 VM.
+> [!CAUTION]
+> **Trap #3: Cloud SQL HA**
+> High Availability (HA) handles **zonal failure**, but it does not protect against someone accidentally running `DROP DATABASE`. For that, you need **Backups**.
 
 ---
 
-## 🧪 4. Hands-On Review Lab
+## 🧪 4. Weekend Capstone Lab: The Unbreakable App
 
-Build a scalable, load-balanced web service.
+**Scenario:** Build a Load Balanced, Auto-healing cluster using the CLI.
 
-### Project: Auto-Healing Web Server Group
+### ✅ Step 1: Prep the Template
+```bash
+gcloud compute instance-templates create web-template-v2 \
+  --tags=http-server,hc-allow \
+  --metadata=startup-script='#!/bin/bash
+  apt update && apt install -y apache2
+  echo "Week 2 Champion" > /var/www/html/index.html'
+```
 
-**Steps:**
+### ✅ Step 2: Build the Auto-Healing Loop
+```bash
+# Create Health Check
+gcloud compute health-checks create-http champion-hc --port=80
 
-1. **Create Instance Template**
-   ```bash
-   gcloud compute instance-templates create my-web-template \
-     --tags=http-server,lb-health-check \
-     --metadata=startup-script='#!/bin/bash
-     apt-get update && apt-get install -y apache2
-     echo "Web Server" > /var/www/html/index.html'
-   ```
+# Create Managed Instance Group
+gcloud compute instance-groups managed create global-cluster \
+  --template=web-template-v2 \
+  --size=2 \
+  --region=us-central1 \
+  --health-check=champion-hc \
+  --initial-delay=300
+```
 
-2. **Create Health Check**
-   ```bash
-   gcloud compute health-checks create-http my-health-check --port=80
-   ```
-
-3. **Create Managed Instance Group (Regional)**
-   ```bash
-   gcloud compute instance-groups managed create my-mig \
-     --template=my-web-template \
-     --size=2 \
-     --region=us-central1 \
-     --health-check=my-health-check \
-     --initial-delay=300
-   ```
-
-4. **Set Firewall Rule (Allow LB Health Checks)**
-   ```bash
-   gcloud compute firewall-rules create allow-lb-health-check \
-     --allow=tcp:80 \
-     --source-ranges=130.211.0.0/22,35.191.0.0/16 \
-     --target-tags=lb-health-check
-   ```
-
-5. **Verify Auto-Healing**
-   - Go to Console. Delete one VM in the group.
-   - Watch the MIG automatically recreate it!
+### ✅ Step 3: Secure the Perimeter
+```bash
+gcloud compute firewall-rules create allow-gcp-health-checks \
+  --allow=tcp:80 \
+  --source-ranges=130.211.0.0/22,35.191.0.0/16 \
+  --target-tags=hc-allow
+```
 
 ---
 
-## 📚 5. Study Tips for Week 3
+## 🏆 5. What's Next? (Week 3! Kubernetes)
 
-- **Week 3 is Kubernetes (GKE).** It is often the hardest week for beginners.
-- **Docker:** If you don't know Docker, spend 1 hour this weekend learning basic `Dockerfile` syntax.
-- **YAML:** Love it or hate it, K8s runs on YAML. Be ready to read lots of indentation.
+Week 2 was about **Scale**. Week 3 is about **Orchestration**.
+
+*   **Docker Mastery:** Packaging any app into a box.
+*   **GKE Concepts:** Pods, Nodes, and Clusters.
+*   **GKE Autopilot:** The "hands-free" way to run Kubernetes.
+*   **Hybrid Networking:** Connecting GCP to your corporate data center.
 
 ---
 
-## 🏆 6. What's Next? Week 3!
-
-Week 3 is **Kubernetes Week**.
-
-*   **Docker & Containers:** Understanding the box.
-*   **GKE (Google Kubernetes Engine):** The industry standard for container orchestration.
-*   **Pods, Services, Deployments:** The K8s vocabulary.
-*   **GKE Modes:** Standard vs Autopilot.
-
-> **🎉 Great job! You are halfway to becoming a Cloud Engineer.**
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I know when to use Cloud Run vs App Engine.', checked: false },
+        { text: 'I understand why Health Checks need specific firewall rules.', checked: false },
+        { text: 'I can explain the difference between HA and Read Replicas.', checked: false },
+        { text: 'I successfully built a self-healing cluster using gcloud.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Week 2 Milestone Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

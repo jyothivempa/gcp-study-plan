@@ -270,18 +270,18 @@ days:
   # --- WEEK 7: Exam Preparation (Days 43-45) ---
   - number: 43
     week: 7
-    file: "section_43_mock_exam_1.md"
-    title: "Mock Exam #1"
-    outcome: "Full-Length Practice Exam"
+    file: "section_45_exam_strategy.md"
+    title: "Final Exam Strategy & Tips"
+    outcome: "Master the ACE Exam Tactics"
     
   - number: 44
     week: 7
     file: "section_44_mock_exam_2.md"
-    title: "Mock Exam #2"
-    outcome: "Additional Practice Exam"
+    title: "Week 7 Review & Course Completion"
+    outcome: "Final Review of All GCP Domains"
     
   - number: 45
     week: 7
-    file: "section_45_exam_strategy.md"
-    title: "Final Exam Tips & Resources"
-    outcome: "Prepare for Certification Exam"
+    file: "section_43_mock_exam_1.md"
+    title: "Final Mock Exam & Certification Readiness"
+    outcome: "Full-Length ACE Simulation"

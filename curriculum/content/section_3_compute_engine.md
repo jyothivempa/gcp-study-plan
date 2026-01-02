@@ -2,132 +2,142 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Beginner  
-**ACE Exam Weight:** ⭐⭐⭐ High (VM questions are everywhere)
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (VM questions are everywhere)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 3, learners will be able to:
-*   **Explain** what Compute Engine is.
-*   **Select** the right Machine Type for a workload.
-*   **Understand** Regions vs. Zones.
-*   **Deploy** a web server on a Virtual Machine (VM).
+By the end of Day 3, you will be able to:
+*   **Explain** the Infrastructure as a Service (IaaS) model.
+*   **Select** the right Machine Family for any workload.
+*   **Understand** the difference between Zonal and Regional availability.
+*   **Deploy** a functional web server using a Linux VM.
 
 ---
 
-## 🧠 1. What Is Compute Engine? (Plain-English)
+## 🧠 1. What is Compute Engine?
 
-**Compute Engine** is Google's **IaaS** (Infrastructure as a Service) product.
+**Compute Engine** is Google's **IaaS** (Infrastructure as a Service) powerhouse. 
 
-It lets you create **Virtual Machines (VMs)** running on Google's global infrastructure. 
-It’s basically renting a raw computer in the cloud.
+> [!NOTE]
+> Think of it as renting a "raw" computer in Google's data center. You get to choose the CPU, RAM, Disk, and Operating System.
 
-### Use Cases:
-*   Hosting legacy apps.
-*   Running databases (MySQL, Postgres).
-*   Web servers (Nginx, Apache).
-*   Batch processing.
-
----
-
-## 🍕 2. Real-World Analogy: The Pizza Shop
-
-*   **Compute Engine (IaaS)** is like **Making a Pizza from Scratch**.
-    *   You buy the dough, cheese, tomato sauce (**Hardware**).
-    *   You choose the oven temp, baking time, and toppings (**OS & Config**).
-    *   **Pro:** Total control. You can make any pizza you want.
-    *   **Con:** You have to do all the work (patching, updates).
-
----
-
-## 🏗️ 3. Core Concepts (Exam Critical)
-
-### 🌍 Regions & Zones
-*   **Region:** A specific geographical location (e.g., `us-central1`, `europe-west1`).
-    *   Contains 3+ Zones.
-*   **Zone:** An isolated location within a region (e.g., `us-central1-a`).
-    *   Think of it as a separate building in the same campus.
-    *   **Rule:** If a Zone goes down, the others survive.
-
-> **🎯 ACE Tip:** For **High Availability**, deploy VMs across **Multiple Zones**. For **Disaster Recovery**, deploy across **Multiple Regions**.
-
-### 💻 Machine Types
-Google offers "Families" of VMs for different jobs:
-
-| Family | Purpose | Analogy |
-| :--- | :--- | :--- |
-| **E2 / N1 / N2** (General Purpose) | Web servers, databases, Dev/Test. | The Toyota Camry. Reliable, balanced. |
-| **C2** (Compute Optimized) | Gaming, Video Encoding, High Performance Computing. | The Sports Car (Ferrari). Fast CPU. |
-| **M2** (Memory Optimized) | Massive in-memory databases (SAP HANA). | The Moving Van. Huge memory capacity. |
+### Core Architecture
+```mermaid
+graph LR
+    User[User] --> Internet((Internet))
+    Internet --> Firewall[Firewall Rules]
+    Firewall --> VM[Compute Engine VM]
+    
+    subgraph VM_Internal ["Inside the VM"]
+        OS[OS: Linux/Windows]
+        App[Your App: Nginx/MySQL]
+    end
+    
+    VM --> PD[(Persistent Disk)]
+    
+    style VM fill:#dbeafe,stroke:#1e40af,stroke-width:2px
+    style VM_Internal fill:#f8fafc,stroke:#94a3b8
+```
 
 ---
 
-## 🛠️ 4. Hands-On Lab: Launch a Web Server
+## 🍕 2. The "Pizza as a Service" Analogy
 
-**🧪 Lab Objective:** Create a Linux VM and install the Nginx web server.
+How does **Compute Engine (IaaS)** compare to other models?
 
-### ✅ Steps
+| Feature | **IaaS (Compute Engine)** | **PaaS (App Engine)** | **FaaS (Cloud Functions)** |
+| :--- | :--- | :--- | :--- |
+| **Analogy** | Making Pizza at Home | Pizza Delivery | Eating at a Buffet |
+| **Control** | High (Dough, Sauce, Oven) | Medium (Just Toppings) | Low (Just Eat) |
+| **Effort** | High (Clean the kitchen) | Low (Just wait) | Zero (Disposable) |
+| **Pricing** | By the Hour/Minute | By Instance/Request | By Execution Time |
 
-1.  **Open Console:** Go to **Compute Engine** > **VM Instances**.
-2.  **Create:** Click **Create Instance**.
-3.  **Config:**
-    *   **Name:** `my-first-web-server`
-    *   **Region:** `us-central1` (or close to you)
-    *   **Machine type:** `e2-micro` (Free Tier friendly!)
-    *   **Boot Disk:** Debian (Default)
-4.  **Firewall:** Check the box **"Allow HTTP traffic"**.
-5.  **Startup Script (Automation):**
-    *   Expand **Advanced Options** > **Management**.
-    *   Paste this into "Automation" / "Startup Script":
-        ```bash
-        #! /bin/bash
-        apt update
-        apt install -y nginx
-        echo "<h1>Hello from Google Cloud! 🍕</h1>" > /var/www/html/index.html
-        ```
-6.  **Launch:** Click **Create**.
-7.  **Verify:** Wait for the green checkmark. Click the **External IP** link. 
-    *   You should see your "Hello" message!
+> [!TIP]
+> Use **IaaS (Compute Engine)** when you need total control over the OS or have legacy software that requires specific configuration.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 🏗️ 3. Machine Families: The "Right Tool for the Job"
 
-1.  **Compute Engine is an example of which service model?**
-    *   A. PaaS
-    *   B. SaaS
-    *   C. **IaaS** ✅
-    *   D. FaaS
+Google offers three main families of virtual machines. Choosing the wrong one can waste thousands of dollars!
 
-2.  **You need to ensure your application keeps running even if a single data center loses power. What should you do?**
-    *   A. Use a bigger VM.
-    *   B. **Deploy VMs in multiple Zones.** ✅
-    *   C. Use a specific Region.
-    *   D. Backup to a USB drive.
+```mermaid
+mindmap
+  root((Machine Families))
+    (General Purpose)
+      E2: Balanced & Cost Effective
+      N2: Performance & Scalability
+      Analogy: The Toyota Camry
+    (Compute Optimized)
+      C2: High Clock Speed
+      Best for: Gaming, Video Encoding
+      Analogy: The Sports Car
+    (Memory Optimized)
+      M2: Massive RAM (up to 12TB)
+      Best for: SAP HANA, In-Memory DBs
+      Analogy: The Freight Truck
+```
 
-3.  **Which machine family is best for a general-purpose web server?**
-    *   A. M2 (Memory Optimized)
-    *   B. **E2 (General Purpose)** ✅
-    *   C. A2 (Accelerator/GPU)
+> [!IMPORTANT]
+> **E2 Series** is your best friend for learning. It's cost-optimized and part of the **GCP Free Tier** (e2-micro).
 
-4.  **What does "Allow HTTP Traffic" actually do?**
-    *   A. Installs Chrome.
-    *   B. **Creates a Firewall Rule to allow port 80.** ✅
-    *   C. Gives you a domain name.
+---
 
-5.  **True or False: You pay for a VM even if it is stopped.**
-    *   A. True (Full price)
-    *   B. **False (You only pay for the attached Disk)** ✅
+## 🛠️ 4. Hands-On Lab: Your First Cloud Server
+
+**🧪 Lab Objective:** Create a Linux VM and install a web server that says "Hello World".
+
+### ✅ Step 1: Configuration
+1.  Go to **Compute Engine > VM Instances**.
+2.  Click **Create Instance**.
+3.  Name: `web-server-1`.
+4.  Region: `us-central1`.
+5.  Machine type: **e2-micro** (Look for the "Free Tier" badge!).
+
+### ✅ Step 2: The Firewall (Critical!)
+Scroll down to **Networking**.
+*   [x] **Allow HTTP traffic**
+*   [x] **Allow HTTPS traffic**
+
+> [!WARNING]
+> If you forget to check these boxes, your web server will be "UP" but nobody will be able to see it!
+
+### ✅ Step 3: Automation (Startup Script)
+Expand **Advanced Options > Management**. In the **Startup Script** box, paste:
+```bash
+#! /bin/bash
+apt update
+apt install -y apache2
+echo "<h1>Deployed via Compute Engine 🚀</h1>" > /var/www/html/index.html
+```
+
+---
+
+## 📝 5. Checkpoint Quiz
+
+1.  **You need a VM for a high-performance video rendering app. Which family should you choose?**
+    *   A. E2
+    *   B. **C2** ✅
+    *   C. M2
+
+2.  **Which service model requires the MOST management effort from you?**
+    *   A. **IaaS** ✅
+    *   B. PaaS
+    *   C. SaaS
+
+3.  **True or False: A VM's Ephemeral IP Address remains the same if you stop and restart the VM.**
+    *   *Answer:* **False.** It changes. Use a **Static IP** if you need it to stay the same.
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I understand Regions vs Zones.', checked: false },
-        { text: 'I can choose the right VM family.', checked: false },
-        { text: 'I created a VM with a Startup Script.', checked: false },
-        { text: 'I viewed my web page via External IP.', checked: false }
+        { text: 'I understand what IaaS stands for.', checked: false },
+        { text: 'I know when to use C2 vs E2 machine types.', checked: false },
+        { text: 'I successfully launched a VM and saw the Hello page.', checked: false },
+        { text: 'I know that allowing HTTP traffic creates a firewall rule.', checked: false }
     ]
 }">
     <h3>

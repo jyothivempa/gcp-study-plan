@@ -1,127 +1,178 @@
 # Day 15: Docker & Containers 101
 
 **Duration:** ⏱️ 45 Minutes  
-**Level:** Beginner  
-**ACE Exam Weight:** ⭐⭐⭐ Foundation
+**Level:** Beginner/Intermediate  
+**ACE Exam Weight:** ⭐⭐⭐ Foundation for GKE
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 15, learners will be able to:
-*   **Explain** what a Container is.
-*   **Differentiate** between Virtual Machines (VMs) and Containers.
-*   **Create** a `Dockerfile` and build an image.
+By the end of Day 15, you will be able to:
+*   **Deconstruct** the architecture of a container vs. a virtual machine.
+*   **Visualize** the Docker layer system and image caching.
+*   **Architect** a multi-step Docker workflow from local build to Cloud Registry.
+*   **Deploy** a functional container using Cloud Shell and Artifact Registry.
 
 ---
 
-## 🧠 1. What Is a Container?
+## 🧠 1. Containers vs. Virtual Machines
 
-A **Container** is a lightweight, standalone package of software that includes everything needed to run it: code, runtime, system tools, libraries, and settings.
+Understanding the difference is critical for the ACE exam. While VMs virtualize **Hardware**, Containers virtualize the **Operating System**.
 
-### Containers vs VMs
-*   **VM (Virtual Machine):** Has its own Guest OS. Heavy (GBs). Slow boot.
-*   **Container:** Shares the Host OS kernel. Light (MBs). Instant start.
+### The Architectural Difference
+
+```mermaid
+graph TD
+    subgraph "Virtual Machine (Heavy)"
+        App1[App A] --> Lib1[Bins/Libs]
+        Lib1 --> OS1[Guest OS]
+        OS1 --> Hypervisor[Hypervisor]
+    end
+    
+    subgraph "Container (Lightweight)"
+        App2[App B] --> Lib2[Bins/Libs]
+        Lib2 --> Engine[Docker/Container Engine]
+        Engine --> HostOS[Host OS Kernel]
+    end
+    
+    Hypervisor --> Hardware[Physical Server]
+    HostOS --> Hardware
+```
+
+| Feature | Virtual Machines (VMs) | Containers |
+| :--- | :--- | :--- |
+| **Isolation** | Hardware-level (Hypervisor) | OS-level (Kernel namespaces) |
+| **Startup** | Minutes (Full OS boot) | Seconds (Process start) |
+| **Size** | GBs (includes kernel) | MBs (shared kernel) |
+| **Portability** | Hard (specific hypervisor) | High (Run anywhere with Docker) |
 
 ---
 
-## 🍱 2. Real-World Analogy: The Lunchbox
+## 🐳 2. The Docker Lifecycle: Recipe to Reality
 
-*   **Your Code** = The Food (Sandwich & Apple).
-*   **VM (Virtual Machine)** = **A Whole Kitchen**. 
-    *   To transport your sandwich, you move the fridge, the oven, and the sink with it. Heavy!
-*   **Container** = **A Lunchbox**.
-    *   You only pack the food (App) and the spoon (Dependencies).
-    *   It sits on any table (OS) and is ready to eat instantly.
+On GCP, you rarely just run Docker; you manage the lifecycle of images.
+
+### The Standard Workflow
+
+```mermaid
+sequenceDiagram
+    participant D as Dockerfile
+    participant I as Image
+    participant R as Registry (Artifact Registry)
+    participant C as Container (GKE/Cloud Run)
+
+    D->>I: docker build (The Recipe becomes the Meal)
+    I->>R: docker push (Store the meal in the cloud)
+    R->>C: Pull & Run (Serve the meal to users)
+```
+
+> [!TIP]
+> **ACE Pro Tip: Caching Matters**
+> Each line in a `Dockerfile` creates a **layer**. Docker caches these layers. If you change a line at the bottom, Docker reuses all cached layers above it. Always put the most frequently changed lines (like `COPY . .`) at the bottom to speed up builds!
 
 ---
 
-## 🐳 3. Key Concepts
+## 🛠️ 3. Hands-On Lab: Build. Push. Run.
 
-1.  **Dockerfile:** The recipe. A text file with instructions (`FROM python`, `COPY . .`).
-2.  **Image:** The frozen meal. The result of building a Dockerfile. Read-only template.
-3.  **Container:** The hot meal. A running instance of an Image.
+In this lab, we'll go beyond local Docker and prepare for GCP by using **Artifact Registry**.
 
----
-
-## 🛠️ 4. Hands-On Lab: Build Your First Container
-
-**🧪 Lab Objective:** Create a Docker container in Cloud Shell.
+### 🧪 Lab Objective
+Build a Python container and push it to Google Cloud's official storage for images.
 
 ### ✅ Steps
 
-1.  **Open Cloud Shell** (Top right in Console).
-2.  **Create Directory:**
+1.  **Initialize Environment**:
     ```bash
-    mkdir my-docker-lab
-    cd my-docker-lab
+    gcloud services enable artifactregistry.googleapis.com
+    mkdir gcp-docker-lab && cd gcp-docker-lab
     ```
-3.  **Create File:** `nano Dockerfile`
+
+2.  **Create the Application** (`app.py`):
+    ```python
+    print("GCP Container is alive!")
+    ```
+
+3.  **Draft the Dockerfile**:
     ```dockerfile
-    # Use lightweight Python
+    # 1. Use a tiny base image
     FROM python:3.9-slim
-    # Make a working directory
+    # 2. Set directory
     WORKDIR /app
-    # Create a dummy file
-    RUN echo "Hello from Docker!" > message.txt
-    # Command to run when starting
-    CMD ["cat", "message.txt"]
+    # 3. Copy app
+    COPY app.py .
+    # 4. Execute
+    CMD ["python", "app.py"]
     ```
-4.  **Build Image:**
+
+4.  **Build & Tag**:
     ```bash
-    docker build -t my-image:v1 .
+    # Replace [PROJECT_ID] with your actual ID
+    docker build -t gcr.io/[PROJECT_ID]/quickstart-image:v1 .
     ```
-5.  **Run Container:**
+
+5.  **Authenticate & Push**:
     ```bash
-    docker run my-image:v1
+    gcloud auth configure-docker
+    docker push gcr.io/[PROJECT_ID]/quickstart-image:v1
     ```
-    *   *Result:* It prints "Hello from Docker!" and exits.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## ⚠️ 4. Exam Traps & Best Practices
 
-1.  **Which statement best describes a Container?**
-    *   A. A physical server.
-    *   B. **A lightweight package including code and dependencies sharing the host OS.** ✅
-    *   C. A full Virtual Machine with its own Kernel.
+> [!IMPORTANT]
+> **Security Trap**: By default, containers share the host kernel. If a container is compromised, the host is at risk. GKE uses **GKE Sandbox** (based on gVisor) for extra isolation if needed.
 
-2.  **What is the "Recipe" file used to build a Docker Image?**
-    *   A. `Makefile`
-    *   B. `package.json`
-    *   C. **`Dockerfile`** ✅
+> [!WARNING]
+> **Image Size**: For the exam, always prefer "slim" or "alpine" base images. Smaller images pull faster (better for auto-scaling) and have a smaller attack surface.
 
-3.  **Main benefit of Containers vs VMs?**
-    *   A. Containers are larger.
-    *   B. **Containers start faster and use fewer resources.** ✅
-    *   C. Containers are more secure by default.
+---
 
-4.  **How do you turn a Docker Image into a running application?**
-    *   A. `docker build`
-    *   B. `docker run` ✅
-    *   C. `docker push`
+## 📝 5. Knowledge Check
 
-5.  **Where does a Container run?**
-    *   A. Only on Google Cloud.
-    *   B. Only on Linux.
-    *   C. **Anywhere with a Container Runtime (Laptop, Server, Cloud).** ✅
+<!-- QUIZ_START -->
+1.  **Why are containers more efficient than VMs?**
+    *   A. They include a dedicated OS kernel for every app.
+    *   B. **They share the host OS kernel and virtualize at the OS level.** ✅
+    *   C. They run directly on hardware without any OS.
+    *   D. They utilize hardware-level virtualization only.
+
+2.  **What GCP service is the primary successor to Container Registry (GCR)?**
+    *   A. Cloud Storage Buckets
+    *   B. **Artifact Registry** ✅
+    *   C. Cloud Build
+    *   D. Compute Engine Images
+
+3.  **You want to speed up your Docker builds. Where should you place the command `COPY . .`?**
+    *   A. At the very top (first line).
+    *   B. **Near the bottom, after installing OS dependencies.** ✅
+    *   C. In a separate script outside the Dockerfile.
+    *   D. It doesn't matter; Docker builds all lines at once.
+
+4.  **A command like `docker run -it ubuntu /bin/bash` does what?**
+    *   A. Builds a new image from the Ubuntu directory.
+    *   B. Pushes an image to the cloud.
+    *   C. **Starts an interactive container session from the Ubuntu image.** ✅
+    *   D. Deletes all running Ubuntu containers.
+<!-- QUIZ_END -->
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I understand the Lunchbox analogy.', checked: false },
-        { text: 'I created a Dockerfile.', checked: false },
-        { text: 'I built an image with docker build.', checked: false },
-        { text: 'I ran it with docker run.', checked: false }
+        { text: 'I can explain why containers start in seconds vs minutes for VMs.', checked: false },
+        { text: 'I understand that Dockerfiles build read-only images.', checked: false },
+        { text: 'I know that Artifact Registry is the storage for GCP containers.', checked: false },
+        { text: 'I can identify the impact of layer caching on build speed.', checked: false }
     ]
 }">
     <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Day 15 Checklist
+        Day 15 Mastery Checklist
     </h3>
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">

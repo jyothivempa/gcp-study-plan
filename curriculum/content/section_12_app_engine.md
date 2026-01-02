@@ -2,134 +2,138 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐ Medium
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Core PaaS Service)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 12, learners will be able to:
-*   **Define** Platform as a Service (PaaS).
-*   **Choose** between Standard Environment vs Flexible Environment.
-*   **Deploy** a "Hello World" app without configuring a server.
-*   **Understand** Traffic Splitting.
+By the end of Day 12, you will be able to:
+*   **Define** the Platform as a Service (PaaS) model.
+*   **Decide** between App Engine Standard and Flexible environments.
+*   **Deploy** applications using the `gcloud` CLI.
+*   **Execute** traffic splitting for canary deployments.
 
 ---
 
-## 🧠 1. What Is App Engine?
+## 🧠 1. What is App Engine?
 
-**App Engine** is a fully managed platform (PaaS) for building web applications.
-You just upload your code (Python, Java, Node.js, Go), and Google runs it.
+**App Engine** is a fully managed serverless platform. The philosophy is: **You write code, Google handles everything else.**
 
-**Zero Config:** You don't create VMs. You don't install OS updates. You don't set up Load Balancers. It's built-in.
+### The Hierarchy Model
+Understanding the nested structure of App Engine is crucial for managing deployments.
+
+```mermaid
+graph TD
+    App[📱 Application <br/> one per project] --> Svc1[⚙️ Service: Web-Frontend]
+    App --> Svc2[⚙️ Service: API-Backend]
+    
+    Svc1 --> V1[📄 Version: v1]
+    Svc1 --> V2[📄 Version: v2]
+    
+    V1 --> I1[🖥️ Instance 1]
+    V1 --> I2[🖥️ Instance 2]
+    
+    style App fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style Svc1 fill:#f0f9ff,stroke:#0369a1
+```
 
 ---
 
-## 🌴 2. Real-World Analogy: The All-Inclusive Resort
+## ⚔️ 2. Standard vs. Flexible (The Big Decision)
 
-*   **Compute Engine (IaaS):** You rent an Airbnb. You have to cook, clean, and buy groceries.
-*   **App Engine (PaaS):** You go to an **All-Inclusive Resort**.
-    *   Food is ready. Room is cleaned. Pool is open.
-    *   You just enjoy the holiday (**Write Code**).
-    *   **Pro:** Easy!
-    *   **Con:** You can't repaint the walls (Lees control over OS).
+This is the most frequent App Engine question on the ACE exam.
 
----
-
-## ⚔️ 3. Standard vs Flexible (The Big Decision)
-
-| Feature | Standard Environment | Flexible Environment |
+| Feature | **Standard Environment** | **Flexible Environment** |
 | :--- | :--- | :--- |
-| **Startup Time** | milliseconds (Instant) | Minutes (Uses VMs) |
-| **Price** | Scales to Zero (Free if unused) | Always running (Min 1 instance) |
-| **Languages** | Specific versions (Python 3.10, Node 18) | Any Language (Docker) |
-| **OS Access** | Sandbox (No SSH) | SSH Allowed |
+| **Startup** | Milliseconds | Minutes (Docker Boot) |
+| **Scaling** | **Scale to Zero** (Free if unused) | Always has min 1 instance |
+| **Access** | No OS/SSH access | SSH allowed |
+| **Languages** | Specific versions only | Any (via Docker) |
 
-> **🎯 ACE Tip:** 
-> *   "Scale to zero" or "Sudden traffic spikes" → **Standard**.
-> *   "Custom Docker container" or "Background processes" → **Flexible**.
-
----
-
-## 🚦 4. Traffic Splitting (Canary Deployments)
-
-App Engine is famous for easy **Blue/Green** testing.
-You can say: *"Send 90% of users to V1, and 10% to V2."*
-This lets you test new features safely.
+> [!IMPORTANT]
+> **Scaling to Zero:** Only the **Standard** environment can scale down to zero instances when no traffic is present, saving you significant money!
 
 ---
 
-## 🛠️ 5. Hands-On Lab: Deploy a Python App
+## 🚦 3. Traffic Splitting (Canary Deployments)
 
-**🧪 Lab Objective:** Deploy a simple app using Cloud Shell.
+App Engine allows you to host multiple versions of your app simultaneously and route a percentage of traffic to each.
 
-### ✅ Steps
+```mermaid
+graph LR
+    U[Internet Users] --> LB[App Engine LB]
+    LB -- "90% Workload" --> V1[Stable Version]
+    LB -- "10% Canary" --> V2[New Version]
+    
+    style V2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+```
 
-1.  **Open Cloud Shell:** Click the Terminal icon in top-right.
-2.  **Create Folder:**
-    ```bash
-    mkdir my-app
-    cd my-app
-    ```
-3.  **Create App File (`main.py`):**
+> [!TIP]
+> **Splitting Methods:** You can split traffic based on **IP Address** (good for anonymous users) or **Cookies** (more reliable for session persistence).
+
+---
+
+## 🛠️ 4. Hands-On Lab: Deploying "Hello World"
+
+**🧪 Lab Objective:** Deploy a Python application and view its configuration.
+
+### ✅ Step 1: Prepare the Files
+1.  Open Cloud Shell.
+2.  Create your app directory: `mkdir gcp-hero-app && cd gcp-hero-app`.
+3.  Create the entry point `main.py`:
     ```python
     from flask import Flask
     app = Flask(__name__)
 
     @app.route('/')
     def hello():
-        return 'Hello App Engine!'
+        return '<h1>GCP Hero: App Engine Success!</h1>'
+    ```
 
-    if __name__ == '__main__':
-        app.run(host='127.0.0.1', port=8080, debug=True)
-    ```
-    *(You can use `nano main.py` to paste this).*
-4.  **Create Config (`app.yaml`):**
-    ```yaml
-    runtime: python39
-    ```
-5.  **Deploy:**
+### ✅ Step 2: Create the Manifest
+Every App Engine app needs an `app.yaml` file to tell Google what environment to use.
+```yaml
+runtime: python39
+instance_class: F1
+```
+
+### ✅ Step 3: Deploy to Production
+1.  Run the deployment command:
     ```bash
-    gcloud app deploy
+    gcloud app deploy --quiet
     ```
-6.  **Verify:** Select Region (e.g., `us-central1`). Wait ~2 mins.
-7.  **View:** run `gcloud app browse`.
+2.  Once finished (approx 2 mins), run:
+    ```bash
+    gcloud app browse
+    ```
 
 ---
 
-## 📝 6. Quick Knowledge Check (Quiz)
+## 📝 5. Checkpoint Quiz
 
-1.  **App Engine is an example of which service model?**
-    *   A. IaaS
-    *   B. **PaaS (Platform as a Service)** ✅
-    *   C. SaaS
+1.  **You are building a microservice that only triggers once an hour for 5 minutes. Which App Engine environment is most cost-effective?**
+    *   A. Flexible
+    *   B. **Standard (Scales to Zero)** ✅
+    *   C. Compute Engine VM
 
-2.  **Which environment can scale to zero (costing nothing)?**
-    *   A. **Standard** ✅
-    *   B. Flexible
-    *   C. Both
+2.  **How many App Engine "Applications" can you have per GCP Project?**
+    *   *Answer:* **Exactly one.** You can have many services, but only one "App" per project.
 
-3.  **You need to install a custom 3rd-party library that requires C-level OS access. Which environment should you use?**
-    *   A. Standard
-    *   B. **Flexible** (It runs in a Docker container on a VM) ✅
-
-4.  **What built-in feature allows you to test a new version on 1% of users?**
-    *   A. A/B Tester
+3.  **You want to test a new login page but only for 5% of your global user base. What feature do you use?**
+    *   A. Instance Templates
     *   B. **Traffic Splitting** ✅
-    *   C. Load Balancer
-
-5.  **With App Engine, do you need to configure a Firewall manually to allow HTTP?**
-    *   A. Yes
-    *   B. **No, the platform handles routing/firewalling for web traffic automatically.** ✅
+    *   C. IAM Roles
+    *   D. Cloud DNS
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I understand the PaaS model.', checked: false },
-        { text: 'I can differentiate Standard vs Flexible.', checked: false },
-        { text: 'I created app.yaml.', checked: false },
-        { text: 'I deployed an app via gcloud app deploy.', checked: false }
+        { text: 'I understand why Standard is better for sudden traffic spikes.', checked: false },
+        { text: 'I know that Flexible uses Docker containers under the hood.', checked: false },
+        { text: 'I successfully deployed an app with an app.yaml file.', checked: false },
+        { text: 'I can explain the App -> Service -> Version hierarchy.', checked: false }
     ]
 }">
     <h3>

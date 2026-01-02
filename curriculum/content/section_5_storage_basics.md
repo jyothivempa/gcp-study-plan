@@ -1,144 +1,143 @@
-# SECTION 5: Block Storage (Disks)
+# Day 5: Block Storage (Persistent Disks)
 
-> **Official Doc Reference**: [Persistent Disk](https://cloud.google.com/compute/docs/disks)
+**Duration:** ⏱️ 45 Minutes  
+**Level:** Beginner  
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Performance & Persistence)
 
-## 1️⃣ The Concept: Block vs Object 📦
-Storage is not all the same. This distinction is the **#1 Exam Topic**.
+---
+
+## 🎯 Learning Objectives
+
+By the end of Day 5, you will be able to:
+*   **Master** the difference between Block Storage and Object Storage.
+*   **Identify** which Persistent Disk type is right for your throughput needs.
+*   **Understand** the critical danger of using Local SSDs.
+*   **Perform** a "Hot Resize" on a running VM disk.
+
+---
+
+## 🧠 1. Block vs Object: The #1 Exam Topic 📦
+
+If you remember nothing else from this week, remember this table.
 
 | Feature | **Block Storage** (Persistent Disk) | **Object Storage** (Cloud Storage) |
 | :--- | :--- | :--- |
-| **Analogy** | **Hard Drive (C:)** | **Google Drive / Dropbox** |
-| **Data Type** | OS, Databases, Installed Apps. | Photos, Videos, Backups, CSVs. |
-| **Editability** | You can edit *parts* of a file (e.g. Database record). | You must re-upload the *whole* file. (Immutable). |
-| **Access** | Attached to **ONE** VM (usually). | Accessible by **ANYONE** (Authentication). |
+| **Analogy** | A Hard Drive (C: Drive) | Google Drive / Dropbox |
+| **Data Type** | Operating Systems, Database Files. | Photos, Videos, Backups. |
+| **Editability** | You can change a **single bit** of a file. | You must re-upload the **whole** file. |
+| **Connectivity** | Physically/Network attached to ONE VM. | Accessible via URL from anywhere. |
 
 ---
 
-## 2️⃣ Disk Types: The Speed Ladder 🏎️
-You attach these to your VM.
+## 🏗️ 2. Persistent Disk Types: Choosing Speed
+
+Google offers a ladder of performance. Generally, the more you pay, the more IOPS (Input/Output Operations per Second) you get.
 
 ```mermaid
 graph TD
-    Level1[Standard HDD] -- "Cheap / Backup" --> Level2[Standard SSD]
-    Level2 -- "Web Apps" --> Level3[Balanced SSD]
-    Level3 -- "Databases" --> Level4[Extreme SSD]
-    Level4 -- "Top Tier" --> Level5[🚀 Hyperdisk Extreme]
+    H[Standard HDD] -- "Slow / Backup" --> S[SSD Persistent Disk]
+    S -- "Web Servers" --> B[Balanced SSD]
+    B -- "Standard DBs" --> E[Extreme PD]
+    E -- "Modern Apps" --> HY[🚀 Hyperdisk]
 
-    style Level1 fill:#f1f5f9,stroke:#64748b
-    style Level2 fill:#e2e8f0,stroke:#64748b
-    style Level3 fill:#cbd5e1,stroke:#475569
-    style Level4 fill:#94a3b8,stroke:#334155
-    style Level5 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style H fill:#f1f5f9,stroke:#64748b
+    style B fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style HY fill:#fef9c3,stroke:#ef4444,stroke-width:2px
 ```
 
-1.  **Standard HDD:** Magnetic spinning disks. Cheap. Good for backups/logs.
-2.  **Balanced Persistent Disk:** Best Price/Performance. **Default for most apps.**
-3.  **SSD Persistent Disk:** Fast. For Databases (Postgres/MySQL).
-4.  **Hyperdisk:** The new architecture. **Decouples IOPS from Size.**
-    *   *Old Way:* To get more speed (IOPS), you had to buy a bigger disk (Size).
-    *   *Hyperdisk Way:* You can have a 10GB disk with massive speed.
+> [!TIP]
+> **The New King: Hyperdisk** 
+> Historically, disk speed was tied to disk size (bigger disk = faster). **Hyperdisk** changes this, allowing you to buy a small disk but provision massive speed independently.
 
 ---
 
-## 3️⃣ Persistent Disk vs Local SSD (The Physical Difference) 🔌
+## 🔌 3. Persistent Disk vs Local SSD (The Danger Zone)
+
+This is a classic exam "trap" question.
+
+*   **Persistent Disk (Network Attached):** Safe. If your VM hardware dies, Google just moves your disk to new hardware. Data survives a VM stop.
+*   **Local SSD (Physically Attached):** **DANGEROUS.** It is physically glued to the server box. If you STOP the VM, the data is **WIPED**.
+
+> [!CAUTION]
+> **Local SSD Data Loss:**
+> Only use Local SSDs for temporary data like "Scratch Space", "Swap Files", or "Caches". Never store a database on a Local SSD unless you have real-time replication to a safe place!
 
 ```mermaid
-graph TD
-    subgraph Host ["Physical Server"]
-        VM["Your VM"]
-        LSSD["Local SSD (Physically Attached)"]
-        VM === LSSD
-    end
+graph LR
+    VM[Your VM] -- "Network (Fiber)" --- PD[(Persistent Disk)]
+    VM -- "SATA/NVMe (Physical)" --- LSSD["Local SSD"]
     
-    subgraph Network ["The Zone (Network)"]
-        PD["Persistent Disk (Network Attached)"]
-    end
-    
-    VM -.->|Ethernet Cable| PD
-    
-    style LSSD fill:#fecaca,stroke:#dc2626,stroke-width:2px
-    style PD fill:#bbf7d0,stroke:#16a34a,stroke-width:2px
+    style PD fill:#dcfce7,stroke:#16a34a
+    style LSSD fill:#fee2e2,stroke:#ef4444
 ```
 
-*   **Persistent Disk (PD):** Safe. If your VM crashes, the disk is safe in the network. You can attach it to a new VM.
-*   **Local SSD:** **Ephemeral (Temporary).** It is physically glued to the server. If you stop the VM, the data is **WIPED**. Use it for Cache or Swap only.
+---
+
+## 🛠️ 4. Hands-On Lab: The "Hot Resize" Trick 🔥
+
+**🧪 Lab Objective:** Increase the size of a disk while the VM is still running.
+
+### ✅ Step 1: Check Current Size
+1.  SSH into your VM from Day 3.
+2.  Run: `df -h`
+    *   Observe that your main disk is roughly 10GB.
+
+### ✅ Step 2: Resize in Console
+1.  Go to **Compute Engine > Storage > Disks**.
+2.  Click on the name of your VM's boot disk.
+3.  Click **EDIT**.
+4.  Change size to **20GB** and click Save.
+
+### ✅ Step 3: Verify (No Reboot Required!)
+1.  Go back to your SSH terminal.
+2.  Run: `lsblk`
+    *   *Result:* You will see the physical device is now 20GB. (Note: Depending on the OS, you might need to run `sudo resize2fs` to tell the filesystem to use the new space).
 
 ---
 
-## 4️⃣ Hands-On Lab: The "Hot Resize" Trick 🔥
-**Mission:** You filled up your disk! Increase the size without stopping the server.
+## 📝 5. Checkpoint Quiz
 
-1.  **Create a VM:** Standard `e2-micro`, 10GB boot disk.
-2.  **Go to Disks:** Compute Engine > Storage > Disks.
-3.  **Select:** Click your VM's disk.
-4.  **Edit:** Click Edit. Change Size from **10GB** to **20GB**. Save.
-5.  **Verify:**
-    *   SSH into the VM.
-    *   Run `lsblk`. You will see the physical device is now 20GB!
-    *   *(Note: You usually have to run a command like `growpart` to expand the filesystem, but the hardware resize is instant).*
+1.  **Which storage type would you use for a high-performance database requiring millisecond latency and data persistence across VM restarts?**
+    *   A. Local SSD
+    *   B. **SSD Persistent Disk** ✅
+    *   C. Cloud Storage Standard
+    *   D. Archive Storage
 
-> **Exam Trap:** You can **Increase** (Upsize) a disk anytime. You can **NEVER Decrease** (Downsize) it. To shrink, you must create a new smaller disk and copy data.
+2.  **You have a 100GB disk. You realize you only need 50GB. What is the easiest way to shrink it?**
+    *   A. Click Edit and type 50GB.
+    *   B. **You cannot decrease disk size.** ✅ You must create a new smaller disk and migrate data.
+    *   C. Run the `gcloud compute disks shrink` command.
 
----
-
-<!--
-## 5️⃣ Checkpoint Quiz
-<form>
-  <!-- Q1 -->
-  <div class="quiz-question" id="q1">
-    <p class="font-bold">1. Which storage type is "Ephemeral" and loses all data if the VM is stopped?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q1" value="wrong"> Standard Persistent Disk</label>
-      <label class="block"><input type="radio" name="q1" value="correct"> Local SSD</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Cloud Storage Bucket</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Hyperdisk</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Local SSD is physical and temporary.
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="quiz-question mt-6" id="q2">
-    <p class="font-bold">2. You have a 100GB disk that is half full. You want to save money by shrinking it to 50GB. How do you do this?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q2" value="wrong"> Edit the disk and type 50GB.</label>
-      <label class="block"><input type="radio" name="q2" value="correct"> You cannot shrink it. You must create a new disk and copy data.</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> Use the "Compression" feature.</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Disks can only grow, never shrink.
-    </div>
-  </div>
-
-  <!-- Q3 -->
-  <div class="quiz-question mt-6" id="q3">
-    <p class="font-bold">3. Which disk type creates a clear separation between IOPS (Performance) and Capacity (Size)?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q3" value="wrong"> Standard HDD</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> SSD Persistent Disk</label>
-      <label class="block"><input type="radio" name="q3" value="correct"> Hyperdisk</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Local SSD</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Hyperdisk allows you to provision IOPS independently of disk size.
-    </div>
-  </div>
-</form>
--->
+3.  **What is the main benefit of Hyperdisk?**
+    *   A. It's the cheapest option.
+    *   B. It works with personal Gmail accounts.
+    *   C. **It decouples performance (IOPS) from storage capacity (GB).** ✅
 
 ---
 
-### ⚡ Zero-to-Hero: Pro Tips
-*   **Filestore:** Mentioned briefly: If you need 10 VMs to access the *same* folder (Read/Write), you can't use PDs. You need **Filestore** (Managed NFS).
-*   **Snapshots:** Always Snapshot your disk before a risky change. Snapshots are incremental (cheap) and saved globally (safe).
-
----
-<!-- FLASHCARDS
-[
-  {"term": "Block Storage", "def": "Storage managed as blocks (hard drive). Used for OS/Databases. (Persistent Disk)."},
-  {"term": "Object Storage", "def": "Storage managed as files/objects. Used for media/backups. (Cloud Storage)."},
-  {"term": "Local SSD", "def": "Ephemeral, high-performance physical storage. Data lost on stop."},
-  {"term": "Snapshot", "def": "A backup of a Persistent Disk. Incremental and Global."}
-]
--->
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I know that Persistent Disks are network-attached.', checked: false },
+        { text: 'I understand that stopping a VM wipes Local SSD data.', checked: false },
+        { text: 'I successfully resized a disk without stopping the VM.', checked: false },
+        { text: 'I can explain why IaaS needs Block Storage.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 5 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

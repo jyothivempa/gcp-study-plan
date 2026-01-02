@@ -1,114 +1,152 @@
-# Day 26: Billing & Resource Management
+# Day 26: Resource Management & Billing
 
 **Duration:** ⏱️ 45 Minutes  
-**Level:** Beginner  
-**ACE Exam Weight:** ⭐⭐⭐ Medium
+**Level:** Beginner/Intermediate  
+**ACE Exam Weight:** ⭐⭐⭐⭐ High
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 26, learners will be able to:
-*   **Set up** Billing Budgets and Alerts.
-*   **Understand** Quotas and how to request increases.
-*   **Export** billing data to BigQuery for analysis.
+By the end of Day 26, you will be able to:
+*   **Navigate** the Google Cloud resource hierarchy (Org, Folders, Projects).
+*   **Architect** a cost-control strategy using Budgets, Alerts, and Quotas.
+*   **Analyze** complex spending patterns using Billing Exports to BigQuery.
+*   **Implement** labels for granular cost tracking and filtering.
 
 ---
 
-## 🧠 1. The Cloud Bill
+## 🏗️ 1. The Resource Hierarchy
 
-The cloud is "Pay as you go". This is great, until you leave a massive GPU cluster running over the weekend.
-**Cost Management safeguards are mandatory.**
+In Google Cloud, resources aren't just floating in space. They follow a strict hierarchy that dictates how permissions and billing are inherited.
 
-### Key Concepts:
-1.  **Budget:** A target amount (e.g., $100).
-2.  **Alert:** A notification sent when you hit 50%, 90%, or 100% of the budget.
-    *   *Note:* Alerts do **NOT** stop services. They just scream at you via Email.
-3.  **Quota:** Hard limits on resources (e.g., "Max 5 CPUs per region") to prevent accidental massive spending.
+```mermaid
+graph TD
+    ORG[Organization: 'company.com'] --> F1[Folder: Production]
+    ORG --> F2[Folder: Development]
+    
+    F1 --> P1[Project: Primary App]
+    F2 --> P2[Project: Sandbox]
+    F2 --> P3[Project: Testing]
+    
+    P1 --> R1[VMs, Buckets, DBs]
+    P2 --> R2[Trial VM]
+```
+
+| Level | Key Responsibility | ACE Exam Note |
+| :--- | :--- | :--- |
+| **Organization** | Root node. | Requires a verified Google Workspace domain. |
+| **Folder** | Grouping (per dept, per env). | Used to apply bulk IAM policies. |
+| **Project** | The boundary for resources. | Every project **must** be linked to a Billing Account. |
+| **Label** | Key-Value pairs on resources. | Best for categorizing costs (e.g. `team:data`). |
 
 ---
 
-## 💳 2. Real-World Analogy: The Credit Limit
+## 📊 2. Budgets vs. Quotas: The Safestop
 
-*   **Quota** = **Your Credit Card Limit ($5000)**.
-    *   Standard safeguard. You can ask bank to raise it.
-    *   Prevents you from accidentally buying an island.
-*   **Budget Alert** = **SMS Notification**.
-    *   "You have spent $50." -> "You have spent $90."
-    *   It doesn't freeze the card. It just warns you.
+It is a common mistake to think Budgets stop your spending. They don't. Only **Quotas** actually halt resource creation.
+
+| Feature | Budgets & Alerts | Quotas |
+| :--- | :--- | :--- |
+| **Goal** | Cost Awareness | Safety & Capacity |
+| **Action** | Sends an email/notification. | Blocks the `Create` operation. |
+| **Stops Spend?** | **NO**. Resources keep running. | **YES**. Prevents new spend. |
+| **Increase?** | You set the limit yourself. | You must request from Google. |
 
 ---
 
-## 🛠️ 3. Hands-On Lab: Set a Budget
+## 🛠️ 3. Hands-On Lab: Cost Safety Net
 
-**🧪 Lab Objective:** Create a safeguard for your project.
+### 🧪 Lab Objective
+Set up a multi-threshold budget and understand where to find your current Quota usage.
 
 ### ✅ Steps
 
-1.  **Open Console:** Go to **Billing**.
-2.  **Menu:** Select **Budgets & alerts**.
-3.  **Create:** Click **Create Budget**.
-    *   Name: `My Learning Budget`.
-    *   Time range: Monthly.
-    *   Amount: **Specified amount** -> **$20.00**.
-4.  **Actions:**
-    *   Thresholds: 50%, 90%, 100%.
-    *   Notifications: Email alerts to billing admins.
-5.  **Finish:** Click Save.
-    *   *Result:* If your labs cost $10, you will get an email.
+1.  **Create a Budget**:
+    - Go to **Billing > Budgets & alerts**.
+    - Set Monthy Budget: **$10.00**.
+    - Set Thresholds:
+        - 50% (Email Admins)
+        - 90% (Email Admins + PubSub Notification)
+        - 100% (Email Admins)
+
+2.  **Inspect Quotas**:
+    - Go to **IAM & Admin > Quotas**.
+    - Filter by: **Service: Compute Engine API**.
+    - Metric: **CPUs (all regions)**.
+    - *Observation:* Note your current limit (usually 8 or 32 for new accounts). If you try to create 100 VMs, this is where it would be blocked!
+
+3.  **Label a Resource**:
+    ```bash
+    gcloud compute instances add-labels monitor-node \
+      --labels="env=dev,owner=learner" \
+      --zone=us-central1-a
+    ```
+    *Now, your next billing report allows you to filter specifically for `env=dev` costs.*
 
 ---
 
-## 📊 4. BigQuery Export
+## ⚠️ 4. Exam Traps & Best Practices
 
-The Billing console is nice, but what if you need to know: *"How much did Project A spend on Storage in Tokyo on Tuesday?"*
-For detailed SQL analysis, you **Export Billing Data to BigQuery**.
-This is a common exam question!
+> [!IMPORTANT]
+> **ACE Exam Alert: BigQuery Export**
+> If you need to "Visualize billing data over the last 12 months with custom charts," the first step is always **exporting the billing data to BigQuery**. Standard console reports only show limited history.
+
+> [!WARNING]
+> **Billing Account Permissions**: To link a project to a billing account, you must have the **Billing Account User** role on the *Billing Account*, and **Project Creator/Owner** on the *Project*.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 📝 5. Knowledge Check
 
-1.  **Does setting a Billing Budget automatically stop your VMs when the limit is reached?**
-    *   A. Yes
-    *   B. **No, it only sends alerts.** ✅
-    *   C. Yes, but only for Compute Engine.
+<!-- QUIZ_START -->
+1.  **You want to receive an automated notification when your monthly spend reaches $500, but you do NOT want your services to stop. What should you configure?**
+    *   A. A hard Quota limit.
+    *   B. **A Billing Budget and Alert.** ✅
+    *   C. An IAM Policy.
+    *   D. A Firewall Rule.
 
-2.  **You can't create a database because you reached the "Limit of 5 instances". What is this called?**
-    *   A. Budget
-    *   B. **Quota** ✅
-    *   C. Firewall
+2.  **You are unable to create a new Compute Engine instance in the `us-east1` region because you have 'exceeded account limits.' How do you resolve this?**
+    *   A. Increase your Billing Budget.
+    *   B. **Request a Quota increase in the Console.** ✅
+    *   C. Change your credit card.
+    *   D. Delete your project and start over.
 
-3.  **How do you analyze complex spending patterns using SQL?**
-    *   A. Download a CSV.
-    *   B. **Enable Billing Export to BigQuery.** ✅
-    *   C. Use Cloud Monitoring.
+3.  **Which level of the resource hierarchy is best suited for applying a single IAM policy that affects all production projects simultaneously?**
+    *   A. Project level
+    *   B. **Folder level ('Production' folder)** ✅
+    *   C. Resource level
+    *   D. Label level
 
-4.  **Who can link a Project to a Billing Account?**
-    *   A. Any editor.
-    *   B. **Billing Account User (or Admin).** ✅
-    *   C. Viewer.
+4.  **What is the primary benefit of exporting billing data to BigQuery?**
+    *   A. It makes the bill cheaper.
+    *   B. **It allows for complex SQL analysis and long-term data retention.** ✅
+    *   C. It automatically pays the bill using credits.
+    *   D. It encrypts the billing data.
 
-5.  **What is the best way to categorize costs (e.g. separate "Dev" vs "Prod" spend)?**
-    *   A. Use separate credit cards.
-    *   B. **Use Labels (e.g. env=prod) and filter billing reports.** ✅
-    *   C. Quotas.
+5.  **You need to track exactly how much the 'Marketing' team is spending on Cloud Storage vs the 'Engineering' team within the same project. What should you use?**
+    *   A. Folders
+    *   B. **Labels (e.g., team=marketing, team=eng)** ✅
+    *   C. Different Billing Accounts
+    *   D. Different VPCs
+<!-- QUIZ_END -->
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I created a Budget of $20.', checked: false },
-        { text: 'I verified my Email is set for alerts.', checked: false },
-        { text: 'I understand that Budgets do NOT stop spending.', checked: false }
+        { text: 'I can draw the Org -> Folder -> Project hierarchy.', checked: false },
+        { text: 'I understand that Budgets do not stop services.', checked: false },
+        { text: 'I know the difference between Billing Account Admin and User.', checked: false },
+        { text: 'I understand how to use Labels for cost tracking.', checked: false }
     ]
 }">
     <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        Day 26 Checklist
+        Day 26 Mastery Checklist
     </h3>
     <template x-for="(item, index) in items" :key="index">
         <div class="checklist-item" @click="item.checked = !item.checked">

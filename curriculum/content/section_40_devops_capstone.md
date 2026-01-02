@@ -1,106 +1,164 @@
-# SECTION 33: DevOps Capstone (The Broken Pipeline)
+# Day 40: DevOps Capstone (The "Broken Pipeline" Rescue)
 
-## 🕵️‍♂️ The Scenario
-The Lead DevOps engineer quit yesterday.
-He left a half-finished **Cloud Build** pipeline that fails 100% of the time.
-You need to fix it and deploy the app to **Cloud Run**.
+**Duration:** ⏱️ 90 Minutes  
+**Level:** Advanced (Scenario-Based)  
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (CI/CD & Automation)
 
-## 1️⃣ The "Bad" Pipeline
+---
+
+## 🕵️‍♂️ The Scenario: "Dead on Arrival"
+
+The Lead DevOps Engineer has left the company midway through a migration to Cloud Run. Your goal is to take over a failing Cloud Build pipeline that refuses to deploy the application.
+
+**The Symptom:** Every build fails at the `pytest` or `deploy` step.
+**The Goal:** Fix the pipeline, automate the trigger, and implement a "Zero-Downtime" deployment strategy.
+
+---
+
+## 🏗️ 1. Architecture: The CI/CD Lifecycle
+
 ```mermaid
 graph LR
-    Git[GitHub Push] --"Fail"--> Build[Cloud Build]
-    Build --"x"--> Deploy[Cloud Run]
-    
-    style Build fill:#fee2e2,stroke:#991b1b
-```
-**Error Logs:**
-1.  `Error: step 'pytest' failed. requirements.txt not found.`
-2.  `Error: 403 Permission Denied. Service Account cannot deploy to Cloud Run.`
+    Code[Developer Push] --> Build[Cloud Build]
+    Build --> Test[Pytest / Lint]
+    Test --> Push[Artifact Registry]
+    Push --> Deploy[Cloud Run]
 
-## 2️⃣ The Objectives
-1.  **Debug:** Analyze the `cloudbuild.yaml` and IAM permissions.
-2.  **Fix Code:** Add the missing file.
-3.  **Fix IAM:** Grant the Cloud Build Service Account the right roles.
-4.  **Verify:** A green Checkmark ✅ on the build.
-
-## 3️⃣ Lab Steps (Guided) 🛠️
-
-### Step 1: Fix the Container
-*   *Issue:* The build fails because `pip install` cannot find `requirements.txt`.
-*   *Task:* Create a dummy `requirements.txt` in your repo:
-    ```text
-    Flask==2.0.0
-    gunicorn==20.1.0
-    ```
-
-### Step 2: Fix the Permissions (The main exam topic) 🔑
-*   *Issue:* Cloud Build uses the default service account: `[PROJECT_NUMBER]@cloudbuild.gserviceaccount.com`.
-*   By default, **it does not have permission to deploy to Cloud Run**.
-*   *Task:* Go to IAM. Find the Cloud Build Service Account. Grant it:
-    *   `Cloud Run Admin`
-    *   `Service Account User` (to act as the runtime identity).
-
-### Step 3: The Job-Ready Solution (Code) 🚀
-Don't just fix it manually. Build the repo structure that works out of the box.
-
-**1. The App (`app.py`)**
-```python
-from flask import Flask
-import os
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    target = os.environ.get('TARGET', 'World')
-    return f'Hello {target}! Deployed via Cloud Build.'
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    style Build fill:#e0f2fe,stroke:#0369a1
+    style Deploy fill:#dcfce7,stroke:#15803d
 ```
 
-**2. The Build Config (`cloudbuild.yaml`)**
+---
+
+## 🛠️ 2. The DevOps Debugging Checklist
+
+When a build fails, follow this triage order:
+
+### Phase 1: Environment Errors
+*   **Error:** `Command not found` or `File not found`.
+*   **Check:** Is the `cloudbuild.yaml` running in the correct directory? Are all files (.requirements.txt, Dockerfile) in the root?
+*   **Fix:** Ensure `COPY . .` is in your Dockerfile.
+
+### Phase 2: IAM Permissions (90% of failures)
+*   **Error:** `403 Permission Denied: Unable to act as service account`.
+*   **Check:** Does the **Cloud Build Service Account** have the `Cloud Run Admin` and `Service Account User` roles?
+*   **ACE Exam Rule:** Cloud Build is a separate identity that needs explicit permission to "hand over" a container to Cloud Run.
+
+---
+
+## 🏗️ 3. The "Production-Ready" Pipeline (IaC)
+
+Upgrade the basic build to a professional-grade config.
+
 ```yaml
+# cloudbuild.yaml
 steps:
-  # Install Dependencies
-  - name: 'python:3.9'
-    entrypoint: 'pip'
-    args: ['install', '-r', 'requirements.txt']
+  # 1. Static Analysis (Linting)
+  - name: 'python:3.9-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install flake8
+        flake8 .
 
-  # Build & Push Container
+  # 2. Build and Tag with Commit SHA (Best Practice)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-app', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/app:$SHORT_SHA', '.']
 
-  # Deploy to Cloud Run
+  # 3. Deploy to Cloud Run (Managed)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
-    args: ['run', 'deploy', 'my-app', '--image', 'gcr.io/$PROJECT_ID/my-app', '--region', 'us-central1', '--platform', 'managed']
+    args:
+      - 'run'
+      - 'deploy'
+      - 'my-service'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/app:$SHORT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/app:$SHORT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
 ```
 
-**3. Trigger It:**
-```bash
-gcloud builds submit --config=cloudbuild.yaml .
-```
+---
 
-## 4️⃣ Checkpoint Questions
-<!--
-**Q1. You get a "Permission Denied" error when Cloud Build tries to deploy to Cloud Run. What is missing?**
-*   A. The developer is banned.
-*   B. The `Cloud Run Admin` role on the Cloud Build Service Account.
-*   C. The API is down.
-*   D. You need to use Jenkins.
-> **Answer: B.** Cloud Build is a robot. It needs explicit permission to "touch" Cloud Run.
+## 🚀 4. Deployment Strategies: Blue-Green vs. Canary
 
-**Q2. Your build passes, but the app crashes on startup with "ModuleNotFound". Where should you look first?**
-*   A. Cloud Build logs.
-*   B. Cloud Run logs.
-*   C. VPC logs.
-*   D. Billing console.
-> **Answer: B.** If the build passes, the artifact is good. If startup fails, the runtime environment (Cloud Run) will show why (e.g. missing dependency).
+| Strategy | Logic | Risk | Use Case |
+| :--- | :--- | :--- | :--- |
+| **Blue-Green** | Spin up a full new version (Green) and switch all traffic at once. | Low (Easy rollback). | Mission-critical apps. |
+| **Canary** | Send 5% of traffic to New, 95% to Old. Monitor for errors. | Very Low. | High-traffic web apps. |
+| **Rolling** | Update one instance at a time (Standard GKE/GCE). | Medium. | Standard internal apps. |
 
-**Q3. How do you automate this pipeline to run on every Git Push?**
-*   A. Use a Cron Job.
-*   B. Create a **Cloud Build Trigger**.
-*   C. Use a Webhook manually.
-*   D. It happens automatically.
-> **Answer: B.** Triggers connect the Git Provider (GitHub) to the Build Service.
--->
+---
+
+## 📝 5. Knowledge Check
+
+<!-- QUIZ_START -->
+1.  **Your Cloud Build pipeline fails at the 'Deploy' step with a 403 error. Which Service Account likely needs more permissions?**
+    *   A. Your personal Google Account.
+    *   B. **The Cloud Build Service Account ([NUMBER]@cloudbuild.gserviceaccount.com).** ✅
+    *   C. The Compute Engine Default SA.
+    *   D. The App Engine Default SA.
+
+2.  **What is the benefit of using $SHORT_SHA in your container tags?**
+    *   A. It makes the build faster.
+    *   B. **It provides traceability between the deployed image and the specific Git commit.** ✅
+    *   C. It reduces storage costs.
+    *   D. It encrypts the image.
+
+3.  **You want to ensure that a new version of your app is only released if it passes all unit tests. Where should the tests run?**
+    *   A. On the developer's laptop.
+    *   B. **As an early step in the Cloud Build pipeline.** ✅
+    *   C. After the app is deployed to Cloud Run.
+    *   D. Inside the Dockerfile.
+
+4.  **A Cloud Build 'Trigger' allows you to automate builds based on which event?**
+    *   A. A manual API call.
+    *   B. **A push to a specific branch in GitHub/Bitbucket.** ✅
+    *   C. A change in the Billing account.
+    *   D. A user logging into the console.
+
+5.  **Which deployment strategy involves running two identical environments but only sending traffic to one at a time?**
+    *   A. Canary.
+    *   B. **Blue-Green.** ✅
+    *   C. Rolling.
+    *   D. A/B Testing.
+<!-- QUIZ_END -->
+
+---
+
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I can troubleshoot 403 errors in Cloud Build.', checked: false },
+        { text: 'I understand how to use substitution variables like $SHORT_SHA.', checked: false },
+        { text: 'I know the difference between Blue-Green and Canary deployments.', checked: false },
+        { text: 'I can define a multi-step pipeline in cloudbuild.yaml.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 40 Mastery Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

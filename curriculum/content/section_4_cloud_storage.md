@@ -2,122 +2,133 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Beginner  
-**ACE Exam Weight:** ⭐⭐⭐⭐ Very High
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Very High
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 4, learners will be able to:
-*   **Explain** how Cloud Storage differs from a Disk.
-*   **Choose** the correct Storage Class (Standard vs Nearline vs Coldline vs Archive).
-*   **Create** a Bucket and upload objects.
-*   **Understand** Object Versioning.
+By the end of Day 4, you will be able to:
+*   **Differentiate** between Object Storage and Block Storage.
+*   **Select** the optimal Storage Class based on access frequency.
+*   **Deploy** a static website using a globally unique bucket.
+*   **Configure** IAM permissions for public object access.
 
 ---
 
-## 🧠 1. What Is Cloud Storage? (Plain-English)
+## 🧠 1. What is Cloud Storage?
 
-**Cloud Storage** is "Object Storage". 
-It is NOT a hard drive attached to a VM (that's Persistent Disk).
+**Cloud Storage (GCS)** is "Object Storage". Unlike a hard drive (which stores bits of files in blocks), GCS stores the entire file as an "Object" along with metadata.
 
-### Key Features:
-*   **Infinite Scale:** Store exabytes of data.
-*   **Global Access:** Accessible via URL (HTTP) from anywhere.
-*   **Serverless:** No VM to manage. Just upload files.
+### Object vs. Block Storage
+```mermaid
+graph TD
+    subgraph Object_Storage ["📦 Object Storage (GCS)"]
+        Obj1["File + Metadata + ID"]
+        Obj2["File + Metadata + ID"]
+    end
+    
+    subgraph Block_Storage ["💾 Block Storage (Persistent Disk)"]
+        Block1["Data Segment"]
+        Block2["Data Segment"]
+    end
+    
+    Object_Storage -- "Accessed via API/URL" --> Internet((Internet))
+    Block_Storage -- "Attached to VM" --> VM[Compute Engine VM]
+```
+
+> [!NOTE]
+> **Key Rule:** If you need to run an OS or a high-performance DB, use **Block Storage**. If you need to store billions of images or backups, use **Object Storage**.
 
 ---
 
-## 🤖 2. Real-World Analogy: Google Drive for Robots
+## 🏗️ 2. The Storage Hierarchy: Buckets & Objects
 
-*   **Google Drive** is for **Humans** (drag and drop, UI, docs).
-*   **Cloud Storage** is for **Applications** (APIs, code, massive scale).
+*   **Bucket:** A container for your objects. 
+*   **Object:** The actual file (image, video, log).
 
-Think of a **Bucket** like a **Folder** in the cloud that has a unique name.
-Think of an **Object** like a **File** inside that bucket.
+> [!IMPORTANT]
+> **The Global Rule:**
+> Bucket names must be **globally unique**. This means if I name my bucket `test-bucket`, nobody else on the planet can use that name.
 
 ---
 
-## 🧊 3. Storage Classes (The "Temperature" of Data)
+## 🔥 3. Storage Classes: The "Temperature" of Data
 
-Google charges you less if you promise to access data less often.
+Google allows you to trade accessibility for cost. The less you access it, the less you pay.
 
-| Class | Use Case | "Temperature" | Min Duration |
+| Class | Analogy | Use Case | Min Duration |
 | :--- | :--- | :--- | :--- |
-| **Standard** | Streaming videos, websites, "Hot" data used daily. | 🔥 Hot | None |
-| **Nearline** | Backups aimed at once-a-month access. | 🌤️ Warm | 30 Days |
-| **Coldline** | Disaster recovery, accessed once-a-quarter. | ❄️ Cold | 90 Days |
-| **Archive** | Regulation logs, "Tape" replacement, accessed once-a-year. | 🧊 Frozen | 365 Days |
+| **Standard** | 🔥 Hot | Streaming, Websites, Daily use. | None |
+| **Nearline** | 🌦️ Warm | Backups (accessed < once / mo). | 30 Days |
+| **Coldline** | ❄️ Cold | Disaster Recovery (< once / quarter). | 90 Days |
+| **Archive** | 🧊 Frozen | Regulatory compliance (< once / year). | 365 Days |
 
-> **🎯 ACE Tip:** 
-> *   "Access frequently" → **Standard**.
-> *   "Access once a month" → **Nearline**.
-> *   "Long-term retention / Regulations" → **Archive**.
+```mermaid
+graph LR
+    S[Standard] --> N[Nearline]
+    N --> C[Coldline]
+    C --> A[Archive]
+    
+    style S fill:#ef4444,color:#fff
+    style N fill:#fbbf24
+    style C fill:#60a5fa
+    style A fill:#1e40af,color:#fff
+```
+
+> [!TIP]
+> **Lifecycle Policies:** You can automate this! You can set a rule to move files from **Standard** to **Archive** automatically after 365 days.
 
 ---
 
 ## 🛠️ 4. Hands-On Lab: Host a Static Website
 
-**🧪 Lab Objective:** Create a bucket and host a simple public file.
+**🧪 Lab Objective:** Create a bucket and host a public image/file.
 
-### ✅ Steps
+### ✅ Step 1: Create the Bucket
+1.  Go to **Cloud Storage > Buckets**.
+2.  Click **Create**.
+3.  Name: `gcp-hero-website-{{RANDOM_NUM}}`.
+4.  Choose **Regional** and pick `us-central1`.
 
-1.  **Open Console:** Go to **Cloud Storage** > **Buckets**.
-2.  **Create:** Click **Create**.
-3.  **Name:** `my-unique-bucket-name-xyz` (Must be globally unique!).
-4.  **Settings:**
-    *   **Region:** `us-central1`
-    *   **Class:** `Standard`
-    *   **Access Control:** Uncheck "Enforce public access prevention" (So we can share it).
-    *   **Access Control:** Choose **Uniform**.
-5.  **Upload:** Upload an image or `index.html` file.
-6.  **Make Public:**
-    *   Go to **Permissions** tab.
-    *   Click **Grant Access**.
-    *   Add Principal: `allUsers`.
-    *   Role: `Storage Object Viewer`.
-    *   Save.
-7.  **Test:** Click the "Public URL" link next to your file. It works!
+### ✅ Step 2: Public Access (Security)
+1.  **Uncheck** "Enforce public access prevention on this bucket".
+2.  Select **Uniform** access control.
 
-> **⚠️ Security Warning:** Only do this for public websites. Never grant `allUsers` access to private data!
+> [!CAUTION]
+> In a production environment, you should almost always use **Enforce Public Access Prevention** unless you specifically intend to host a public website.
+
+### ✅ Step 3: Make it Public
+After uploading a file (e.g., `index.html`):
+1.  Go to the **Permissions** tab.
+2.  Click **Grant Access**.
+3.  New Principal: `allUsers`.
+4.  Role: **Storage > Storage Object Viewer**.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 📝 5. Checkpoint Quiz
 
-1.  **Which storage class is cheapest for storing data you plan to access only once a year?**
+1.  **You need to store 10TB of tax records that legal says you must keep for 7 years, but will likely never look at. Which class?**
     *   A. Standard
     *   B. Nearline
     *   C. **Archive** ✅
     *   D. Coldline
 
-2.  **What must be unique about a Bucket Name?**
-    *   A. Unique within your project.
-    *   B. **Globally unique across ALL of Google Cloud.** ✅
-    *   C. Just contains your name.
+2.  **What happens if you delete a file in a bucket that has 'Object Versioning' enabled?**
+    *   *Answer:* The file becomes a **Noncurrent Version**. It isn't actually gone; it's just hidden. You can restore it later.
 
-3.  **Cloud Storage is what type of storage?**
-    *   A. Block Storage
-    *   B. File Storage
-    *   C. **Object Storage** ✅
-
-4.  **How do you make a file downloadable by anyone on the internet?**
-    *   A. Send them the password.
-    *   B. **Grant the 'Storage Object Viewer' role to 'allUsers'.** ✅
-    *   C. You cannot do this.
-
-5.  **Is Cloud Storage used for running an Operating System?**
-    *   A. Yes
-    *   B. **No (That's Persistent Disk)** ✅
+3.  **True or False: Bucket names can be duplicated as long as they are in different regions.**
+    *   *Answer:* **False.** Names are globally unique.
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I can pick the right Storage Class.', checked: false },
-        { text: 'I created a globally unique bucket.', checked: false },
-        { text: 'I uploaded a file.', checked: false },
-        { text: 'I configured IAM to make an object public.', checked: false }
+        { text: 'I understand why bucket names must be unique.', checked: false },
+        { text: 'I successfully hosted a file and viewed it via Public URL.', checked: false },
+        { text: 'I can name the 4 storage classes in order of cost.', checked: false },
+        { text: 'I know the difference between allUsers and allAuthenticatedUsers.', checked: false }
     ]
 }">
     <h3>

@@ -2,121 +2,128 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐ Medium
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Critical for Lift & Shift)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 10, learners will be able to:
-*   **Explain** managed database benefits (vs installing MySQL on a VM).
-*   **Choose** between Cloud SQL, Spanner, and BigQuery.
-*   **Connect** to a Cloud SQL instance.
+By the end of Day 10, you will be able to:
+*   **Explain** the benefits of managed databases vs. self-managed VMs.
+*   **Select** the right database engine (MySQL, PostgreSQL, SQL Server).
+*   **Implement** High Availability (HA) and Read Replicas.
+*   **Connect** securely to a database from Cloud Shell.
 
 ---
 
-## 🧠 1. What Is Cloud SQL?
+## 🧠 1. What is Cloud SQL?
 
-**Cloud SQL** is a fully managed relational database service.
-It runs **MySQL**, **PostgreSQL**, or **SQL Server**.
+**Cloud SQL** is a fully managed service that takes the "pain" out of database administration.
 
-### "Fully Managed" means Google handles:
-*   ✅ Backups (Automated daily).
-*   ✅ Patching (No more OS updates).
-*   ✅ Failover (High Availability).
-*   ✅ Replication (Read Replicas).
+### What Google Manages for You
+*   ✅ **Auto-Backups:** Daily snapshots of your data.
+*   ✅ **Patching:** Google updates the OS and the Database Engine automatically.
+*   ✅ **Failover:** If the primary zone fails, traffic is moved to a standby instance.
+*   ✅ **Scaling:** Increase CPU or Storage with a few clicks.
 
-You just write SQL queries.
-
----
-
-## 👔 2. Real-World Analogy: Hiring a DBA
-
-*   **MySQL on Compute Engine:** You are the janitor, the mechanic, and the driver. You fix the server when it breaks.
-*   **Cloud SQL:** You **hired a Database Administrator (DBA)** named Google.
-    *   You tell Google: "Make sure this never goes down." (Enable HA).
-    *   You tell Google: "Back it up every night." (Config).
-    *   Google does the work. You pay a salary (Management fee).
+```mermaid
+graph LR
+    App[App Engine / VM] --> LB[Cloud SQL Auth Proxy]
+    LB --> Master[Primary Instance <br/> Zone A]
+    Master -.-> Standby[Standby Instance <br/> Zone B]
+    Master --> RR[Read Replica <br/> Region 2]
+    
+    style Master fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style Standby fill:#f1f5f9,stroke:#64748b
+```
 
 ---
 
-## ⚖️ 3. Cloud SQL vs Other DBs (Exam Key)
+## 👔 2. The Analogy: Hiring an Expert DBA
 
-| Service | Type | Use Case | Scale |
+*   **MySQL on a VM:** You are the janitor, the driver, and the chef. If the server crashes at 3 AM, **you** wake up.
+*   **Cloud SQL:** You **hired a 24/7 Expert DBA (Google)**. 
+    *   You give them the keys (Config).
+    *   They handle the maintenance, the fires, and the security.
+    *   You focus on writing the app code.
+
+---
+
+## ⚖️ 3. The SQL Decision Matrix
+
+Choosing the right database is a major part of the ACE exam.
+
+| Service | Best For | Scale | Exam Keyword |
 | :--- | :--- | :--- | :--- |
-| **Cloud SQL** | Relational (SQL) | Traditional Apps, ERP, CRS, Wordpress. | Regional (Up to ~64TB). |
-| **Cloud Spanner** | Relational (SQL) | Global Banking, Global Inventory. | **Global** (Unlimited Horizontal Scale). |
-| **BigQuery** | Warehouse (SQL) | Analytics, Dashboarding, ML. | Petabytes. |
-| **Firestore** | NoSQL | Mobile Apps, User Profiles, Game State. | Document Scale. |
+| **Cloud SQL** | Blogs, ERP, Standard Web Apps. | Regional (~64TB) | "Lift & Shift", "MySQL/Postgres". |
+| **Cloud Spanner** | Global Finance, Inventory. | **Global** (Unlimited) | "Horizontal Scale", "Global Consistency". |
+| **BigQuery** | Analytics, Data Mining. | Petabytes | "Warehouse", "OLAP", "Large Datasets". |
 
-> **🎯 ACE Tip:**
-> *   "Global SQL Database with horizontal scale" → **Spanner**.
-> *   "Lift and shift existing MySQL/Postgres" → **Cloud SQL**.
-> *   "Analytics" → **BigQuery**.
+> [!IMPORTANT]
+> **Read Performance:** If your app is slow because of too many "SELECT" queries, add a **Read Replica**. This creates a second copy of your database dedicated to reading data.
 
 ---
 
-## 🛠️ 4. Hands-On Lab: Create a MySQL Instance
+## 🛠️ 4. Hands-On Lab: Your First Managed DB
 
-**🧪 Lab Objective:** Spin up a managed MySQL database.
+**🧪 Lab Objective:** Create a MySQL instance and run your first query.
 
-### ✅ Steps
+### ✅ Step 1: Create the Instance
+1.  Go to **SQL** in the Console.
+2.  Click **Create Instance** and select **MySQL**.
+3.  Instance ID: `hero-db-1`.
+4.  **Configuration:** Choose **Enterprise** (Standard).
+5.  **Location:** **Single Zone** (to save money for the lab).
 
-1.  **Open Console:** Go to **SQL**.
-2.  **Create:** Click **Create Instance**.
-3.  **Engine:** Choose **MySQL**.
-4.  **Config:**
-    *   **Instance ID:** `my-test-db`.
-    *   **Password:** Generate or set a strong one. Save it!
-    *   **Database Version:** MySQL 8.0.
-    *   **Region:** `us-central1`.
-    *   **Zonal Availability:** Single Zone (Cheaper for lab).
-5.  **Create:** Click Create. **(This takes 5-10 minutes!)**
-6.  **Connect:**
-    *   Once green, click **Open Cloud Shell**.
-    *   Run: `gcloud sql connect my-test-db --user=root`
-    *   Enter password.
-    *   Run SQL: `SHOW DATABASES;`
+### ✅ Step 2: Set the Password
+Choose a root password and **copy it somewhere safe**.
+
+### ✅ Step 3: Secure Connection
+1.  Once the instance is ready, click **Connect using Cloud Shell**.
+2.  Run:
+    ```bash
+    gcloud sql connect hero-db-1 --user=root --quiet
+    ```
+3.  Enter your password.
+4.  Create a table:
+    ```sql
+    CREATE DATABASE hero_corp;
+    USE hero_corp;
+    CREATE TABLE users (id INT, name VARCHAR(50));
+    INSERT INTO users VALUES (1, 'GCP Student');
+    SELECT * FROM users;
+    ```
+
+> [!WARNING]
+> **Cloud SQL Auth Proxy:** In production, never use Public IPs for your DB. Use the **Cloud SQL Auth Proxy** or **Private Service Access** for a secure, encrypted connection.
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 📝 5. Checkpoint Quiz
 
-1.  **Which database engine is NOT supported by Cloud SQL?**
-    *   A. MySQL
-    *   B. PostgreSQL
-    *   C. SQL Server
-    *   D. **Oracle** ✅
+1.  **Which of these is NOT a managed feature of Cloud SQL?**
+    *   A. Automated backups
+    *   B. OS Patching
+    *   C. **Writing SQL Queries** ✅ (That's your job!)
+    *   D. High Availability failover
 
-2.  **You need a relational database that scales horizontally across the globe. Which service should you choose?**
+2.  **A global retail company needs a relational database that can scale horizontally across the US, Europe, and Asia with strong consistency. Which should they use?**
     *   A. Cloud SQL
     *   B. **Cloud Spanner** ✅
-    *   C. BigQuery
-    *   D. Bigtable
+    *   C. Cloud Bigtable
+    *   D. BigQuery
 
-3.  **What is the main benefit of "Managed" Cloud SQL over "MySQL on a VM"?**
-    *   A. It is free.
-    *   B. **Google handles patching, backups, and failover.** ✅
-    *   C. You get root OS access (You don't).
-
-4.  **To increase read performance for a reporting app, what should you add to Cloud SQL?**
-    *   A. High Availability (HA)
-    *   B. **Read Replicas** ✅
-    *   C. More disk space
-
-5.  **When should you choose BigQuery over Cloud SQL?**
-    *   A. For transaction processing (OLTP).
-    *   B. **For analytical queries on massive datasets (OLAP).** ✅
-    *   C. For hosting a Wordpress site.
+3.  **True or False: To increase the write performance of a single Cloud SQL instance, you should add more Read Replicas.**
+    *   *Answer:* **False.** Read Replicas only help with READS. To increase WRITE performance, you must **Vertically Scale** (increase CPU/RAM).
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I can list the 3 engines supported by Cloud SQL.', checked: false },
-        { text: 'I understand when to use Spanner vs Cloud SQL.', checked: false },
-        { text: 'I created a Cloud SQL instance.', checked: false },
-        { text: 'I connected via Cloud Shell.', checked: false }
+        { text: 'I know the 3 engines supported by Cloud SQL.', checked: false },
+        { text: 'I understand when to choose Spanner over Cloud SQL.', checked: false },
+        { text: 'I successfully ran a query in a managed SQL instance.', checked: false },
+        { text: 'I know that Read Replicas are for scaling read traffic.', checked: false }
     ]
 }">
     <h3>

@@ -8,109 +8,124 @@
 
 ## 🎯 Learning Objectives
 
-By the end of Day 8, learners will be able to:
-*   **Differentiate** between Unmanaged vs Managed Instance Groups (MIGs).
-*   **Configure** Auto-healing to replace broken VMs.
-*   **Understand** Auto-scaling logic.
+By the end of Day 8, you will be able to:
+*   **Differentiate** between Unmanaged and Managed Instance Groups (MIGs).
+*   **Configure** High Availability using Regional MIGs.
+*   **Implement** Auto-healing to detect and replace unhealthy VMs.
+*   **Master** the "Cattle vs. Pets" philosophy of cloud infrastructure.
 
 ---
 
-## 🧠 1. What Are Instance Groups?
+## 🧠 1. What are Instance Groups?
 
-An **Instance Group** is a collection of VM instances that you manage as a single entity.
+An **Instance Group** is a collection of VM instances treated as a single entity. 
 
-### Two Types:
-1.  **Unmanaged Instance Group:** A bag of random VMs. Used for legacy apps that need to be grouped for a load balancer. (Rarely used).
-2.  **Managed Instance Group (MIG):** Identical VMs created from a template. 
-    *   **Auto-Healing:** If a VM crashes, MIG replaces it.
-    *   **Auto-Scaling:** Adds/removes VMs based on CPU load.
-    *   **Updates:** Rollover updates with 0 downtime.
+### The Two Types
+1.  **Unmanaged Instance Groups:** A "bag of random VMs". Used for legacy applications where VMs are different. Avoid these for new projects.
+2.  **Managed Instance Groups (MIGs):** All VMs are identical clones created from a **Template**.
 
----
-
-## 💂 2. Real-World Analogy: Cloning an Army
-
-*   **Single VM** = **Captain America**. He is unique. If he gets sick, you have 0 heroes.
-*   **MIG** = **Stormtroopers**. They are all identical (Clones).
-    *   If one falls, the Empire just sends another one (**Auto-healing**).
-    *   If the rebels attack, the Empire sends 100 more (**Auto-scaling**).
-
-> **Key Concept:** In a MIG, VMS are **Stateless**. You don't name them "Web-Server-1". You treat them like cattle, not pets.
+```mermaid
+graph TD
+    Template[Instance Template<br/>OS + Script + Size] --> MIG[Managed Instance Group]
+    MIG --> VM1[VM clone-a1]
+    MIG --> VM2[VM clone-b2]
+    MIG --> VM3[VM clone-c3]
+    
+    style Template fill:#fdf4ff,stroke:#a21caf,stroke-width:2px
+    style MIG fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+```
 
 ---
 
-## 🛠️ 3. Hands-On Lab: Create a MIG
+## 💂 2. The Philosophy: Cattle vs. Pets
 
-**🧪 Lab Objective:** Create a group of Apache web servers that auto-heals.
+In the cloud, we don't name our servers "Bessie" and care for them when they are sick. We treat them like **Cattle**.
 
-### ✅ Steps
+> [!IMPORTANT]
+> **The Stateless Rule:**
+> For a MIG to work, your application must be **Stateless**. This means no data is saved on the VM's local disk. All data goes to **Cloud SQL** or **Cloud Storage**.
 
-**Phase 1: Create the Template (The Blueprint)**
-1.  Go to **Compute Engine** > **Instance Templates**.
+| Feature | **Pets (Single VM)** | **Cattle (MIG)** |
+| :--- | :--- | :--- |
+| **Identity** | Fixed Name (e.g. `prod-db-1`) | Random Name (e.g. `web-a8f2`) |
+| **Failure** | Manual repair needed. | Automatically replaced (**Auto-healing**). |
+| **Scaling** | Vertical (Bigger VM). | Horizontal (More VMs). |
+
+---
+
+## 🏗️ 3. Auto-healing & Scaling Logic
+
+MIGs don't just sit there; they actively monitor your application.
+
+### Auto-healing Flow
+```mermaid
+graph LR
+    Check[Health Check] -- "HTTP 200?" --> OK[Success]
+    Check -- "No Response" --> Kill[Terminate VM]
+    Kill --> Recreate[Launch New VM from Template]
+    
+    style Kill fill:#fee2e2,stroke:#ef4444
+    style Recreate fill:#dcfce7,stroke:#16a34a
+```
+
+> [!TIP]
+> **Regional MIGs:** For maximum safety, create a **Regional MIG**. This spreads your VMs across 3 zones automatically. If an entire data center loses power, your app stays UP!
+
+---
+
+## 🛠️ 4. Hands-On Lab: Build a Self-Healing Cluster
+
+**🧪 Lab Objective:** Create a group of web servers that automatically resurrects itself after a failure.
+
+### ✅ Phase 1: The Blueprint (Instance Template)
+1.  Go to **Compute Engine > Instance Templates**.
 2.  Click **Create Instance Template**.
-3.  Name: `web-server-v1`.
-4.  Machine type: `e2-micro`.
+3.  **Name:** `web-server-base`.
+4.  **Machine Type:** `e2-micro`.
 5.  **Startup Script (Advanced > Management):**
     ```bash
     #! /bin/bash
     apt update && apt install -y apache2
-    echo "This is a Replica!" > /var/www/html/index.html
+    echo "Resurrected at $(date)" > /var/www/html/index.html
     ```
-6.  Firewall: Allow HTTP traffic.
-7.  Click **Create**.
 
-**Phase 2: Create the Group (The Army)**
-1.  Go to **Instance Groups** (left menu).
+### ✅ Phase 2: The Army (Managed Instance Group)
+1.  Go to **Compute Engine > Instance Groups**.
 2.  Click **Create Instance Group**.
 3.  Select **New Managed Instance Group (Stateless)**.
-4.  Name: `my-web-cluster`.
-5.  Template: Select `web-server-v1`.
-6.  Location: Single Zone (`us-central1-a`).
-7.  **Autoscaling:** Set "Minimum number of instances" to **2**.
-8.  Click **Create**.
+4.  Location: **Multiple Zones (Regional)**.
+5.  Autoscaling: **Min 2, Max 5**.
+6.  Metric: **CPU Utilization at 60%**.
 
-**Phase 3: Verify Auto-healing**
-1.  Wait for the 2 VMs to start (green check).
-2.  **Delete** one of the VMs manually.
-3.  Wait 30 seconds... The MIG will automatically notice it's missing and **create a new one**. Spooky!
+### ✅ Phase 3: The Test
+1.  Navigate to **VM Instances**.
+2.  **Delete** one of the instances in the group.
+3.  Watch the Group manager spin up a replacement within 60 seconds.
 
 ---
 
-## 📝 4. Quick Knowledge Check (Quiz)
+## 📝 5. Checkpoint Quiz
 
-1.  **Which type of Instance Group contains identical VMs created from a template?**
-    *   A. Unmanaged
-    *   B. **Managed (MIG)** ✅
-    *   C. Zonal
+1.  **Which feature of a MIG ensures that a VM is replaced if the application running on it crashes?**
+    *   A. Auto-scaling
+    *   B. **Auto-healing** ✅
+    *   C. Rolling Updates
+    *   D. Load Balancing
 
-2.  **What happens if you manually delete a VM that belongs to a MIG?**
-    *   A. The Group size shrinks permanently.
-    *   B. **The MIG detects the loss and re-creates the VM automatically.** ✅
-    *   C. You get a billing credit.
+2.  **You need to ensure your application can survive the total failure of a GCP Region. Can a single MIG do this?**
+    *   *Answer:* **No.** A MIG is Regional at most. To survive a Region failure, you need MIGs in **two different regions** behind a Global Load Balancer.
 
-3.  **For Auto-scaling to work, your application should ideally be:**
-    *   A. Stateful (Stores data locally)
-    *   B. **Stateless (Stores data in a DB/Bucket)** ✅
-    *   C. Massive
-
-4.  **Where do you define the Startup Script for a MIG?**
-    *   A. In the Group settings.
-    *   B. **In the Instance Template.** ✅
-    *   C. You cannot use startup scripts.
-
-5.  **You need to update the OS version for all 100 VMs in your MIG. What is the feature called?**
-    *   A. Manual Restart
-    *   B. **Rolling Update** ✅
-    *   C. Blue/Green Deployment
+3.  **True or False: To update the OS on 100 VMs in a MIG, you must delete the MIG and start over.**
+    *   *Answer:* **False.** You update the **Instance Template** and perform a **Rolling Update**.
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I can describe the difference between Pets (Single VM) and Cattle (MIG).', checked: false },
-        { text: 'I created an Instance Template.', checked: false },
-        { text: 'I launched a MIG with 2 instances.', checked: false },
-        { text: 'I tested Auto-healing by deleting a VM.', checked: false }
+        { text: 'I understand the Cattle vs Pets analogy.', checked: false },
+        { text: 'I can explain the difference between a Zonal and Regional MIG.', checked: false },
+        { text: 'I created an Instance Template with a startup script.', checked: false },
+        { text: 'I observed Auto-healing in action after deleting a VM.', checked: false }
     ]
 }">
     <h3>

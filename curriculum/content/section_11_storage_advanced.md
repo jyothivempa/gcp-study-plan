@@ -2,119 +2,121 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐ Medium
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Essential for Cost & Security)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 11, learners will be able to:
-*   **Automate** cost savings with Lifecycle Policies.
-*   **Protect** data with Object Versioning.
-*   **Secure** uploads with Signed URLs.
+By the end of Day 11, you will be able to:
+*   **Automate** cost optimization using Object Lifecycle Management.
+*   **Protect** data from accidental deletion with Object Versioning.
+*   **Implement** secure, temporary access using Signed URLs.
+*   **Identify** use cases for Retention Policies and Bucket Lock.
 
 ---
 
 ## 🧠 1. Lifecycle Policies (Automated Housekeeping)
 
-You don't want to manually move old files to "Coldline" or "Archive" storage.
-**Lifecycle Management** does it for you based on rules.
+Storage costs add up. You shouldn't pay for "Standard" storage for logs from 2 years ago. **Lifecycle Policies** automate the "downgrade" or deletion of objects.
 
-### Common Rules:
-*   "If file is older than 30 days -> Move to Nearline."
-*   "If file is older than 365 days -> Move to Archive."
-*   "If file has 3 newer versions -> Delete the old one."
+### The Lifecycle State Machine
+```mermaid
+graph TD
+    Live[🔥 Standard Storage] -- "After 30 Days" --> Nearline[🌤️ Nearline]
+    Nearline -- "After 90 Days" --> Coldline[❄️ Coldline]
+    Coldline -- "After 365 Days" --> Archive[🧊 Archive]
+    Archive -- "After 10 Years" --> Delete[❌ Delete]
+    
+    style Live fill:#fee2e2,stroke:#ef4444
+    style Archive fill:#dbeafe,stroke:#1e40af
+```
 
----
-
-## 📜 2. Real-World Analogy: The Archivist
-
-*   **You (User):** You dump files on the desk.
-*   **Lifecycle Policy (The Archivist):**
-    *   "This paper is a month old. I'll move it to the basement (**Nearline**) to save desk space."
-    *   "This tax record is a year old. I'll move it to the off-site warehouse (**Archive**)."
-    *   "This draft is trash. I'll shred it (**Delete**)."
-
----
-
-## 🛡️ 3. Object Versioning
-
-What happens if you overwrite `report.docx` with a blank file by mistake?
-Without Versioning: It's gone.
-**With Versioning:** Google keeps the old copy hidden. You can restore it.
-
-> **Cost Warning:** You pay for **every version**. If you overwrite a 1GB file 10 times, you pay for 10GB. Always combine Versioning with Lifecycle Policies (e.g., "Keep max 3 versions").
+> [!TIP]
+> **Combine Rules:** You can set a rule to move to Nearline after 30 days AND a rule to delete it after 365 days. The most restrictive/cost-saving rule usually takes precedence in your strategy.
 
 ---
 
-## ✍️ 4. Signed URLs (Temporary Access)
+## 🛡️ 2. Object Versioning (The "Undo" Button)
 
-How do you let a user upload a file *without* giving them a Google Account?
-**Signed URL:** A magic link that gives permission for a limited time (e.g., 10 minutes).
+What happens if a script accidentally overwrites your 5GB database backup with a 0-byte file?
+*   **Without Versioning:** Data is lost.
+*   **With Versioning:** Google keeps the old version. You just "restore" the previous generation.
 
-**Use Case:** A "Upload Profile Picture" button on your website. Your backend generates a Signed URL, gives it to the user, and the user uploads directly to GCS.
-
----
-
-## 🛠️ 5. Hands-On Lab: Lifecycle & Versioning
-
-**🧪 Lab Objective:** Configure automatic deletion and test file recovery.
-
-### ✅ Steps
-
-1.  **Open Bucket:** Go to the bucket you created in Day 4.
-2.  **Enable Versioning:**
-    *   Click **Configuration** tab (or "Protection").
-    *   Find "Object Versioning". Set to **On**.
-3.  **Test Versioning:**
-    *   Upload a text file named `test.txt` (Content: "Version 1").
-    *   Upload another file named `test.txt` (Content: "Version 2").
-    *   In the bucket view, click "Version History" (toggle). You see both!
-4.  **Set Lifecycle Rule:**
-    *   Click **Lifecycle** tab.
-    *   Click **Add a rule**.
-    *   **Action:** Select "Delete object".
-    *   **Condition:** Select "Newer versions" and enter `2`.
-    *   **Create.**
-    *   *Meaning:* If I upload a 3rd version, the 1st (oldest) version will be deleted to save space.
+> [!CAUTION]
+> **The Cost Trap:**
+> You pay for **every single version**. If you have a 1GB file and you update it every hour for 24 hours, you are paying for **24GB** of storage! Always use Lifecycle rules to "Delete older versions" after X days.
 
 ---
 
-## 📝 6. Quick Knowledge Check (Quiz)
+## ✍️ 3. Signed URLs (Temporary Access)
 
-1.  **What is the primary purpose of Lifecycle Management?**
-    *   A. To speed up downloads.
-    *   B. **To automate moving/deleting objects for cost optimization.** ✅
-    *   C. To encrypt data.
+How do you let a user upload a profile picture to your bucket if they don't have a Google Account?
 
-2.  **You enabled Object Versioning. You overwrite a 100MB file 5 times. How much storage are you paying for?**
-    *   A. 100MB
-    *   B. **500MB** ✅
-    *   C. 0MB
+```mermaid
+graph LR
+    User[User/Browser] -- "1. Request Upload" --> App[Your Backend]
+    App -- "2. Generate URL" --> User
+    User -- "3. PUT File (Direct)" --> GCS[Cloud Storage]
 
-3.  **To verify that an uploaded file hasn't been corrupted, which feature should you check?**
-    *   A. CRC32c / MD5 Hash
-    *   B. **Content-Type**
-    *   C. The file size only
+    style App fill:#fdf4ff,stroke:#a21caf
+    style GCS fill:#ecfdf5,stroke:#10b981
+```
 
-4.  **You want to let a user upload a file directly to Cloud Storage securely without a GCP account. What should you generate?**
-    *   A. A public bucket.
-    *   B. **A Signed URL.** ✅
-    *   C. An IAM Policy.
+**Signed URL Properties:**
+*   **Temporary:** Valid for minutes or hours (max 7 days).
+*   **Specific:** Limited to one action (GET, PUT, or DELETE).
+*   **Self-Contained:** The URL *is* the authentication.
 
-5.  **Which Lifecycle condition helps clean up old versions?**
-    *   A. "Age"
-    *   B. **"Number of newer versions"** ✅
-    *   C. "Storage Class matches Standard"
+---
+
+## 🛠️ 4. Hands-On Lab: Lifecycle & Versioning
+
+**🧪 Lab Objective:** Configure a bucket to automatically clean up old file versions.
+
+### ✅ Phase 1: Enable Protection
+1.  Go to your bucket from Day 4.
+2.  Select the **Protection** tab.
+3.  Toggle **Object Versioning** to **ON**.
+
+### ✅ Phase 2: Test File Recovery
+1.  Upload a file `security_plan.txt` with some text.
+2.  Upload it again with different text (overwrite).
+3.  Click **Version History** toggle. You will see two "Generations" of the file!
+
+### ✅ Phase 3: Add Lifecycle Automation
+1.  Go to the **Lifecycle** tab.
+2.  Click **Add a Rule**.
+3.  **Action:** Delete Object.
+4.  **Condition:** "Number of newer versions" = `1`.
+5.  *Result:* Whenever you upload a new version, the old one is immediately deleted. Great for testing, saves money!
+
+---
+
+## 📝 5. Checkpoint Quiz
+
+1.  **You want to ensure that any object in your bucket is kept for at least 7 years for legal compliance, even if a user tries to delete it. What should you use?**
+    *   A. Object Versioning
+    *   B. Lifecycle Policy
+    *   C. **Bucket Lock (Retention Policy)** ✅
+    *   D. IAM Owner Role
+
+2.  **A developer needs to give a third-party vendor access to download 10 large video files for exactly 2 hours. What is the most secure method?**
+    *   A. Make the bucket public.
+    *   B. **Generate 10 Signed URLs with a 2-hour expiration.** ✅
+    *   C. Add the vendor's email to the IAM policy.
+
+3.  **True or False: Object Lifecycle Management rules can be used to move data between any two storage classes (e.g., Coldline to Standard).**
+    *   *Answer:* **False.** Lifecycle rules only move data to **colder** storage classes (lower cost) or delete it. You can't use them to "upgrade" data to Standard.
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I understand Lifecycle rules.', checked: false },
-        { text: 'I enabled Object Versioning.', checked: false },
-        { text: 'I setup a rule to clean up old versions.', checked: false },
-        { text: 'I know what a Signed URL is used for.', checked: false }
+        { text: 'I can explain why Versioning is a cost risk.', checked: false },
+        { text: 'I successfully restored a previous version of a file.', checked: false },
+        { text: 'I understand that Signed URLs are for users without GCP accounts.', checked: false },
+        { text: 'I know that Bucket Lock is irreversible once locked.', checked: false }
     ]
 }">
     <h3>

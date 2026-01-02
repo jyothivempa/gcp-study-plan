@@ -40,46 +40,93 @@ def load_config():
 
 
 def extract_quizzes_from_markdown(content):
-    """Extract quiz questions from markdown content using regex
-    
-    Searches both regular content and HTML comments (<!-- -->)
-    """
-    # First, extract content from HTML comments
+    """Extract quiz questions using a state machine for robustness"""
+    # Combine content from HTML comments
     comment_pattern = r'<!--(.*?)-->'
     comment_matches = re.findall(comment_pattern, content, re.DOTALL)
-    all_content = content + '\n'.join(comment_matches)
+    all_content = content + '\n' + '\n'.join(comment_matches)
     
+    lines = all_content.split('\n')
     quizzes = []
-    matches = re.finditer(QUIZ_PATTERN, all_content, re.DOTALL)
     
-    for match in matches:
-        question_num = match.group(1)
-        question_text = match.group(2).strip()
-        options_block = match.group(3).strip()
-        
-        # Parse options and answer
-        options_lines = [line.strip() for line in options_block.split('\n') if line.strip()]
-        options = []
-        correct_index = None
-        
-        for line in options_lines:
-            if line.startswith('> **Answer:'):
-                # Extract correct answer letter
-                answer_match = re.search(r'\*\*Answer:\s*(\w)', line)
-                if answer_match:
-                    answer_letter = answer_match.group(1)
-                    correct_index = ord(answer_letter.upper()) - ord('A') + 1
-            elif re.match(r'^[A-D]\.', line):
-                options.append(line)
-        
-        if len(options) >= 2 and correct_index:
-            quizzes.append({
-                "text": question_text,
-                "type": "mcq",
-                "options": options,
-                "correct": correct_index
-            })
+    current_q = None
     
+    # regexes
+    # matches: "### Q1. text" or "1. **text**" or "**Q1. text**" or "Q1. **text**"
+    # Capture starts AFTER the Q1 part
+    q_start_re = re.compile(r'^(?:#+\s*)?(?:(?:\*\*?Q\d+[\.:]\*\*?)|(?:\*\*?\d+[\.:]\*\*?)|(?:Q\d+[\.:])|(?:- Q:)|(?:\d+[\.:]))\s*(.*)', re.IGNORECASE)
+    # matches: "* A. Option" or "A. Option"
+    opt_re = re.compile(r'^[*-]?\s*([A-D][\.\)]\s*.*)', re.IGNORECASE)
+    # matches: "> **Answer: B**" or "* B. Option ✅"
+    ans_re = re.compile(r'(?:>\s*(?:\*\*)?(?:Answer|Correct|Ans)(?:\*\*)?[:\s]+(?:\*\*)?([A-D])(?:\*\*)?)|(?:([A-D])[\.\)].*?✅)', re.IGNORECASE)
+    
+    for line in lines:
+        line_clean = line.strip()
+        if not line_clean:
+            continue
+            
+        # Start of a new question?
+        q_match = q_start_re.match(line_clean)
+        if q_match:
+            # Save previous if valid
+            if current_q and len(current_q['options']) >= 2 and current_q['correct']:
+                if not any(q['text'].strip() == current_q['text'].strip() for q in quizzes):
+                    quizzes.append(current_q)
+            
+            # Start new one
+            q_initial_text = q_match.group(1).strip()
+            current_q = {
+                'text': q_initial_text,
+                'type': 'mcq',
+                'options': [],
+                'correct': None,
+                'collecting_text': True
+            }
+            continue
+            
+        if current_q:
+            # Option?
+            opt_match = opt_re.match(line_clean)
+            if opt_match:
+                current_q['collecting_text'] = False
+                opt_text = opt_match.group(1).strip()
+                # Remove checkmark from option text if present
+                clean_opt = re.sub(r'[\s✅]+$', '', opt_text).strip().strip('*').strip()
+                current_q['options'].append(clean_opt)
+                
+            # Answer?
+            ans_match = ans_re.search(line_clean)
+            if ans_match:
+                current_q['collecting_text'] = False
+                letter = ans_match.group(1) or ans_match.group(2)
+                current_q['correct'] = ord(letter.upper()) - ord('A') + 1
+            
+            # If we are still collecting text and it's not an option/answer, append it to question text
+            if current_q['collecting_text'] and not opt_match and not ans_match:
+                # Avoid adding headers or separators to question text
+                if not line_clean.startswith('#') and not line_clean.startswith('---'):
+                    if current_q['text']:
+                        current_q['text'] += " " + line_clean
+                    else:
+                        current_q['text'] = line_clean
+
+    # Save last one
+    if current_q and len(current_q['options']) >= 2 and current_q['correct']:
+        if not any(q['text'].strip() == current_q['text'].strip() for q in quizzes):
+            quizzes.append(current_q)
+            
+    # Final cleanup of question text
+    for q in quizzes:
+        # Strip outer stars and whitespace
+        text = q['text'].strip()
+        # Handle cases like **Q: text** or **text**
+        text = re.sub(r'^\*+', '', text)
+        text = re.sub(r'\*+$', '', text)
+        q['text'] = text.strip()
+        # Remove "Scenario:" prefix if it got doubled up or messy
+        q['text'] = re.sub(r'^Scenario:\s*', '', q['text'], flags=re.IGNORECASE)
+        q['text'] = q['text'].replace('**', '') # Double check for internal stars
+            
     return quizzes
 
 
@@ -95,6 +142,18 @@ def update_day(day_num, day_config, content_base_path, dry_run=False):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
+    # Split content into Concept and Lab parts if possible
+    # For now, we'll put most in Concept
+    concept_content = ""
+    hands_on_content = ""
+    
+    if "## Hands-on" in content:
+        parts = content.split("## Hands-on")
+        concept_content = parts[0]
+        hands_on_content = parts[1]
+    else:
+        concept_content = content
+    
     # Extract quizzes from markdown
     quizzes = extract_quizzes_from_markdown(content)
     
@@ -105,9 +164,10 @@ def update_day(day_num, day_config, content_base_path, dry_run=False):
         return True
     
     # Get or create course
+    # Use 'gcp' slug as defined in config or default
     course, _ = Course.objects.get_or_create(
         slug='gcp',
-        defaults={'name': 'GCP Associate Cloud Engineer'}
+        defaults={'title': 'GCP Associate Cloud Engineer'}
     )
     
     # Get or create week
@@ -115,17 +175,18 @@ def update_day(day_num, day_config, content_base_path, dry_run=False):
     week, _ = Week.objects.get_or_create(
         number=week_num,
         course=course,
-        defaults={'title': f'Week {week_num}'}
+        defaults={'description': f'Week {week_num} topics'}
     )
     
     # Update day
     day, created = Day.objects.update_or_create(
         number=day_num,
         defaults={
+            'week': week,
             'title': day_config['title'],
             'outcome': day_config['outcome'],
-            'content_file': day_config['file'],
-            'week': week
+            'concept_content': concept_content,
+            'hands_on_content': hands_on_content,
         }
     )
     
@@ -134,12 +195,16 @@ def update_day(day_num, day_config, content_base_path, dry_run=False):
     
     # Add new quizzes
     for quiz_data in quizzes:
+        opts = quiz_data['options']
         QuizQuestion.objects.create(
             day=day,
             question_text=quiz_data['text'],
             question_type=quiz_data['type'],
-            options=quiz_data['options'],
-            correct_answer=quiz_data['correct']
+            option_1=opts[0] if len(opts) > 0 else "",
+            option_2=opts[1] if len(opts) > 1 else "",
+            option_3=opts[2] if len(opts) > 2 else "",
+            option_4=opts[3] if len(opts) > 3 else "",
+            correct_option=quiz_data['correct']
         )
     
     action = "Created" if created else "Updated"
@@ -197,12 +262,22 @@ def main():
     
     # Update days
     success_count = 0
-    total_quizzes = 0
+    active_day_numbers = set(days_to_update.keys())
     
     for day_num in sorted(days_to_update.keys()):
         day_config = days_to_update[day_num]
         if update_day(day_num, day_config, content_base_path, args.dry_run):
             success_count += 1
+            
+    # Cleanup orphaned days and questions (only if updating all or specified days)
+    if not args.dry_run and (args.all or len(days_to_update) > 1):
+        print("\n🧹 Cleaning up orphaned data...")
+        # Get all days currently in the DB
+        all_db_days = Day.objects.all()
+        for db_day in all_db_days:
+            if db_day.number not in active_day_numbers:
+                print(f"  🗑️ Removing phantom Day {db_day.number}: {db_day.title}")
+                db_day.delete() # This will cascade delete related QuizQuestions
     
     print(f"\n{'✅' if not args.dry_run else '📋'} Complete: {success_count}/{len(days_to_update)} days processed")
     

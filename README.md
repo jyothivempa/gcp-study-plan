@@ -1,9 +1,9 @@
-# 30-Day GCP Daily Study Plan LMS
+# 45-Day GCP Study Plan LMS
 
-A Django-based Learning Management System designed to guide beginners from zero to Google Associate Cloud Engineer in 30 days.
+A Django-based Learning Management System designed to guide beginners from zero to Google Associate Cloud Engineer in 45 days.
 
 ## Features
-- **30-Day Structured Curriculum**: Day-by-day lesson plan.
+- **45-Day Structured Curriculum**: Day-by-day lesson plan.
 - **Progress Tracking**: User accounts to track completed days.
 - **Coursera-Style UI**: Clean, focus-oriented interface.
 - **Interactive Lessons**: Concepts, Hands-on labs, and Interview questions for each day.
@@ -36,9 +36,9 @@ A Django-based Learning Management System designed to guide beginners from zero 
    ```
 
 4. **Populate Course Content**:
-   Run the custom management command to seed the database with the 30-day curriculum:
+   Run the custom management command to seed the database with the 45-day curriculum:
    ```bash
-   python manage.py populate_content
+   python update_curriculum.py --all
    ```
 
 5. **Create Superuser** (Optional, for Admin access):

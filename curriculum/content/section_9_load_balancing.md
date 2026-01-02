@@ -2,113 +2,118 @@
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐⭐ High
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (ACE Core Service)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 9, learners will be able to:
-*   **Understand** why Load Balancing is necessary.
-*   **Distinguish** between Global (HTTP) and Regional (Network) Load Balancers.
-*   **Configure** a simple HTTP Load Balancer.
+By the end of Day 9, you will be able to:
+*   **Understand** the difference between Layer 4 (Network) and Layer 7 (Application) load balancing.
+*   **Explain** how Anycast IPs allow for a single global endpoint.
+*   **Distinguish** between External and Internal Load Balancers.
+*   **Construct** a Global HTTP(S) Load Balancer for a web cluster.
 
 ---
 
-## 🧠 1. What Is Load Balancing?
+## 🧠 1. What is Cloud Load Balancing?
 
-If you have 1,000 users and only 1 Web Server, that server will crash.
-If you have 2 Web Servers (MIG), how do you tell user A to go to Server 1, and user B to Server 2?
+If you have 10,000 users and only 1 Web Server, that server will crash. If you have 10 Web Servers, how do you decide which user goes where? 
 
-**Solution:** A **Load Balancer (LB)**.
+**The answer is the Load Balancer (LB).**
 
-It sits in front of your VMs and sits behind a single **Anycast IP**.
-
----
-
-## 👮 2. Real-World Analogy: The Traffic Cop
-
-*   **Users** = Cars.
-*   **VMs** = Lanes on a highway.
-*   **Load Balancer** = **The Traffic Cop**.
-    *   He sees Lane 1 is stuck (High CPU).
-    *   He waves cars into Lane 2 (Healthy).
-    *   If Lane 3 is closed (Unhealthy VM), he puts cones up so no one goes there.
+### Key Feature: Anycast IP
+Google's Global Load Balancers use a single **Anycast IP**. This means user traffic is routed to the nearest Google data center automatically. You don't need different IPs for US, Europe, and Asia!
 
 ---
 
-## 🏗️ 3. Types of Load Balancers (Cheat Sheet)
+## 🏗️ 2. The Decision Matrix: Choose Your LB
 
-| Type | Layer | Global/Regional | Use Case |
+Google Cloud offers several types of Load Balancers. Choosing the wrong one is a frequent "Exam Trap".
+
+| Load Balancer Type | Layer | Reach | Use Case |
 | :--- | :--- | :--- | :--- |
-| **External HTTP(S)** | Layer 7 (App) | **Global** | Websites, APIs, content serving. |
-| **External TCP/UDP** | Layer 4 (Transport) | **Regional** | Gaming, Non-HTTP apps. |
-| **Internal HTTP(S)** | Layer 7 (App) | Regional | Internal microservices. |
+| **Global HTTP(S)** | Layer 7 | **Global** | Web Apps, Mobile Backends, Content Delivery. |
+| **Regional Network** | Layer 4 | Regional | Gaming, TCP/UDP traffic, Non-HTTP. |
+| **Internal HTTP(S)** | Layer 7 | Regional | Private microservices talking to each other. |
 
-> **🎯 ACE Tip:**
-> *   "Global application" or "Content Delivery" → **Global HTTP(S) LB**.
-> *   "Non-HTTP traffic" or "Custom Protocol" → **TCP/UDP LB**.
+```mermaid
+graph TD
+    User[User on Internet] --> Anycast["Single Anycast IP"]
+    Anycast --> GLB["Global HTTP(S) LB"]
+    
+    subgraph Region_US ["us-central1"]
+        MIG_US[MIG: US-Servers]
+    end
+    
+    subgraph Region_EU ["europe-west1"]
+        MIG_EU[MIG: EU-Servers]
+    end
 
----
+    GLB -- "Routes to Nearest" --> MIG_US
+    GLB -- "Routes to Nearest" --> MIG_EU
 
-## 🛠️ 4. Hands-On Lab: Set Up an HTTP LB
-
-**🧪 Lab Objective:** Put a Load Balancer in front of yesterday's MIG.
-
-### ✅ Steps
-
-1.  **Prerequisite:** Ensure your MIG (Day 8 Lab) is running.
-2.  **Open Console:** Go to **Network Services** > **Load Balancing**.
-3.  **Start:** Click **Create Load Balancer**.
-4.  **Type:** Choose **Application Load Balancer (HTTP/S)**.
-5.  **Config:**
-    *   **Frontend:** Leave default (Port 80). Global.
-    *   **Backend:**
-        *   Create a "Backend Service".
-        *   Select your MIG (`my-web-cluster`).
-        *   Port: 80.
-        *   Health Check: Create one (Protocol TCP, Port 80).
-    *   **Routing Rules:** Host and Path = Simple (Default).
-6.  **Create:** Click Create. **Wait 5-10 minutes!** (Global propagation is slow).
-7.  **Test:** Copy the Frontend IP. Open it in browser.
-    *   You are now hitting the LB, which routes you to one of your Clones!
+    style GLB fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+```
 
 ---
 
-## 📝 5. Quick Knowledge Check (Quiz)
+## 👮 3. The Analogy: The Traffic Cop
 
-1.  **Which Load Balancer is Global and operates at Layer 7?**
-    *   A. Network TCP LB
-    *   B. **External HTTP(S) LB** ✅
-    *   C. Internal UDP LB
+Imagine a massive concert with 4 entrance gates.
+*   The **Load Balancer** is the **Traffic Cop** at the front.
+*   He sees Gate 1 is crowded, so he points the next 10 people to Gate 2.
+*   If Gate 3 is closed (Server Crash), he puts up a sign so nobody tries to enter there (**Health Checks**).
 
-2.  **What does a "Health Check" do?**
-    *   A. Scans for viruses.
-    *   B. **Checks if a backend VM is responsive. If not, the LB stops sending traffic to it.** ✅
-    *   C. Checks the user's browser health.
+> [!NOTE]
+> **Health Checks:** A Load Balancer only sends traffic to "Healthy" instances. If your server stops responding to a "ping", the LB stops sending users there until it recovers.
 
-3.  **You want to serve traffic from a single IP address to users in Asia, Europe, and US. Which solution works best?**
-    *   A. DNS Load Balancing
-    *   B. **Global HTTP Load Balancer (Anycast IP)** ✅
-    *   C. VPN
+---
 
-4.  **Can a Load Balancer distribute traffic to instances in different regions?**
-    *   A. **Yes (Global LBs only)** ✅
-    *   B. No, strictly regional.
+## 🛠️ 4. Hands-On Lab: Putting it All Together
 
-5.  **Layer 4 Load Balancing handles:**
-    *   A. URL paths (/images, /video)
-    *   B. **TCP/UDP Traffic (IP and Ports)** ✅
-    *   C. Cookies
+**🧪 Lab Objective:** Create a Global HTTP Load Balancer for your MIG from Day 8.
+
+### ✅ Step 1: Frontend Configuration
+1.  Go to **Network Services > Load Balancing**.
+2.  Start "Create Load Balancer" > **Application Load Balancer (HTTP/S)**.
+3.  Choose **Global** deployment.
+4.  Frontend: Protocol **HTTP**, Port **80**.
+
+### ✅ Step 2: Backend Configuration
+1.  Create a **Backend Service**.
+2.  Backend Type: **Instance Group**.
+3.  Select your `web-server-base` MIG.
+4.  **Health Check:** Create a new one. Protocol: **TCP**, Port: **80**.
+
+> [!CAUTION]
+> **Propagation Time:** Unlike local hardware, Global LBs can take **5-10 minutes** to start working. If you see a `404` or `502` error immediately, just wait!
+
+---
+
+## 📝 5. Checkpoint Quiz
+
+1.  **Which Load Balancer would you use to support a global mobile application that uses a single IP address worldwide?**
+    *   A. Regional Network LB
+    *   B. **Global External HTTP(S) LB** ✅
+    *   C. Internal TCP LB
+
+2.  **At which layer of the OSI model does a Network Load Balancer operate?**
+    *   A. Layer 7 (Application)
+    *   B. **Layer 4 (Transport)** ✅
+    *   C. Layer 3 (Network)
+
+3.  **True or False: A Load Balancer can perform SSL termination, offloading the decryption work from your backend VMs.**
+    *   *Answer:* **True.** This is a major benefit of using an HTTP(S) Load Balancer.
 
 ---
 
 <div class="checklist-card" x-data="{ 
     items: [
-        { text: 'I understand the difference between Layer 4 and Layer 7 LBs.', checked: false },
-        { text: 'I know which LB is Global.', checked: false },
-        { text: 'I created a Backend Service linked to a MIG.', checked: false },
-        { text: 'I accessed my app via the LB IP.', checked: false }
+        { text: 'I know the difference between Layer 4 and Layer 7.', checked: false },
+        { text: 'I understand what an Anycast IP is.', checked: false },
+        { text: 'I can explain why Health Checks are necessary.', checked: false },
+        { text: 'I know that propagation takes 5-10 mins.', checked: false }
     ]
 }">
     <h3>

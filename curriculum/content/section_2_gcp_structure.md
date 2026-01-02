@@ -1,162 +1,196 @@
-# SECTION 2: Global Infrastructure & Resource Hierarchy
+# Day 2: Global Infrastructure & Resource Hierarchy
 
-> **Official Doc Reference**: [Resource Hierarchy](https://cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy)
-
-## 1️⃣ The Physical Layer: Regions & Zones 🌍
-GCP is a mesh of fiber optic cables connecting data centers around the world.
-
-### The Map
-*   **Region:** A specific geographical location (e.g., `us-central1`, `europe-west2`).
-*   **Zone:** A deployment area *within* a region (e.g., `us-central1-a`). Think of a Zone as a **Data Center Building**.
-*   **Edge PoP (Point of Presence):** Not a data center, but a connection point close to users (for CDN caching).
-
-```mermaid
-graph TD
-    Geo["🌏 Geography (e.g., US)"] --> Reg["📍 Region: us-central1 (Iowa)"]
-    Reg --> Z1["🏢 Zone A (us-central1-a)"]
-    Reg --> Z2["🏢 Zone B (us-central1-b)"]
-    Reg --> Z3["🏢 Zone C (us-central1-c)"]
-
-    style Geo fill:#f8fafc,stroke:#64748b,stroke-width:2px
-    style Reg fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
-    style Z1 fill:#f0fdf4,stroke:#16a34a
-    style Z2 fill:#f0fdf4,stroke:#16a34a
-    style Z3 fill:#f0fdf4,stroke:#16a34a
-```
-
-### Design Patterns (Availability)
-| Pattern | SLA | Description |
-| :--- | :--- | :--- |
-| **Zonal** | 99.5% | Single VM. If the zone fails (rare but possible), you are offline. |
-| **Regional** | 99.99% | VMs in *different zones* (A and B). App survives a building fire. |
-| **Multi-Region** | 99.999% | VMs in *different regions* (US & EU). App survives a catastrophic earthquake. |
+**Duration:** ⏱️ 45 Minutes  
+**Level:** Beginner  
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (Foundational)
 
 ---
 
-## 2️⃣ The Logical Layer: Resource Hierarchy 🌳
-This is **THE** most important concept in GCP governance. You absolutely must memorize this tree structure.
+## 🎯 Learning Objectives
 
-```mermaid
-graph TD
-    Org["Organization Node (company.com)"] --> F_Prod["Folder: Prod"]
-    Org --> F_Dev["Folder: Dev"]
-    F_Prod --> P_App1["Project: Payment-App"]
-    F_Prod --> P_App2["Project: Web-App"]
-    P_App1 --> VM1["Resource: VM"]
-    P_App1 --> Bkt["Resource: Bucket"]
-```
-
-### The 4 Layers
-1.  **Organization Node (Root):**
-    *   Represents your company domain (e.g., `google.com`).
-    *   *Note:* If you use a personal `@gmail.com`, you **do not** have this. You start at Project.
-2.  **Folders:**
-    *   Used for grouping (e.g., "HR Dept", "Finance Dept" or "Prod", "Test").
-    *   Policies inherit down (e.g., "Allow Admin Access" on the Folder applies to all Projects inside).
-3.  **Projects (The Container):**
-    *   **Billing lives here.** Every resource MUST belong to a project.
-    *   APIs are enabled here.
-4.  **Resources:**
-    *   The actual stuff: VMs, Buckets, Databases.
+By the end of Day 2, you will be able to:
+*   **Differentiate** between physical infrastructure (Regions/Zones) and logical organization.
+*   **Master** the GCP Resource Hierarchy (the "Tree of Governance").
+*   **Identify** the 3 project identifiers and when to use them.
+*   **Understand** how Organization Policies set global guardrails.
 
 ---
 
-## 3️⃣ Project Identifiers (Exam Gold 🥇)
-Every project has 3 IDs. You will be tested on which one to use when.
+## 🧠 1. The Physical Layer: Regions & Zones 🌍
 
-| Identifier | Format | Mutability | Used For |
+GCP isn't just "in the sky"; it's a massive mesh of fiber optic cables and concrete buildings.
+
+### The Breakdown
+*   **Region:** A specific geographical location (e.g., `us-central1`, `asia-south1`).
+*   **Zone:** A deployment area *within* a region (e.g., `us-central1-a`). Think of a Zone as one or more **Data Center Buildings**.
+*   **Edge Points of Presence (PoPs):** These are locations that connect Google's network to the rest of the internet. They host **Cloud CDN** and **Cloud IDS**.
+
+> [!IMPORTANT]
+> **High Availability (HA) Rule of Thumb:**
+> Always deploy your application across at least **two zones** in a region to survive a data center outage. For legendary reliability, go **Multi-Region**.
+
+```mermaid
+graph TD
+    subgraph Geography ["🌎 Geography (e.g., Americas)"]
+        direction TB
+        Region1["📍 Region: us-central1 (Iowa)"]
+        Region2["📍 Region: us-east1 (S. Carolina)"]
+    end
+
+    subgraph us_central1 ["Building the Infrastructure"]
+        direction LR
+        ZoneA["🏢 Zone A"]
+        ZoneB["🏢 Zone B"]
+        ZoneC["🏢 Zone C"]
+    end
+
+    Region1 --> ZoneA
+    Region1 --> ZoneB
+    Region1 --> ZoneC
+
+    style Geography fill:#f8fafc,stroke:#94a3b8,stroke-width:2px
+    style us_central1 fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+    style ZoneA fill:#ecfdf5,stroke:#10b981
+    style ZoneB fill:#ecfdf5,stroke:#10b981
+    style ZoneC fill:#ecfdf5,stroke:#10b981
+```
+
+---
+
+## 🌳 2. The Logical Layer: Resource Hierarchy
+
+This is how Google Cloud manages access and billing. It follows a strict **Parent-Child** relationship.
+
+> [!TIP]
+> **Inheritance is Power:** If you assign a permission at the Folder level, it "flows down" to all Projects and Resources inside it.
+
+```mermaid
+graph TD
+    Org["🏢 Organization<br/>(company.com)"]
+    
+    Folder_Prod["📁 Folder: Production"]
+    Folder_Dev["📁 Folder: Development"]
+    
+    Proj_App["🚀 Project: Web-App-Prod"]
+    Proj_DB["💾 Project: SQL-Static"]
+    
+    Res_VM["🖥️ Compute VM"]
+    Res_Bkt["📦 Storage Bucket"]
+
+    Org --> Folder_Prod
+    Org --> Folder_Dev
+    
+    Folder_Prod --> Proj_App
+    Folder_Prod --> Proj_DB
+    
+    Proj_App --> Res_VM
+    Proj_App --> Res_Bkt
+
+    style Org fill:#fefce8,stroke:#eab308,stroke-width:2px
+    style Folder_Prod fill:#f0f9ff,stroke:#0369a1
+    style Folder_Dev fill:#f0f9ff,stroke:#0369a1
+    style Proj_App fill:#ecfdf5,stroke:#10b981
+```
+
+### The 4 Pillars
+1.  **Organization:** The root node (requires Google Workspace or Cloud Identity).
+2.  **Folders:** Optional but recommended for team-based isolation (e.g., Apps, Data, Security).
+3.  **Projects:** The fundamental "container". **Billing and APIs are managed here.**
+4.  **Resources:** The individual services (VMs, Buckets, Pub/Sub topics).
+
+---
+
+## 🆔 3. Project Identifiers (Exam Gold 🥇)
+
+You will be asked which ID to use in different scenarios.
+
+| Identifier | Mutable? | Unique? | Use Case |
 | :--- | :--- | :--- | :--- |
-| **Project Name** | "My Cool App" | ✅ Changeable | Human display only. |
-| **Project ID** | `my-cool-app-8852` | ❌ **Immutable** | **CLI & Terraform.** Unique across ALL of GCP. |
-| **Project Number** | `10384759283` | ❌ **Immutable** | **Internal Google use.** Service Accounts often use this. |
+| **Project Name** | ✅ Yes | No | Human-friendly name (e.g., "My Demo"). |
+| **Project ID** | ❌ **No** | **Globally** | **CLI, Terraform, APIs.** (e.g., `my-project-123`). |
+| **Project Number** | ❌ **No** | **Globally** | **Internal Google use.** (e.g., `103948572`). |
 
-> **Critical Rule:** If a command needs to target a project, use the **Project ID**.
-
----
-
-## 4️⃣ Organization Policies (Guardrails) 🛡️
-Policies control **WHAT** resources can be created. I call them "The Parents Rules".
-
-*   **Difference from IAM:**
-    *   **IAM:** "James can create VMs." (Who)
-    *   **Org Policy:** "Nobody can create VMs in Australia." (What/Where)
-*   **Example Constraints:**
-    *   `compute.vmExternalIpAccess = DENY` (No public IPs allowed).
-    *   `gcp.resourceLocations = allowed: [us-central1]` (Data residency).
+> [!CAUTION]
+> Once you create a Project ID, you **cannot change it**. Most people append numbers to their desired name to ensure global uniqueness.
 
 ---
 
-## 5️⃣ Hands-On Lab: Identity Check 🕵️
-**Mission:** Find your 3 IDs.
+## 🛡️ 4. Organization Policies (The Guardrails)
 
-1.  Open Cloud Shell.
-2.  Run: `gcloud projects list`
-    *   *Result:* You will see `PROJECT_ID`, `NAME`, `PROJECT_NUMBER`.
-3.  Run: `gcloud config set project [YOUR_PROJECT_ID]`
-    *   *Result:* Sets your active terminal context.
-4.  Run: `gcloud compute regions list`
-    *   *Result:* See all the physical locations you can deploy to.
+Organization Policies give you central control over your cloud environment.
 
----
+*   **IAM** controls **WHO** can do things.
+*   **Org Policy** controls **WHAT** can be done.
 
-## 6️⃣ Checkpoint Quiz
-<form>
-  <!-- Q1 -->
-  <div class="quiz-question" id="q1">
-    <p class="font-bold">1. Which GCP resource identifier is globally unique, immutable, and used in CLI commands?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q1" value="wrong"> Project Name</label>
-      <label class="block"><input type="radio" name="q1" value="correct"> Project ID</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Project Number</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Organization Node</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Project ID is the technical identifier you must know.
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="quiz-question mt-6" id="q2">
-    <p class="font-bold">2. A startup wants to ensure NO developer can create a VM in the 'asia-east1' region due to data compliance. What tool should they use?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q2" value="wrong"> Identity & Access Management (IAM)</label>
-      <label class="block"><input type="radio" name="q2" value="correct"> Organization Policy</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> VPC Firewall Rules</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> Billing Budget</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Org Policies restrict resource locations/types. IAM controls "Who".
-    </div>
-  </div>
-
-  <!-- Q3 -->
-  <div class="quiz-question mt-6" id="q3">
-    <p class="font-bold">3. You have a personal Gmail account. Which layer of the Resource Hierarchy do you NOT see?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q3" value="wrong"> Project</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Resource</label>
-      <label class="block"><input type="radio" name="q3" value="correct"> Organization Node</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Billing Account</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Org Nodes are only for Google Workspace/Cloud Identity domains.
-    </div>
-  </div>
-</form>
+> [!WARNING]
+> An Organization Policy **overrides** IAM. If an Org Policy says "No Public IPs", even the Project Owner cannot create a VM with a Public IP.
 
 ---
 
-### ⚡ Zero-to-Hero: Pro Tips
-*   **Latency Matters:** Use sites like [gcping.com](http://www.gcping.com) to find the region closest to you. A 20ms difference feels huge in a terminal.
-*   **Inheritance:** Permissions flow DOWN. If you give "Owner" access at the Organization level, that user owns every project in the company. **Be careful.**
+## 🛠️ 5. Hands-On Lab: Resource Discovery
+
+**🧪 Lab Objective:** Discover your project's "DNA" and verify regional availability.
+
+1.  **Open Cloud Shell** (The `>_` icon in the top right).
+2.  **List your projects:**
+    ```bash
+    gcloud projects list
+    ```
+3.  **Find your Project Number:**
+    ```bash
+    gcloud projects describe $(gcloud config get-value project) --format="value(projectNumber)"
+    ```
+4.  **Explore Regions:**
+    ```bash
+    gcloud compute regions list --filter="name~us"
+    ```
 
 ---
-<!-- FLASHCARDS
-[
-  {"term": "Project ID", "def": "Immutable, globally unique identifier used for CLI/APIs."},
-  {"term": "Project Number", "def": "Immutable numeric ID used internally by Google services."},
-  {"term": "Organization Node", "def": "Root node of the hierarchy (Company level)."},
-  {"term": "Folder", "def": "Logical grouping of projects (e.g., HR, Dev) to apply policies."},
-  {"term": "Org Policy", "def": "Restricts WHAT resources can be created (e.g. data residency)."}
-]
--->
+
+## 📝 6. Checkpoint Quiz
+
+1.  **Which level of the hierarchy is used to manage billing?**
+    *   A. Organization
+    *   B. Folder
+    *   C. **Project** ✅
+    *   D. Resource
+
+2.  **Which project identifier is required when running `gcloud` commands?**
+    *   A. Project Name
+    *   B. **Project ID** ✅
+    *   C. Project Number
+
+3.  **You need to ensure that NO service in your company can use "Standard" storage buckets in Europe. What do you use?**
+    *   A. IAM Role
+    *   B. VPC Firewall
+    *   C. **Organization Policy** ✅
+    *   D. Billing Alert
+
+---
+
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I can explain the difference between a Region and a Zone.', checked: false },
+        { text: 'I know the 4 layers of the Resource Hierarchy.', checked: false },
+        { text: 'I understand when to use Project ID vs Project Number.', checked: false },
+        { text: 'I know that Org Policies override IAM permissions.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 2 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>
