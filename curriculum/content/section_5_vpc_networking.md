@@ -114,9 +114,24 @@ Now any VM in this VPC can receive web traffic!
 
 ---
 
-## ✅ Day 5 Checklist
-
-- [ ] I understand VPC is Global, Subnets are Regional.
-- [ ] I created a custom VPC.
-- [ ] I created a custom Subnet.
-- [ ] I created a Firewall Rule to allow Port 80.
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I understand VPC is Global, Subnets are Regional.', checked: false },
+        { text: 'I created a custom VPC.', checked: false },
+        { text: 'I created a custom Subnet.', checked: false },
+        { text: 'I created a Firewall Rule to allow Port 80.', checked: false }
+    ]
+}">
+    <h3>
+        <i class="fa-solid fa-list-check"></i>
+        Day 5 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <i class="fa-solid fa-check text-white text-xs"></i>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>
