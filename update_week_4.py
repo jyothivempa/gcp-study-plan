@@ -12,7 +12,7 @@ sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gcp_study_plan.settings')
 django.setup()
 
-from curriculum.models import Day, QuizQuestion
+from curriculum.models import Day, QuizQuestion, Week, Course
 
 DAYS_CONFIG = {
     22: {
@@ -139,7 +139,12 @@ def update_week4():
         
         try:
             # Week 4
-            day, created = Day.objects.get_or_create(number=day_num, defaults={'title': f"Day {day_num}", 'week_id': 4})
+            # Week 4 Setup
+            print("   - Verifying Week 4 exists...")
+            course, _ = Course.objects.get_or_create(slug='gcp', defaults={'title': 'Google Cloud Platform'})
+            week_obj, _ = Week.objects.get_or_create(course=course, number=4, defaults={'description': 'Security, Operations, & Cost'})
+            
+            day, created = Day.objects.get_or_create(number=day_num, defaults={'title': f"Day {day_num}", 'week': week_obj})
             
             first_line = full_content.split('\n')[0].replace("# ", "").strip()
             clean_title = re.sub(r"^Day \d+: ", "", first_line)
@@ -148,7 +153,8 @@ def update_week4():
             day.concept_content = concept_content
             day.hands_on_content = hands_on_content
             day.outcome = config["outcome"]
-            day.week_id = 4 # Ensure week assignment
+            day.outcome = config["outcome"]
+            day.week = week_obj # Ensure week assignment object
             day.save()
             print(f"✅ Day {day_num} Updated: {clean_title}")
 
