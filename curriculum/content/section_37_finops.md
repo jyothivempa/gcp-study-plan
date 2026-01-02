@@ -78,3 +78,30 @@ graph TD
 *   A. True
 *   B. **False**
 > **Answer: B.** Budgets are for *alerting*. Programmatic action requires Pub/Sub + Cloud Functions (CapOps).
+
+## ✅ Day 37 Checklist
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I can identify Orphaned Disks.', checked: false },
+        { text: 'I know when to use Committed Use Discounts.', checked: false },
+        { text: 'I understand labels for billing attribution.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 37 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>

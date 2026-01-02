@@ -62,3 +62,30 @@ graph TD
     *   *Answer: The External Customer (and Lawyers).*
 3.  **If you exhaust your Error Budget, what should you do?**
     *   *Answer: Stop new feature releases. Focus on stability.*
+
+## ✅ Day 36 Checklist
+<div class="checklist-card" x-data="{ 
+    items: [
+        { text: 'I know the difference between Reliability (SRE) and just Operations.', checked: false },
+        { text: 'I can define SLI, SLO, and SLA.', checked: false },
+        { text: 'I understand the concept of Error Budgets.', checked: false }
+    ]
+}">
+    <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Day 36 Checklist
+    </h3>
+    <template x-for="(item, index) in items" :key="index">
+        <div class="checklist-item" @click="item.checked = !item.checked">
+            <div class="checklist-box" :class="{ 'checked': item.checked }">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
+        </div>
+    </template>
+</div>
