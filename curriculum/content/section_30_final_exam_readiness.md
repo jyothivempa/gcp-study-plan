@@ -132,23 +132,43 @@ pie title ACE Exam Domain Distribution
 
 ---
 
-## ✅ 5. Pre-Exam Checklist
+## ✅ 5. Final Revision Checklist (Print This!)
 
-### One Week Before
-- [ ] Complete all practice exams
-- [ ] Review weak areas from practice results
-- [ ] Re-read exam guide domains
+### The 7-Day Exam Sprint
 
-### One Day Before
-- [ ] Review the Top 10 topics above
-- [ ] Get good sleep (seriously!)
-- [ ] Prepare ID and test environment
+| Day | Focus Area | Action |
+|-----|------------|--------|
+| **Day 7** | Weak spots | Take practice exam, note lowest-scoring domains |
+| **Day 6** | Compute | Review GKE vs Cloud Run vs App Engine decision tree |
+| **Day 5** | Networking | VPC, subnets, firewalls, load balancing types |
+| **Day 4** | Security | IAM, service accounts, least privilege, Cloud KMS |
+| **Day 3** | Data | Database selection (SQL vs NoSQL vs Analytics) |
+| **Day 2** | Operations | Logging vs Monitoring vs Trace vs Error Reporting |
+| **Day 1** | Strategy | Review this guide, Top 10 topics, get good sleep |
 
-### Exam Day
-- [ ] Arrive 15 minutes early
-- [ ] Use the whiteboard/notepad for notes
-- [ ] Take a break mid-exam if needed
-- [ ] Don't change answers unless certain
+### "Last Hour" Quick Review Topics
+
+| Topic | Must Remember |
+|-------|---------------|
+| **VPCs** | Global resource. Subnets are regional. |
+| **Firewalls** | Ingress blocked by default. Egress allowed. Stateful. |
+| **IAM** | Principal → Role → Resource. Never use Basic roles in production. |
+| **Storage Classes** | Standard → Nearline (30d) → Coldline (90d) → Archive (365d) |
+| **Load Balancers** | HTTP(S) = Global. Network = Regional. |
+| **GKE** | Autopilot = Google manages nodes. Standard = You manage. |
+| **Health Checks** | Must allow `130.211.0.0/22` and `35.191.0.0/16` in firewall |
+| **Spot VMs** | Cheapest compute. Can be interrupted. Good for batch jobs. |
+
+### Mock Exam Readiness Scorecard
+
+Before taking the real exam, you should score **80%+** on practice exams consistently.
+
+| Readiness Level | Score Range | Recommendation |
+|-----------------|-------------|----------------|
+| 🔴 Not Ready | 0-60% | Review fundamentals, do more labs |
+| 🟡 Almost Ready | 60-75% | Focus on weak domains |
+| 🟢 Ready | 75-85% | Light review, schedule exam |
+| ⭐ Confident | 85%+ | Trust yourself, take the exam! |
 
 ---
 

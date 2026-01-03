@@ -21,6 +21,10 @@ By the end of this lesson, you will:
 
 **CI/CD = Automate the boring stuff between "git push" and "live in production".**
 
+### Why Does This Matter for Cloud Engineers?
+
+Manual deployments are slow, error-prone, and don't scale. As a Cloud Engineer, you'll be expected to automate deployments so developers can push code safely and quickly. The ACE exam tests your ability to configure these pipelines.
+
 ### 💡 Real-World Analogy: Pizza Delivery
 
 | Manual Deployment | CI/CD Pipeline |

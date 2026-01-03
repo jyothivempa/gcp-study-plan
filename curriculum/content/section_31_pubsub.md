@@ -57,7 +57,38 @@ graph LR
 | **Scaling** | You control the rate (throttling). | Pub/Sub scales as fast as your endpoint allows. |
 | **Network** | Behind firewall (outbound only). | Requires a public endpoint or IAP. |
 
----
+### Push vs Pull: The ACE Exam Classic
+
+This comparison appears frequently on the exam. Memorize these selection criteria:
+
+| If You Need... | Use Pull | Use Push |
+|----------------|----------|----------|
+| Webhook integration | ❌ | ✅ |
+| Batch processing worker | ✅ | ❌ |
+| Cloud Functions trigger | ❌ | ✅ |
+| VM behind firewall (no public IP) | ✅ | ❌ |
+| Control message rate | ✅ | ❌ |
+| Real-time response | ❌ | ✅ |
+
+### Why NOT Push?
+
+| Scenario | Problem with Push | Use Instead |
+|----------|------------------|-------------|
+| No public endpoint | Pub/Sub can't reach you | **Pull** |
+| Need throttling | Push sends as fast as possible | **Pull** with rate control |
+| Behind corporate firewall | Inbound blocked | **Pull** (outbound only) |
+
+### Why NOT Pull?
+
+| Scenario | Problem with Pull | Use Instead |
+|----------|------------------|-------------|
+| Need instant response | Polling delay | **Push** |
+| Triggering Cloud Functions | Functions expect HTTP | **Push** (via Eventarc) |
+| Simple webhook integration | Extra code to poll | **Push** |
+
+> **🎯 ACE Tip:** 
+> - "Webhook" or "HTTPS endpoint" → **Push subscription**
+> - "Batch worker", "rate control", or "no public IP" → **Pull subscription**
 
 ## 🛡️ 3. Reliability & "The Graveyard"
 

@@ -69,6 +69,57 @@ Understanding the distinction is vital for the ACE exam.
 
 ---
 
+## 🐛 Error Reporting, Trace & Profiler
+
+The Operations Suite includes specialized tools beyond basic Monitoring and Logging. Understanding when to use each is critical for exam scenarios.
+
+### Observability Tools Comparison
+
+| Tool | Purpose | Use When... |
+|------|---------|-------------|
+| **Cloud Logging** | All logs (structured or unstructured) | "Show me all requests in the last hour" |
+| **Error Reporting** | Crashes, exceptions, stack traces | "Group similar application errors" |
+| **Cloud Trace** | Request latency across services | "Why is this API slow?" |
+| **Cloud Profiler** | CPU/memory usage in production | "Where is my code spending time?" |
+
+### Error Reporting Deep Dive
+
+**What It Does:** Automatically aggregates, counts, and alerts on application exceptions (stack traces).
+
+```mermaid
+flowchart LR
+    subgraph "Application Crashes"
+        E1[NullPointerException]
+        E2[NullPointerException]
+        E3[TimeoutException]
+    end
+    
+    subgraph "Error Reporting"
+        ER[Groups + Counts]
+    end
+    
+    subgraph "Output"
+        G1["NullPointer: 2 occurrences"]
+        G2["Timeout: 1 occurrence"]
+    end
+    
+    E1 --> ER
+    E2 --> ER
+    E3 --> ER
+    ER --> G1
+    ER --> G2
+```
+
+### Why NOT Just Use Cloud Logging?
+
+| If You Need... | Why Logging Falls Short | Use Instead |
+|----------------|------------------------|-------------|
+| Group similar errors | Logging shows individual entries | **Error Reporting** |
+| See request flow across services | Logging doesn't correlate requests | **Cloud Trace** |
+| Find slow code in production | Logging doesn't profile CPU | **Cloud Profiler** |
+
+> **🎯 ACE Tip:** If the question mentions "stack traces", "group similar errors", or "exception aggregation", the answer is **Error Reporting**.
+
 ## 🛠️ 3. Hands-On Lab: The "Zero Visibility" Fix
 
 By default, GCP cannot see your VM's **Memory (RAM)** or **Disk Usage**. This is because the Hypervisor only sees the outside "box" (CPU/Network).

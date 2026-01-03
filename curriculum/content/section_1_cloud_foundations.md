@@ -131,7 +131,7 @@ graph TD
 
 Companies choose Google Cloud specifically for these advantages:
 
-1.  **🌐 Global Network:** Google's private fiber network is the fastest and most reliable in the world.
+1.  **🌐 Global Network:** Google's private fiber network provides low-latency global connectivity.
 2.  **🔒 Security:** "Secure by Design" infrastructure (encrypted at rest & in transit by default).
 3.  **📊 Data & AI:** Best-in-class tools for Big Data (BigQuery) and ML (Vertex AI).
 4.  **💰 Discounts:** Automatic savings with *Sustained Use Discounts* (no action needed).

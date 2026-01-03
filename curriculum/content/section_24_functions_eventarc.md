@@ -287,6 +287,44 @@ flowchart TD
 
 ---
 
+## 🔍 Cloud Functions vs Cloud Run: The ACE Exam Classic
+
+This comparison is one of the **most common exam questions**. Both are serverless, but they solve different problems.
+
+### When to Use Which
+
+| Factor | Cloud Functions | Cloud Run |
+|--------|-----------------|-----------|
+| **Unit of deployment** | Single function | Container (any language/framework) |
+| **Max timeout** | 9 min (Gen 1), 60 min (Gen 2) | 60 min |
+| **Concurrency** | 1 request/instance (Gen 1) | Up to 1000 requests/instance |
+| **WebSocket support** | ❌ No | ✅ Yes |
+| **Custom binaries** | Limited | ✅ Any executable |
+| **Startup time** | Faster (simpler) | Slightly slower (container) |
+| **Best for** | Event glue, lightweight handlers | APIs, microservices, existing containers |
+
+### Why NOT Cloud Functions?
+
+| If You Need... | Why Functions Fails | Use Instead |
+|----------------|--------------------|--------------| 
+| WebSocket connections | Not supported | **Cloud Run** |
+| Custom OS packages | Limited runtime | **Cloud Run** |
+| Long-running jobs (>60 min) | Timeout limit | **Cloud Run Jobs** or **Batch** |
+| Multi-file applications | Designed for single function | **Cloud Run** or **App Engine** |
+
+### Why NOT Cloud Run?
+
+| If You Need... | Why Run is Overkill | Use Instead |
+|----------------|--------------------|--------------| 
+| Simple event handler (20 lines) | Container overhead | **Cloud Functions** |
+| Fastest cold start possible | Container loading slower | **Cloud Functions Gen 2** |
+| No Docker knowledge | Requires Dockerfile | **Cloud Functions** |
+
+> **🎯 ACE Tip:** 
+> - "Lightweight event handler triggered by Pub/Sub" → **Cloud Functions**
+> - "Containerized REST API microservice" → **Cloud Run**
+> - "Need to run legacy binary with custom dependencies" → **Cloud Run**
+
 <!-- QUIZ_START -->
 ## 📝 8. Knowledge Check Quiz
 

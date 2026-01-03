@@ -51,7 +51,76 @@ graph TD
 > **The New King: Hyperdisk** 
 > Historically, disk speed was tied to disk size (bigger disk = faster). **Hyperdisk** changes this, allowing you to buy a small disk but provision massive speed independently.
 
+### Persistent Disk Types: Quick Reference
+
+| Type | IOPS | Throughput | Best For | Cost |
+|------|------|------------|----------|------|
+| **Standard HDD** | Low | Low | Boot disks, cold data, backups | $ |
+| **Balanced PD** | Medium | Medium | General workloads, web servers | $$ |
+| **SSD PD** | High | High | Databases, enterprise apps | $$$ |
+| **Extreme PD** | Very High | Very High | SAP HANA, Oracle, max performance | $$$$ |
+| **Hyperdisk** | Configurable | Configurable | Any workload, decouple IOPS from size | $$$$$ |
+
+### Zonal vs Regional Persistent Disk
+
+| Disk Type | Zonal | Regional (HA) |
+|-----------|-------|---------------|
+| Standard PD | ✅ | ✅ |
+| Balanced PD | ✅ | ✅ |
+| SSD PD | ✅ | ✅ |
+| Extreme PD | ✅ | ❌ |
+| Local SSD | ✅ (Ephemeral) | ❌ |
+
+> **🎯 ACE Tip:** "High availability for database disk" → **Regional SSD Persistent Disk**
+
 ---
+
+## 📁 Filestore: Managed NFS (ReadWriteMany)
+
+**Why Does Filestore Exist?**
+
+Persistent Disks can only be attached to **one VM at a time** (ReadWriteOnce). But what if 10 web servers need to share the same `/var/www/html` folder?
+
+### Storage Access Modes Comparison
+
+| Storage Type | Access Mode | Use Case |
+|--------------|-------------|----------|
+| **Persistent Disk** | ReadWriteOnce (RWO) | Single VM boot disk, databases |
+| **Filestore** | **ReadWriteMany (RWX)** | Shared config files, CMS, legacy NFS apps |
+| **Cloud Storage** | Object-based (HTTP) | Unstructured data, backups, static assets |
+
+### When to Use Filestore
+
+| Scenario | Use Filestore? |
+|----------|----------------|
+| Multiple VMs sharing same file system | ✅ Yes |
+| WordPress with multiple web servers | ✅ Yes |
+| Legacy application expecting NFS mount | ✅ Yes |
+| Single VM boot disk | ❌ No (use Persistent Disk) |
+| Storing images/videos for web access | ❌ No (use Cloud Storage) |
+
+### Filestore Tiers
+
+| Tier | Capacity | Performance | Use Case |
+|------|----------|-------------|----------|
+| **Basic HDD** | 1-63 TB | Lower | File shares, home directories |
+| **Basic SSD** | 2.5-63 TB | Medium | General purpose |
+| **Zonal** | 1-100 TB | High | Enterprise workloads |
+| **Enterprise** | 1-10 TB | Highest | Mission-critical |
+
+```bash
+# Create a Filestore instance
+gcloud filestore instances create my-filestore \
+    --tier=BASIC_SSD \
+    --file-share=name=vol1,capacity=2560GB \
+    --network=name=default \
+    --zone=us-central1-a
+
+# Mount on VM (after creating)
+sudo mount 10.0.0.2:/vol1 /mnt/filestore
+```
+
+> **🎯 ACE Tip:** If the exam mentions "multiple VMs need shared file access" or "NFS", the answer is **Filestore**.
 
 ## 🔌 3. Persistent Disk vs Local SSD (The Danger Zone)
 

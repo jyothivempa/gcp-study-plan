@@ -59,6 +59,105 @@ The projects you built this week aren't just for learning; they are for your res
 
 ---
 
+## 🚀 Resume-Ready Project Ideas
+
+These projects demonstrate real cloud engineering skills to employers. Each is designed to be completed in 2-4 hours.
+
+### 🔥 Tier 1: Foundation Projects (Add to GitHub)
+
+| Project | Skills Demonstrated | Description |
+|---------|---------------------|-------------|
+| **Auto-Healing Web Cluster** | MIG, Load Balancing, Health Checks | Regional MIG with HTTP LB. Simulate failure by deleting VM. |
+| **Secure Static Website** | Cloud Storage, IAM, Cloud CDN | Host static site with signed URLs for private assets. |
+| **Serverless API** | Cloud Run, Firestore, IAM | REST API with authentication using Cloud Run + Firestore. |
+
+### 🔥 Tier 2: Intermediate Projects (Interview Ready)
+
+| Project | Skills Demonstrated | Description |
+|---------|---------------------|-------------|
+| **CI/CD Pipeline** | Cloud Build, Artifact Registry, GKE | Auto-deploy container to GKE on Git push. |
+| **Cost Monitor** | Cloud Functions, Pub/Sub, Billing API | Alert Slack when daily spend exceeds threshold. |
+| **Multi-Region DR** | Cloud SQL, Cross-region replication | Primary in US, failover replica in EU. Test failover. |
+
+### 🔥 Tier 3: Advanced Capstone (Portfolio Highlight)
+
+| Project | Skills Demonstrated | Description |
+|---------|---------------------|-------------|
+| **Microservices Platform** | GKE, Cloud SQL, Pub/Sub, Monitoring | 3-service app with async messaging and full observability. |
+| **Data Lake Architecture** | Cloud Storage, Dataflow, BigQuery | Ingest CSV → Transform → Analytics dashboard. |
+| **Zero-Trust Network** | VPC Service Controls, IAP, Private Google Access | Corporate-grade network with no public IPs. |
+
+### How to Present on Resume
+
+```
+PROJECTS
+─────────────────────────────────────────────────
+GCP Auto-Healing Web Infrastructure
+• Deployed regional MIG with HTTP(S) Load Balancer
+• Configured auto-healing with custom health checks
+• Achieved 99.9% uptime simulation with zero manual intervention
+• Technologies: Compute Engine, Cloud Load Balancing, Terraform
+```
+
+### GitHub Repository Structure
+
+```
+gcp-portfolio/
+├── README.md           # Overview with architecture diagrams
+├── auto-healing-mig/   # Project 1
+│   ├── terraform/
+│   └── README.md       # Setup instructions
+├── serverless-api/     # Project 2
+│   ├── src/
+│   └── cloudbuild.yaml
+└── data-pipeline/      # Project 3
+    └── dataflow/
+```
+
+> **💡 Pro Tip:** Every project should have a README with:
+> 1. Architecture diagram (Mermaid or image)
+> 2. Problem it solves
+> 3. How to deploy (step-by-step)
+> 4. Cost estimate
+
+---
+
+## 🎯 Capstone Mini-Projects (2-Hour Challenges)
+
+Complete these quick challenges to reinforce your skills:
+
+### Challenge 1: The "Break-Fix" Lab
+**Time:** 30 minutes | **Difficulty:** Medium
+
+1. Create a VM with no external IP
+2. Try to SSH (it will fail)
+3. Fix it using **IAP tunnel** without adding a public IP
+4. Document the commands used
+
+### Challenge 2: The "Cost Optimizer"
+**Time:** 45 minutes | **Difficulty:** Medium
+
+1. Create a Cloud Storage bucket with Standard class
+2. Add a lifecycle rule: Move to Nearline after 30 days, Archive after 90 days
+3. Upload test files and verify the rule applies
+4. Calculate cost savings compared to keeping in Standard
+
+### Challenge 3: The "Incident Response"
+**Time:** 60 minutes | **Difficulty:** Hard
+
+1. Deploy a simple web app on Cloud Run
+2. Create an alerting policy for 5xx errors
+3. Configure a Pub/Sub notification channel
+4. Simulate an error and verify the alert fires
+
+### Challenge 4: The "Security Audit"
+**Time:** 30 minutes | **Difficulty:** Easy
+
+1. Run `gcloud projects get-iam-policy [PROJECT]`
+2. Identify any Basic roles (Owner/Editor/Viewer) in use
+3. Create a report recommending specific Predefined role replacements
+4. Apply one recommendation to prove the concept
+
 ## 📝 4. Advanced Mock Exam (Week 6)
 
 

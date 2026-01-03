@@ -119,6 +119,56 @@ resource "google_compute_router_nat" "nat" {
 
 ---
 
+## 🧠 The ACE Troubleshooting Mindset (8% of Exam)
+
+Troubleshooting is 8% of the ACE exam. Use this systematic approach for any "something isn't working" scenario.
+
+### The 4-Step Debug Framework
+
+| Step | Question | Tools |
+|------|----------|-------|
+| 1. **Reproduce** | Can you consistently trigger the issue? | Console, gcloud |
+| 2. **Isolate** | Is it Network? IAM? Application code? | Connectivity tests |
+| 3. **Check Logs** | What do the logs say? | Cloud Logging, Error Reporting |
+| 4. **Test Incrementally** | One change at a time | Don't change 5 things at once |
+
+### Common ACE Troubleshooting Scenarios
+
+| Symptom | Most Likely Cause | How to Check |
+|---------|-------------------|--------------|
+| **VM can't reach internet** | Missing Cloud NAT or no external IP | `gcloud compute instances describe` |
+| **502 Bad Gateway on LB** | Firewall blocking health checks | Allow `130.211.0.0/22`, `35.191.0.0/16` |
+| **Permission denied** | Missing IAM role | `gcloud projects get-iam-policy` |
+| **SSH timeout** | Firewall blocking port 22 | Check firewall rules for TCP:22 |
+| **Can't ping VM** | ICMP not allowed | Allow ICMP protocol (separate from TCP) |
+| **GKE pod can't reach API** | Missing Workload Identity | Check service account binding |
+| **Cloud Function fails** | Missing service account permissions | Check function's SA roles |
+
+### The "Why Not Working?" Flowchart
+
+```mermaid
+flowchart TD
+    A[Something Broken] --> B{Can you ping it?}
+    B -->|No| C{Has external IP?}
+    B -->|Yes| D{Can you SSH?}
+    
+    C -->|No| NAT[Add Cloud NAT]
+    C -->|Yes| FW1[Check egress firewall]
+    
+    D -->|No| FW2[Check TCP:22 firewall + IAP range]
+    D -->|Yes| E{App responding?}
+    
+    E -->|No| LOG[Check Cloud Logging]
+    E -->|Yes| IAM[Check IAM permissions]
+    
+    style NAT fill:#e8f5e9,stroke:#4caf50
+    style FW2 fill:#fff3e0,stroke:#ff9800
+```
+
+> **🎯 ACE Tip:** When troubleshooting, always check **Network** (firewalls, routes) before **IAM** (permissions), because network issues are more common.
+
+---
+
 <!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
