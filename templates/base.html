@@ -16,6 +16,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
 
+    <!-- PrismJS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css"
+        rel="stylesheet" />
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -60,6 +65,13 @@
                             bg: '#f6f9fc', // Mapped to Light Gray for fallback
                             card: '#ffffff',
                             border: '#e3e8ee',
+                        },
+                        google: {
+                            blue: '#4285F4',
+                            red: '#EA4335',
+                            yellow: '#FBBC04',
+                            green: '#34A853',
+                            grey: '#F1F3F4'
                         }
                     },
                     animation: {
@@ -260,6 +272,8 @@
                         class="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition">Curriculum</a>
                     <a href="{% url 'roadmap' %}"
                         class="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition">Roadmap</a>
+                    <a href="{% url 'faq' %}"
+                        class="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition">FAQ</a>
                 </div>
 
                 <!-- Theme Toggle -->
@@ -362,6 +376,17 @@
     </script>
 
     {% block extra_js %}{% endblock %}
+    <!-- PrismJS Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
 </body>
 
 </html>

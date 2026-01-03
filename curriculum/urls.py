@@ -17,5 +17,5 @@ urlpatterns = [
     path('search/', views.search_lessons, name='search_lessons'),
     path('api/verify_capstone/', views.verify_capstone, name='verify_capstone'),
     path('api/sidebar_data/<slug:course_slug>/<int:day_number>/', views.get_sidebar_data, name='get_sidebar_data'),
-
+    path('faq/', views.faq, name='faq'),
 ]

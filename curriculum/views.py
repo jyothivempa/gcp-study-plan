@@ -132,7 +132,7 @@ def lesson_detail(request, course_slug, day_number):
         'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45],
         'week_title': f"Week {day.week.number}" # Fix for missing title field on Week model
     }
-    return render(request, 'lesson_detail_v5.html', context)
+    return render(request, 'lesson_detail.html', context)
 
 def get_sidebar_data(request, course_slug, day_number):
     """
@@ -280,4 +280,6 @@ def verify_capstone(request):
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
-
+def faq(request):
+    """FAQ page view"""
+    return render(request, 'faq.html')

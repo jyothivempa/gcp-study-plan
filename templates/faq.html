@@ -1,64 +1,365 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}FAQ & Support - GCP Mastery{% endblock %}
+{% block title %}Frequently Asked Questions - GCPMastery{% endblock %}
 
 {% block content %}
-<div class="bg-white min-h-screen">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h1 class="text-3xl font-extrabold text-slate-900 text-center mb-8">Frequently Asked Questions</h1>
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
 
-        <div class="space-y-12">
-            <!-- Update Schedule -->
-            <section>
-                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-brand-600"></i> Update Schedule
-                </h2>
-                <div class="bg-slate-50 border-l-4 border-brand-500 p-4 rounded-r-lg">
-                    <p class="font-bold text-sm text-slate-700">Last Content Update: <span
-                            class="text-slate-900">January 1, 2026</span></p>
-                    <p class="text-sm text-slate-600 mt-1">We review all content quarterly to match the official Google
-                        Cloud Exam Guide. Next scheduled review: <span class="font-medium">April 1, 2026</span>.</p>
-                </div>
-            </section>
-
-            <!-- Support -->
-            <section>
-                <h2 class="text-xl font-bold text-slate-900 mb-4">How do I get help?</h2>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 pt-1">
-                            <i class="fa-brands fa-discord text-indigo-500 text-lg"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-slate-900">Community Discord</h3>
-                            <p class="mt-1 text-sm text-slate-500">Join 500+ students in our <a href="#"
-                                    class="text-brand-600 hover:underline">Discord Server</a>. Course mentors are active
-                                daily.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Course Questions -->
-            <section class="border-t border-slate-200 pt-8">
-                <h2 class="text-xl font-bold text-slate-900 mb-6">Course & Billing</h2>
-                <dl class="space-y-8">
-                    <div>
-                        <dt class="text-lg font-medium text-slate-900">Is this course really free?</dt>
-                        <dd class="mt-2 text-base text-slate-500">Yes. The entire 45-day curriculum is free. We may add
-                            premium advanced specialized modules later, but the core ACE path stays free.</dd>
-                    </div>
-                    <div>
-                        <dt class="text-lg font-medium text-slate-900">Do I need to pay for Google Cloud?</dt>
-                        <dd class="mt-2 text-base text-slate-500">Google Cloud offers a Free Tier ($300 credit for 90
-                            days for new users). Our labs are designed to start with the Free Tier. We teach you how to
-                            set budget alerts on <a href="/curriculum/course/gcp/day/3/"
-                                class="text-brand-600 hover:underline">Day 3</a>.</dd>
-                    </div>
-                </dl>
-            </section>
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-3 px-4 py-2 bg-brand-50 dark:bg-brand-900/30 rounded-full mb-6">
+                <i class="fa-solid fa-circle-question text-brand-600 dark:text-brand-400"></i>
+                <span class="text-sm font-bold text-brand-700 dark:text-brand-300 uppercase tracking-wider">Help
+                    Center</span>
+            </div>
+            <h1 class="text-5xl lg:text-6xl font-display font-black text-slate-900 dark:text-white mb-4">
+                Frequently Asked Questions
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                Everything you need to know about the GCP 45-day study plan and ACE exam preparation.
+            </p>
         </div>
+
+        <!-- Search Bar -->
+        <div class="mb-12">
+            <div class="relative">
+                <input type="text" id="faq-search" placeholder="Search FAQs..."
+                    class="w-full px-6 py-4 pl-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 dark:focus:border-brand-400 transition-all shadow-premium">
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-5 text-slate-400"></i>
+            </div>
+        </div>
+
+        <!-- FAQ Categories -->
+        <div class="space-y-6" x-data="{ openCategory: 1, openQuestion: null }">
+
+            <!-- Category 1: About the Study Plan -->
+            <div class="glass-panel rounded-3xl overflow-hidden hover-lift">
+                <button @click="openCategory = openCategory === 1 ? null : 1"
+                    class="w-full px-8 py-6 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">About the Study
+                                Plan</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Learn about the 45-day curriculum
+                                structure</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"
+                        :class="{'rotate-180': openCategory === 1}"></i>
+                </button>
+
+                <div x-show="openCategory === 1" x-collapse class="px-8 pb-6 space-y-4">
+                    <!-- Q1 -->
+                    <div class="border-l-4 border-brand-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">What is this 45-day study
+                            plan?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            This is a comprehensive, hands-on curriculum designed to take you from zero GCP knowledge to
+                            ACE exam readiness in 45 days. Each day includes concepts, hands-on labs, and quizzes
+                            covering all exam domains.
+                        </p>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-l-4 border-brand-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Do I need prior GCP
+                            experience?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            No! This plan is designed for absolute beginners. We start with cloud fundamentals and
+                            gradually build up to advanced topics. Basic understanding of IT concepts is helpful but not
+                            required.
+                        </p>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-l-4 border-brand-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">How much time should I
+                            dedicate each day?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Each day requires 60-90 minutes on average. This includes reading the lesson, completing
+                            hands-on labs, and taking quizzes. Some capstone projects may require 2-3 hours.
+                        </p>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="border-l-4 border-brand-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Can I complete the plan faster
+                            or slower than 45 days?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Absolutely! The 45-day structure is a guideline. You can accelerate by doing 2 days per day,
+                            or take it slower at your own pace. The platform tracks your progress regardless of timing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 2: Exam Preparation -->
+            <div class="glass-panel rounded-3xl overflow-hidden hover-lift">
+                <button @click="openCategory = openCategory === 2 ? null : 2"
+                    class="w-full px-8 py-6 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">Exam Preparation
+                            </h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">ACE certification exam guidance</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"
+                        :class="{'rotate-180': openCategory === 2}"></i>
+                </button>
+
+                <div x-show="openCategory === 2" x-collapse class="px-8 pb-6 space-y-4">
+                    <!-- Q1 -->
+                    <div class="border-l-4 border-green-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Is this curriculum enough to
+                            pass the ACE exam?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes! This curriculum covers all 5 exam domains with hands-on labs, 240 practice questions,
+                            and real-world scenarios. Combined with the included mock exams, you'll be well-prepared for
+                            the ACE certification.
+                        </p>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-l-4 border-green-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Are practice exams included?
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes! Days 43-44 include full-length mock exams simulating the real ACE test. Plus, every
+                            lesson has quizzes (240 questions total) to reinforce learning.
+                        </p>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-l-4 border-green-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">When should I schedule my ACE
+                            exam?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Schedule your exam for Day 46-50 (1-5 days after completing the plan). This gives you time
+                            for final review while keeping the material fresh. Day 45 provides a complete exam strategy
+                            guide.
+                        </p>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="border-l-4 border-green-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">What's the exam pass rate for
+                            this program?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            While we don't track official statistics, this curriculum follows Google's official exam
+                            guide and includes best practices from certified professionals. Completing all lessons and
+                            labs significantly increases your chances.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 3: Platform Usage -->
+            <div class="glass-panel rounded-3xl overflow-hidden hover-lift">
+                <button @click="openCategory = openCategory === 3 ? null : 3"
+                    class="w-full px-8 py-6 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-solid fa-desktop"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">Platform Usage
+                            </h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">How to use the learning platform</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"
+                        :class="{'rotate-180': openCategory === 3}"></i>
+                </button>
+
+                <div x-show="openCategory === 3" x-collapse class="px-8 pb-6 space-y-4">
+                    <!-- Q1 -->
+                    <div class="border-l-4 border-purple-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">How do I track my progress?
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Your progress is automatically tracked as you complete lessons. The sidebar shows your
+                            completion status, and you can see your overall progress in the curriculum overview page.
+                        </p>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-l-4 border-purple-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Can I skip lessons or jump
+                            ahead?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes! While we recommend following the sequential order for optimal learning, you can
+                            navigate to any day directly from the curriculum page or sidebar. The content builds
+                            progressively, so earlier lessons provide foundation for later ones.
+                        </p>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-l-4 border-purple-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Is the platform
+                            mobile-friendly?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Absolutely! The platform is fully responsive and works on phones, tablets, and desktops.
+                            However, for hands-on labs requiring Cloud Shell, we recommend using a desktop/laptop
+                            browser.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 4: Technical Questions -->
+            <div class="glass-panel rounded-3xl overflow-hidden hover-lift">
+                <button @click="openCategory = openCategory === 4 ? null : 4"
+                    class="w-full px-8 py-6 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-brands fa-google"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">Technical
+                                Questions</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">GCP account and lab requirements</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"
+                        :class="{'rotate-180': openCategory === 4}"></i>
+                </button>
+
+                <div x-show="openCategory === 4" x-collapse class="px-8 pb-6 space-y-4">
+                    <!-- Q1 -->
+                    <div class="border-l-4 border-orange-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Do I need a GCP account?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes, you'll need a GCP account to complete hands-on labs. Google offers a $300 free credit
+                            for new users, which is more than enough for this entire curriculum.
+                        </p>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-l-4 border-orange-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Is the GCP Free Tier
+                            sufficient?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes! All labs are designed to use Free Tier eligible resources (e2-micro VMs, small storage
+                            buckets, etc.). We also include cleanup instructions to avoid unnecessary charges.
+                        </p>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-l-4 border-orange-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Will I incur costs completing
+                            the labs?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Minimal to zero. With the $300 free credit and Free Tier resources, most students complete
+                            the entire plan without charges. Day 37 includes a dedicated lesson on cost monitoring and
+                            optimization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 5: General -->
+            <div class="glass-panel rounded-3xl overflow-hidden hover-lift">
+                <button @click="openCategory = openCategory === 5 ? null : 5"
+                    class="w-full px-8 py-6 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">General</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Other common questions</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"
+                        :class="{'rotate-180': openCategory === 5}"></i>
+                </button>
+
+                <div x-show="openCategory === 5" x-collapse class="px-8 pb-6 space-y-4">
+                    <!-- Q1 -->
+                    <div class="border-l-4 border-slate-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">How do I get help if I'm
+                            stuck?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Each lesson includes detailed explanations and troubleshooting tips. For additional help,
+                            refer to the official GCP documentation links provided throughout the curriculum.
+                        </p>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-l-4 border-slate-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Is this curriculum updated
+                            regularly?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Yes! The curriculum is maintained to reflect the latest GCP services and exam updates. Major
+                            updates are released quarterly, with minor fixes and improvements ongoing.
+                        </p>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-l-4 border-slate-500 pl-6 py-3 bg-slate-50 dark:bg-slate-800/50 rounded-r-xl">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Can I contribute or suggest
+                            improvements?</h3>
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            We welcome feedback! While we don't have a public contribution system yet, you can report
+                            issues or suggest improvements through our feedback channels (coming soon).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA Section -->
+        <div class="mt-16 text-center glass-panel rounded-3xl p-12">
+            <h2 class="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">Still have questions?</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
+                Can't find what you're looking for? Check out our documentation or start learning today.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="{% url 'curriculum_overview' %}"
+                    class="px-8 py-4 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-all shadow-premium hover:shadow-premium-lg inline-flex items-center gap-2">
+                    <i class="fa-solid fa-rocket"></i>
+                    Start Learning
+                </a>
+                <a href="{% url 'roadmap' %}"
+                    class="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold hover:border-brand-500 transition-all inline-flex items-center gap-2">
+                    <i class="fa-solid fa-map"></i>
+                    View Roadmap
+                </a>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<script>
+    // Simple FAQ Search
+    document.getElementById('faq-search')?.addEventListener('input', function (e) {
+        const query = e.target.value.toLowerCase();
+        const questions = document.querySelectorAll('[class*="border-l-4"]');
+
+        questions.forEach(q => {
+            const text = q.textContent.toLowerCase();
+            if (text.includes(query)) {
+                q.style.display = '';
+            } else {
+                q.style.display = 'none';
+            }
+        });
+    });
+</script>
 {% endblock %}
