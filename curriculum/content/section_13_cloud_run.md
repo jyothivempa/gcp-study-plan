@@ -1,148 +1,331 @@
 # Day 13: Cloud Run (Serverless Containers)
 
-**Duration:** ⏱️ 45 Minutes  
+**Duration:** ⏱️ 60 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (The Future of Computing)
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (The future of compute!)
 
 ---
 
 ## 🎯 Learning Objectives
 
 By the end of Day 13, you will be able to:
-*   **Explain** the "Serverless Container" model.
-*   **Compare** Cloud Run with App Engine and GKE.
-*   **Deploy** applications from container images.
-*   **Manage** concurrency and scaling settings.
+
+*   **Explain** the serverless container model
+*   **Compare** Cloud Run vs App Engine vs GKE vs Functions
+*   **Deploy** applications from container images
+*   **Configure** concurrency, scaling, and traffic management
+*   **Implement** secure service-to-service communication
 
 ---
 
-## 🧠 1. What is Cloud Run?
+## 🧠 1. What is Cloud Run? (Plain-English)
 
-**Cloud Run** is the "sweet spot" of Google Cloud. It gives you the flexibility of containers (Docker) with the ease of serverless (App Engine).
+**Cloud Run = Docker container flexibility + serverless simplicity.**
 
-### The Developer Workflow
-Unlike App Engine, you don't send source code. You send a **Container Image**.
+You bring a container, Google runs it. No clusters, no VMs, no patches.
+
+### The Sweet Spot
 
 ```mermaid
 graph LR
-    Code[💻 Your Code] --> Docker[🐳 Docker Build]
-    Docker --> Registry[📦 Artifact Registry]
-    Registry --> Run[🚀 Cloud Run]
-    
-    style Registry fill:#fdf4ff,stroke:#a21caf
-    style Run fill:#ecfdf5,stroke:#10b981,stroke-width:2px
-```
-
-**Key Benefits:**
-*   **Portability:** If you hate GCP tomorrow, you can take your container and run it on AWS or your own laptop. No "lock-in".
-*   **Zero Infrastructure:** No clusters to manage. No VMs to patch.
-*   **Scale to Zero:** You only pay while your code is actually running.
-
----
-
-## 🏪 2. The Analogy: The Pop-Up Store
-
-*   **App Engine:** A managed Food Court. You can only use their kitchens and menus.
-*   **Kubernetes (GKE):** Owning a Restaurant Building. You manage the plumbing, the staff, and the taxes.
-*   **Cloud Run:** A **Pop-Up Food Truck**. 
-    *   You bring your own kitchen (Container).
-    *   Google provides the parking spot and the electricity.
-    *   If no customers show up, the truck disappears and you pay $0.
-
----
-
-## ⚡ 3. Scaling & Concurrency
-
-Cloud Run scales differently than VMs. It uses **Concurrency**.
-
-```mermaid
-graph TD
-    User([Users]) -- "Request 1 to 80" --> Inst1[Instance 1]
-    User -- "Request 81" --> Inst2[Instance 2]
-    
-    subgraph Scale [Horizontal Scaling]
-        Inst1
-        Inst2
+    subgraph Flexibility
+        GKE[GKE<br/>Full Kubernetes]
     end
     
-    style Inst1 fill:#f0f9ff,stroke:#0369a1
-    style Inst2 fill:#f1f5f9,stroke:#64748b
+    subgraph Balance
+        CR[Cloud Run<br/>Serverless Containers]
+    end
+    
+    subgraph Simplicity
+        GAE[App Engine<br/>PaaS]
+        CF[Functions<br/>FaaS]
+    end
+    
+    GKE --> CR --> GAE --> CF
+    
+    style CR fill:#e8f5e9,stroke:#4caf50,stroke-width:3px
 ```
 
-> [!TIP]
-> **Concurrency:** A single Cloud Run instance can handle up to **1000 requests** at the same time (default is 80). This makes it much faster at scaling than traditional VMs.
+### 💡 Real-World Analogy
 
-> [!IMPORTANT]
-> **Statelessness:** Your app **must** be stateless. If you save a file to the local disk, it will be DELETED when the instance scales down to zero. Always save data to **Cloud SQL** or **Firestore**.
-
----
-
-## 🛠️ 4. Hands-Hands Lab: 60-Second Deployment
-
-**🧪 Lab Objective:** Experience the speed of Cloud Run by deploying a public image.
-
-### ✅ Step 1: Create the Service
-1.  Go to **Cloud Run** in the Console.
-2.  Click **CREATE SERVICE**.
-3.  **Container Image:** `us-docker.pkg.dev/cloudrun/container/hello`
-4.  **Service Name:** `hello-gcp-hero`.
-5.  **Region:** Choose your nearest region.
-
-### ✅ Step 2: Configure Traffic
-1.  Authentication: Select **"Allow unauthenticated invocations"**.
-2.  Click **CREATE**.
-
-### ✅ Step 3: Test Scaling
-1.  Once the URL appears, click it. 
-2.  Observe the "Hello World" screen.
-3.  Refresh rapidly. You are seeing the power of a global serverless endpoint.
+| Service | Analogy |
+|---------|---------|
+| **GKE** | Owning a restaurant building - you manage everything |
+| **App Engine** | Managed food court - their kitchens, their menus |
+| **Cloud Run** | **Pop-up food truck** - you bring your kitchen, Google provides the parking |
+| **Functions** | Vending machine - single purpose, instant |
 
 ---
 
-## 📝 5. Checkpoint Quiz
+## 🏗️ 2. Cloud Run Architecture
 
-1.  **Which GCP service allows you to run a custom Docker container in a serverless environment that scales to zero?**
+```mermaid
+flowchart LR
+    subgraph Dev["Development"]
+        CODE[💻 Your Code]
+        DOCKER[🐳 Dockerfile]
+    end
+    
+    subgraph Build["Build"]
+        CB[Cloud Build]
+        AR[Artifact Registry]
+    end
+    
+    subgraph Run["Cloud Run"]
+        SVC[Service]
+        REV1[Revision 1]
+        REV2[Revision 2]
+    end
+    
+    subgraph Scale["Auto-Scaling"]
+        I1[Instance 1]
+        I2[Instance 2]
+        IN[Instance N]
+    end
+    
+    CODE --> DOCKER --> CB --> AR --> SVC
+    SVC --> REV1 & REV2
+    REV2 --> I1 & I2 & IN
+    
+    style SVC fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+```
+
+### Key Features
+*   ✅ **Scale to Zero** - Pay nothing when idle
+*   ✅ **Container Portability** - Works on any cloud or laptop
+*   ✅ **Auto-scaling** - Handles traffic spikes automatically
+*   ✅ **HTTPS by default** - Automatic TLS certificates
+*   ✅ **Revisions** - Easy rollback and traffic splitting
+
+---
+
+## ⚡ 3. Concurrency & Scaling
+
+Cloud Run scales based on **concurrent requests**, not CPU.
+
+### How Concurrency Works
+
+```mermaid
+flowchart LR
+    USERS[100 Users] --> CR[Cloud Run]
+    
+    subgraph Instances["With concurrency=80"]
+        I1[Instance 1<br/>80 requests]
+        I2[Instance 2<br/>20 requests]
+    end
+    
+    CR --> I1 & I2
+    
+    style I1 fill:#e8f5e9,stroke:#4caf50
+    style I2 fill:#fff3e0,stroke:#ff9800
+```
+
+### Concurrency Settings
+
+| Setting | Value | Effect |
+|---------|-------|--------|
+| **Max Concurrency** | 1-1000 (default 80) | Requests per instance |
+| **Min Instances** | 0-N | Cold start prevention |
+| **Max Instances** | 1-1000 | Cost/resource limit |
+
+### Scaling Formula
+```
+Instances Needed = Concurrent Requests / Concurrency Setting
+Example: 200 requests / 80 concurrency = 3 instances
+```
+
+> **🎯 ACE Tip:** Higher concurrency = fewer instances = lower cost. But set it too high and your app might struggle.
+
+---
+
+## 🔒 4. Security & Networking
+
+### Authentication Options
+
+| Option | Use Case |
+|--------|----------|
+| **Allow unauthenticated** | Public APIs, websites |
+| **Require authentication** | Internal services, admin panels |
+| **IAM + Service account** | Service-to-service communication |
+
+### Secure Service-to-Service
+```bash
+# Service A calling Service B
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+    https://service-b-xxx.run.app/api
+```
+
+### VPC Connectivity
+```bash
+# Connect Cloud Run to VPC
+gcloud run services update my-service \
+    --vpc-connector=my-connector \
+    --vpc-egress=all-traffic
+```
+
+---
+
+## 🛠️ 5. Hands-On Lab: Deploy a Container
+
+### Step 1: Deploy from Public Image
+```bash
+gcloud run deploy hello-service \
+    --image=us-docker.pkg.dev/cloudrun/container/hello \
+    --region=us-central1 \
+    --allow-unauthenticated
+```
+
+### Step 2: Build and Deploy Your Own
+```bash
+# Create a simple app
+mkdir my-app && cd my-app
+
+cat > main.py << 'EOF'
+from flask import Flask
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return f'<h1>Hello from Cloud Run! 🚀</h1>'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+EOF
+
+cat > Dockerfile << 'EOF'
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+RUN pip install flask gunicorn
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
+EOF
+
+# Build and deploy
+gcloud run deploy my-app \
+    --source . \
+    --region=us-central1 \
+    --allow-unauthenticated
+```
+
+### Step 3: Configure Scaling
+```bash
+gcloud run services update my-app \
+    --min-instances=1 \
+    --max-instances=10 \
+    --concurrency=100 \
+    --region=us-central1
+```
+
+### Step 4: Split Traffic (Canary)
+```bash
+# Deploy new revision
+gcloud run deploy my-app --source . --no-traffic
+
+# Send 10% traffic to new revision
+gcloud run services update-traffic my-app \
+    --to-revisions=my-app-00002=10 \
+    --region=us-central1
+```
+
+---
+
+## 🔄 6. Cloud Run vs Alternatives
+
+### Compute Service Comparison
+
+| Feature | Cloud Run | App Engine | GKE | Functions |
+|---------|-----------|------------|-----|-----------|
+| **Container Support** | ✅ | Flexible only | ✅ | ❌ |
+| **Scale to Zero** | ✅ | Standard only | ❌ | ✅ |
+| **Custom Runtime** | ✅ | Flexible only | ✅ | ❌ |
+| **Kubernetes** | ❌ | ❌ | ✅ | ❌ |
+| **Long-running** | ✅ (60 min) | ✅ | ✅ | ❌ (9 min) |
+| **Min Overhead** | None | None | Cluster | None |
+
+### When to Use What
+
+| Scenario | Best Choice |
+|----------|-------------|
+| Simple web app, no containers | App Engine Standard |
+| Containerized app, serverless | **Cloud Run** |
+| Kubernetes required | GKE |
+| Event handler, short tasks | Cloud Functions |
+| Full cluster control needed | GKE Standard |
+
+---
+
+## ⚠️ 7. Exam Traps & Pro Tips
+
+### ❌ Common Mistakes
+| Mistake | Reality |
+|---------|---------|
+| "Cloud Run requires Kubernetes" | No! Cloud Run is serverless |
+| "Files persist between requests" | No! Must be stateless |
+| "Concurrency=1 is efficient" | No! Higher concurrency = fewer instances |
+
+### ✅ Pro Tips
+*   **Use min-instances=1** for production to avoid cold starts
+*   **Set concurrency high** if your app handles it (saves money)
+*   **Use Cloud Run Jobs** for batch processing
+*   **Always use regions close to users** for low latency
+
+---
+
+<!-- QUIZ_START -->
+## 📝 8. Knowledge Check Quiz
+
+1. **Which GCP service runs custom Docker containers in a serverless environment that scales to zero?**
     *   A. App Engine Standard
     *   B. **Cloud Run** ✅
     *   C. Compute Engine
     *   D. GKE Autopilot
 
-2.  **What is the maximum number of concurrent requests a single Cloud Run instance can handle by default?**
+2. **What is the default maximum concurrency for a Cloud Run instance?**
     *   A. 1
     *   B. **80** ✅
     *   C. 1000
     *   D. Unlimited
 
-3.  **You have a legacy Python 2.7 app that doesn't use Docker. Which service is the easiest to "lift and shift"?**
+3. **Your Cloud Run service has cold start issues. What configuration helps?**
+    *   A. Increase max concurrency
+    *   B. **Set min-instances >= 1** ✅
+    *   C. Use a smaller container
+    *   D. Enable Cloud CDN
+
+4. **You have a Python 2.7 app without Docker. Which service is easiest for migration?**
     *   A. Cloud Run
     *   B. **App Engine Standard** ✅
     *   C. Cloud Functions
+    *   D. GKE
+
+5. **What happens to data saved to local disk in Cloud Run?**
+    *   A. It persists forever
+    *   B. It's backed up automatically
+    *   C. **It's deleted when instance scales down** ✅
+    *   D. It's moved to Cloud Storage
+<!-- QUIZ_END -->
 
 ---
 
-<div class="checklist-card" x-data="{ 
-    items: [
-        { text: 'I understand why Containers are portable.', checked: false },
-        { text: 'I can explain Clound Runs Scale-to-Zero pricing.', checked: false },
-        { text: 'I successfully deployed a container image.', checked: false },
-        { text: 'I know that Cloud Run is built on Knative.', checked: false }
-    ]
-}">
-    <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        Day 13 Checklist
-    </h3>
-    <template x-for="(item, index) in items" :key="index">
-        <div class="checklist-item" @click="item.checked = !item.checked">
-            <div class="checklist-box" :class="{ 'checked': item.checked }">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
-            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
-        </div>
-    </template>
-</div>
+## ✅ Day 13 Checklist
+
+- [ ] Understand Cloud Run vs alternatives
+- [ ] Deploy a container from public image
+- [ ] Build and deploy your own container
+- [ ] Configure concurrency and scaling
+- [ ] Implement traffic splitting
+
+---
+
+<!-- FLASHCARDS
+[
+  {"term": "Cloud Run", "def": "Serverless container platform. Deploy Docker containers without managing infrastructure."},
+  {"term": "Concurrency", "def": "Number of simultaneous requests per instance. Default 80, max 1000."},
+  {"term": "Revision", "def": "Immutable snapshot of a Cloud Run service. Used for traffic splitting and rollback."},
+  {"term": "Scale to Zero", "def": "No instances running when idle. Pay nothing. Cloud Run advantage."},
+  {"term": "Stateless", "def": "No local data persists. Store state in Cloud SQL, Firestore, or Storage."},
+  {"term": "Cold Start", "def": "Delay when new instance starts. Mitigate with min-instances."}
+]
+-->

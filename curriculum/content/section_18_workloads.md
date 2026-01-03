@@ -102,9 +102,9 @@ Practice the complete workflow: Create Deployment -> Scale -> Expose -> Verify.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which Kubernetes object is responsible for ensuring that a specific number of Pod replicas are running?**
     *   A. Pod
     *   B. Service
@@ -128,8 +128,13 @@ Practice the complete workflow: Create Deployment -> Scale -> Expose -> Verify.
     *   B. **Labels and Selectors** ✅
     *   C. Round-robin scheduling via API Server
     *   D. Node names
-<!-- QUIZ_END -->
 
+5.  **How do you update a Deployment to a new container image version without downtime?**
+    *   A. Delete all pods first, then create new ones
+    *   B. **Use `kubectl set image` which triggers a rolling update** ✅
+    *   C. Restart the entire cluster
+    *   D. Scale to 0 then back to desired replicas
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

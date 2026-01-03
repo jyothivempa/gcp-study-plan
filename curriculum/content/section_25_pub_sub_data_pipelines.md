@@ -27,6 +27,8 @@ How does Ingestion and messaging middleware for streaming analytics. fit into a 
 - **Pattern A**: ...
 - **Pattern B**: ...
 
+
+
 ## 4. Cheat Sheet & Exam Tips
 > [!TIP]
 > **Exam Watch**: Look for keywords like "global", "managed", or "compliant" when seeing questions about Ingestion and messaging middleware for streaming analytics..
@@ -43,4 +45,3 @@ How does Ingestion and messaging middleware for streaming analytics. fit into a 
    - C) Wrong answer
    - D) Wrong answer
    > **Correct**: B) ...
-

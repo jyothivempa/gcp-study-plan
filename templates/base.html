@@ -9,11 +9,11 @@
     <meta name="description"
         content="{% block meta_description %}The ultimate 45-day hands-on study plan to master Google Cloud Platform (GCP). Built for beginners, focused on the Associate Cloud Engineer certification.{% endblock %}">
 
-    <!-- Fonts: Outfit (Headings) + Inter (Body) -->
+    <!-- Premium Fonts: Plus Jakarta Sans + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
 
     <!-- Tailwind CSS -->
@@ -24,9 +24,9 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
                     },
                     colors: {
                         // Stripe-inspired "Modern Technical" Palette
@@ -149,27 +149,42 @@
 
         /* Glassmorphism Utilities */
         .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
 
         .dark .glass {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.08),
+                0 2px 8px -1px rgba(0, 0, 0, 0.04);
         }
 
         .dark .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.5),
+                0 2px 8px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Premium Hover Effects */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px -4px rgba(0, 0, 0, 0.12),
+                0 4px 12px -2px rgba(0, 0, 0, 0.06);
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -302,6 +317,7 @@
             {% block content %}{% endblock %}
 
             <!-- Footer -->
+            {% block footer %}
             <footer
                 class="border-t border-slate-200 dark:border-white/5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm mt-auto">
                 <div class="max-w-7xl mx-auto py-8 px-4 text-center">
@@ -311,6 +327,7 @@
                     </p>
                 </div>
             </footer>
+            {% endblock %}
         </div>
     </div>
 

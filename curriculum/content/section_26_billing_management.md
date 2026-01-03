@@ -97,9 +97,9 @@ Set up a multi-threshold budget and understand where to find your current Quota 
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You want to receive an automated notification when your monthly spend reaches $500, but you do NOT want your services to stop. What should you configure?**
     *   A. A hard Quota limit.
     *   B. **A Billing Budget and Alert.** ✅
@@ -130,7 +130,6 @@ Set up a multi-threshold budget and understand where to find your current Quota 
     *   C. Different Billing Accounts
     *   D. Different VPCs
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

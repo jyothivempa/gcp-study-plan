@@ -113,9 +113,9 @@ Practice mounting sensitive data as a volume instead of an environment variable 
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You need to provide a database connection string that is different for Dev and Prod, but not sensitive. Which object should you use?**
     *   A. Secret
     *   B. **ConfigMap** ✅
@@ -139,8 +139,13 @@ Practice mounting sensitive data as a volume instead of an environment variable 
     *   B. **Mount the ConfigMap as a Volume at a specific path.** ✅
     *   C. Copy the properties into the Docker image.
     *   D. Use a StatefulSet to attach a disk with the config.
-<!-- QUIZ_END -->
 
+5.  **For enterprise-grade secret management, what is the recommended integration with GKE?**
+    *   A. Store secrets in Cloud Storage
+    *   B. **Use GCP Secret Manager with CSI Driver** ✅
+    *   C. Commit secrets to Git repository
+    *   D. Use ConfigMaps for all secrets
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

@@ -61,6 +61,7 @@ However, some industries (Banking, Healthcare) have a rule:
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Quick Knowledge Check (Quiz)
 
 1.  **What is the default encryption state for data stored in GCP?**
@@ -88,7 +89,7 @@ However, some industries (Banking, Healthcare) have a rule:
     *   A. Cloud Armor
     *   B. **Cloud DLP (Data Loss Prevention)** ✅
     *   C. IAM
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

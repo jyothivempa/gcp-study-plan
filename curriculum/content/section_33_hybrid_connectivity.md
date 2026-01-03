@@ -90,9 +90,9 @@ Configure a virtual "On-Prem" to "Cloud" bridge using two VPCs and HA VPN.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **A company needs to transfer 50TB of data every night from their data center to BigQuery. They require a 99.99% SLA and consistent sub-10ms latency. What should they use?**
     *   A. Cloud VPN.
     *   B. **Dedicated Interconnect.** ✅
@@ -121,7 +121,6 @@ Configure a virtual "On-Prem" to "Cloud" bridge using two VPCs and HA VPN.
     *   C. Classic VPN.
     *   D. Cloud NAT.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

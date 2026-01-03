@@ -119,9 +119,9 @@ Submit a manual build to Cloud Build and verify the artifact in Artifact Registr
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which file is the primary configuration for defining build steps in Cloud Build?**
     *   A. Dockerfile
     *   B. **cloudbuild.yaml** ✅
@@ -150,7 +150,6 @@ Submit a manual build to Cloud Build and verify the artifact in Artifact Registr
     *   A. **True** ✅
     *   B. False
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

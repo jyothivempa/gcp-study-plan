@@ -101,7 +101,7 @@ Deploy a web application, provide it with a config, and expose it to the interne
 
 ## 📝 4. Week 3 Mock Exam (ACE Standards)
 
-<!-- QUIZ_START -->
+
 1.  **A team needs to deploy 50 different microservices, each requiring its own external IP address for HTTP traffic. What is the most COST-EFFECTIVE way to handle this in GKE?**
     *   A. Create 50 Services of type LoadBalancer.
     *   B. **Create 50 ClusterIP Services and one Ingress object with routing rules.** ✅
@@ -129,7 +129,7 @@ Deploy a web application, provide it with a config, and expose it to the interne
 5.  **True or False: In GKE Autopilot, you pay for the number of nodes in the 'Google-managed' project.**
     *   A. True
     *   B. **False (You pay for the CPU/RAM requested by your Pods)** ✅
-<!-- QUIZ_END -->
+
 
 ---
 

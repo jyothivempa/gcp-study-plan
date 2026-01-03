@@ -16,6 +16,8 @@ By the end of Day 5, you will be able to:
 
 ---
 
+
+
 ## 🧠 1. Block vs Object: The #1 Exam Topic 📦
 
 If you remember nothing else from this week, remember this table.
@@ -95,6 +97,7 @@ graph LR
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Checkpoint Quiz
 
 1.  **Which storage type would you use for a high-performance database requiring millisecond latency and data persistence across VM restarts?**
@@ -112,7 +115,7 @@ graph LR
     *   A. It's the cheapest option.
     *   B. It works with personal Gmail accounts.
     *   C. **It decouples performance (IOPS) from storage capacity (GB).** ✅
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

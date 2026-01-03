@@ -100,6 +100,8 @@ graph TD
 
 ---
 
+
+
 ## 🆔 3. Project Identifiers (Exam Gold 🥇)
 
 You will be asked which ID to use in different scenarios.
@@ -147,6 +149,7 @@ Organization Policies give you central control over your cloud environment.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 6. Checkpoint Quiz
 
 1.  **Which level of the hierarchy is used to manage billing?**
@@ -159,13 +162,26 @@ Organization Policies give you central control over your cloud environment.
     *   A. Project Name
     *   B. **Project ID** ✅
     *   C. Project Number
+    *   D. Billing Account ID
 
-3.  **You need to ensure that NO service in your company can use "Standard" storage buckets in Europe. What do you use?**
+3.  **You need to ensure NO service in your company can create public storage buckets. What do you use?**
     *   A. IAM Role
     *   B. VPC Firewall
     *   C. **Organization Policy** ✅
     *   D. Billing Alert
 
+4.  **What is the relationship between Regions and Zones?**
+    *   A. A Zone contains multiple Regions
+    *   B. **A Region contains multiple Zones** ✅
+    *   C. Regions and Zones are the same thing
+    *   D. Zones are global, Regions are local
+
+5.  **IAM controls WHO can do things. What controls WHAT can be done?**
+    *   A. VPC Firewall
+    *   B. Cloud Armor
+    *   C. **Organization Policy** ✅
+    *   D. Service Account
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

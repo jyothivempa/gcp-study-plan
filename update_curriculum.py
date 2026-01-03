@@ -56,7 +56,8 @@ def extract_quizzes_from_markdown(content):
     # Capture starts AFTER the Q1 part
     q_start_re = re.compile(r'^(?:#+\s*)?(?:(?:\*\*?Q\d+[\.:]\*\*?)|(?:\*\*?\d+[\.:]\*\*?)|(?:Q\d+[\.:])|(?:- Q:)|(?:\d+[\.:]))\s*(.*)', re.IGNORECASE)
     # matches: "* A. Option" or "A. Option"
-    opt_re = re.compile(r'^[*-]?\s*([A-D][\.\)]\s*.*)', re.IGNORECASE)
+    # Capture group 1: The prefix (A.), Group 2: The text
+    opt_re = re.compile(r'^[*-]?\s*([A-D][\.\)])\s*(.*)', re.IGNORECASE)
     # matches: "> **Answer: B**" or "* B. Option ✅"
     ans_re = re.compile(r'(?:>\s*(?:\*\*)?(?:Answer|Correct|Ans)(?:\*\*)?[:\s]+(?:\*\*)?([A-D])(?:\*\*)?)|(?:([A-D])[\.\)].*?✅)', re.IGNORECASE)
     
@@ -89,9 +90,11 @@ def extract_quizzes_from_markdown(content):
             opt_match = opt_re.match(line_clean)
             if opt_match:
                 current_q['collecting_text'] = False
-                opt_text = opt_match.group(1).strip()
+                opt_text = opt_match.group(2).strip() # Group 2 is the text part
                 # Remove checkmark from option text if present
                 clean_opt = re.sub(r'[\s✅]+$', '', opt_text).strip().strip('*').strip()
+                # Remove Markdown bold/italic
+                clean_opt = clean_opt.replace('**', '').replace('__', '').strip()
                 current_q['options'].append(clean_opt)
                 
             # Answer?

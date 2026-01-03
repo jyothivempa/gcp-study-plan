@@ -23,6 +23,8 @@ Docker is the tool that builds and runs containers.
 *   **Image:** The cake (the built artifact).
 *   **Container:** The slice of cake being eaten (the running instance).
 
+
+
 ### Key Commands (Exam)
 *   `docker build -t my-app .` -> Build image.
 *   `docker run -p 80:80 my-app` -> Run image.

@@ -129,9 +129,9 @@ Build a Python container and push it to Google Cloud's official storage for imag
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Why are containers more efficient than VMs?**
     *   A. They include a dedicated OS kernel for every app.
     *   B. **They share the host OS kernel and virtualize at the OS level.** ✅
@@ -155,8 +155,13 @@ Build a Python container and push it to Google Cloud's official storage for imag
     *   B. Pushes an image to the cloud.
     *   C. **Starts an interactive container session from the Ubuntu image.** ✅
     *   D. Deletes all running Ubuntu containers.
-<!-- QUIZ_END -->
 
+5.  **Which feature provides extra kernel isolation for containers in GKE?**
+    *   A. Cloud Armor
+    *   B. VPC Service Controls
+    *   C. **GKE Sandbox (gVisor)** ✅
+    *   D. Binary Authorization
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

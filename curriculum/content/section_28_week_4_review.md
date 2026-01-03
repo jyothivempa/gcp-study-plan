@@ -71,7 +71,7 @@ When a build or service fails with a `403 Forbidden` error:
 
 ## 🏆 5. Week 4 Mock Exam (ACE Alignment)
 
-<!-- QUIZ_START -->
+
 1.  **You need to ensure that your application's memory usage is being tracked in Cloud Monitoring. After viewing the dashboard, you see 'No Data' for the 'memory/percent_used' metric. What is the first corrective action?**
     *   A. Increase the VM machine type.
     *   B. **Install the Ops Agent on the VM.** ✅
@@ -101,7 +101,7 @@ When a build or service fails with a `403 Forbidden` error:
     *   B. **Cloud Armor.** ✅
     *   C. Cloud NAT
     *   D. Identity-Aware Proxy
-<!-- QUIZ_END -->
+
 
 ---
 

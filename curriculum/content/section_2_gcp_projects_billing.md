@@ -144,6 +144,7 @@ Follow these rules to avoid "Cloud Shock" bills:
 
 ---
 
+
 ## ⚠️ 8. Common Exam Traps
 
 Don't fall for these common misconceptions on the ACE exam:
@@ -154,9 +155,9 @@ Don't fall for these common misconceptions on the ACE exam:
     *   **Truth:** Data coming **IN** (Ingress) is usually free. Data going **OUT** (Egress) usually costs money.
 *   ❌ **Trap:** "Deleting a VM deletes the Project."
     *   **Truth:** No. The Project remains. To delete everything, delete the **Project**.
-
 ---
 
+<!-- QUIZ_START -->
 ## 📝 9. Quick Knowledge Check (Quiz)
 
 1.  **Every GCP resource must belong to a:**
@@ -181,7 +182,7 @@ Don't fall for these common misconceptions on the ACE exam:
 5.  **True or False: The Free Tier allows unlimited usage of all services.**
     *   A. True
     *   B. **False** ✅
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

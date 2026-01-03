@@ -121,9 +121,9 @@ Understand the PVC lifecycle and see the GCP Persistent Disk creation.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which Kubernetes object acts as a "request" for storage by a user?**
     *   A. StorageClass
     *   B. PersistentVolume (PV)
@@ -153,7 +153,6 @@ Understand the PVC lifecycle and see the GCP Persistent Disk creation.
     *   B. **No, standard PDs do not support ReadWriteMany. Use Google Cloud Filestore instead.** ✅
     *   C. Yes, if the nodes are in the same zone.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

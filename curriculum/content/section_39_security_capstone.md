@@ -94,9 +94,9 @@ resource "google_storage_bucket_iam_binding" "private_access" {
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You discover a Service Account with the 'Project Owner' role assigned to a VM. What is the most secure replacement?**
     *   A. Project Editor role.
     *   B. Project Viewer role.
@@ -127,7 +127,6 @@ resource "google_storage_bucket_iam_binding" "private_access" {
     *   C. Google automatically deletes the project.
     *   D. The Git repo is hidden.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

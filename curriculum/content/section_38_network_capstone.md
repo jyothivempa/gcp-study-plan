@@ -119,9 +119,9 @@ resource "google_compute_router_nat" "nat" {
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You have a VM in a custom VPC with no external IP. It needs to download an OS update from the internet. What is the most secure way to enable this?**
     *   A. Assign a Static External IP.
     *   B. **Configure Cloud NAT and Cloud Router.** ✅
@@ -150,7 +150,6 @@ resource "google_compute_router_nat" "nat" {
     *   A. True
     *   B. **False.** ✅ (Implied rules exist in every VPC, even custom ones, and cannot be deleted).
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

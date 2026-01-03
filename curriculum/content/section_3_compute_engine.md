@@ -115,6 +115,7 @@ echo "<h1>Deployed via Compute Engine 🚀</h1>" > /var/www/html/index.html
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Checkpoint Quiz
 
 1.  **You need a VM for a high-performance video rendering app. Which family should you choose?**
@@ -129,7 +130,7 @@ echo "<h1>Deployed via Compute Engine 🚀</h1>" > /var/www/html/index.html
 
 3.  **True or False: A VM's Ephemeral IP Address remains the same if you stop and restart the VM.**
     *   *Answer:* **False.** It changes. Use a **Static IP** if you need it to stay the same.
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

@@ -107,6 +107,7 @@ After uploading a file (e.g., `index.html`):
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Checkpoint Quiz
 
 1.  **You need to store 10TB of tax records that legal says you must keep for 7 years, but will likely never look at. Which class?**
@@ -120,7 +121,7 @@ After uploading a file (e.g., `index.html`):
 
 3.  **True or False: Bucket names can be duplicated as long as they are in different regions.**
     *   *Answer:* **False.** Names are globally unique.
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

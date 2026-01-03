@@ -84,9 +84,9 @@ Configure a migration job that mocks moving an Amazon RDS (MySQL) instance to Cl
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You need to migrate a 500GB production PostgreSQL database from On-Premises to AlloyDB. You can only afford 30 seconds of downtime. What is the best strategy?**
     *   A. Export to SQL dump, upload to GCS, import to AlloyDB.
     *   B. **Use Database Migration Service (DMS) with continuous replication.** ✅
@@ -115,7 +115,6 @@ Configure a migration job that mocks moving an Amazon RDS (MySQL) instance to Cl
     *   A. True.
     *   B. **False. It is a managed, configuration-based service.** ✅
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

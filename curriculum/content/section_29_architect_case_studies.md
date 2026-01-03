@@ -153,9 +153,9 @@ graph TD
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You are designing a global inventory system that requires strong consistency for stock levels across Asia and the US. Which database should you use?**
     *   A. Cloud SQL with read replicas.
     *   B. **Cloud Spanner.** ✅
@@ -186,7 +186,6 @@ graph TD
     *   C. Partner Interconnect.
     *   D. VPC Peering.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

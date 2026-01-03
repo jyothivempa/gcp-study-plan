@@ -19,7 +19,7 @@ This is it. 20 high-fidelity questions that replicate the difficulty, phrasing, 
 
 ## 🏗️ Domain 1: Setting up a Cloud Solution Environment
 
-<!-- QUIZ_START -->
+
 1.  **Scenario: You have 3 projects (Dev, Test, Prod). You want to ensure that only the 'Prod' project has 'Billing Export' enabled to BigQuery to save on storage costs. Where do you configure this?**
     *   A. In each project's settings.
     *   B. **In the Billing Account settings.** ✅ (Billing exports are configured at the Billing Account level).
@@ -149,7 +149,7 @@ This is it. 20 high-fidelity questions that replicate the difficulty, phrasing, 
     *   B. **Provides a path for outbound traffic to the public internet.** ✅
     *   C. Connects to on-premises.
     *   D. Enables VPC Peering.
-<!-- QUIZ_END -->
+
 
 ---
 

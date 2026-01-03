@@ -113,9 +113,9 @@ While firewalls handle Layer 4 (IP/Port), **Cloud Armor** handles Layer 7 (HTTP/
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **A developer created a firewall rule with priority 500 to DENY traffic, and another rule with priority 200 to ALLOW that same traffic. What will happen?**
     *   A. Traffic is denied because Deny always wins.
     *   B. **Traffic is allowed because priority 200 is evaluated first.** ✅
@@ -144,7 +144,6 @@ While firewalls handle Layer 4 (IP/Port), **Cloud Armor** handles Layer 7 (HTTP/
     *   A. **True** ✅
     *   B. False
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

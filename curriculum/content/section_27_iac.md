@@ -78,6 +78,7 @@ resource "google_compute_instance" "default" {
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Quick Knowledge Check (Quiz)
 
 1.  **What is the main benefit of Infrastructure as Code?**
@@ -103,7 +104,7 @@ resource "google_compute_instance" "default" {
     *   A. In a bucket.
     *   B. **In a Version Control System (like GitHub).** ✅
     *   C. On a USB drive.
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

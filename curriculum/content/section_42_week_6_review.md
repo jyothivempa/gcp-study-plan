@@ -61,7 +61,7 @@ The projects you built this week aren't just for learning; they are for your res
 
 ## 📝 4. Advanced Mock Exam (Week 6)
 
-<!-- QUIZ_START -->
+
 1.  **Your application has an SLO of 99.9% availability per month. You have experienced 40 minutes of downtime this month. Your monthly 'Error Budget' is 43 minutes. What should you do?**
     *   A. Stop all new feature releases immediately.
     *   B. **Proceed with caution. You have 3 minutes of budget left.** ✅
@@ -91,7 +91,7 @@ The projects you built this week aren't just for learning; they are for your res
     *   B. **Disable/Delete the key in GCP Console and rotate the credentials immediately.** ✅
     *   C. Change the developer's password.
     *   D. Do nothing; the repo is private now.
-<!-- QUIZ_END -->
+
 
 ---
 

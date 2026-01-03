@@ -108,9 +108,9 @@ Inspect the default system components and understand where they live.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which component is responsible for deciding which node a new Pod should run on?**
     *   A. Kubelet
     *   B. API Server
@@ -134,8 +134,13 @@ Inspect the default system components and understand where they live.
     *   B. You don't have the "Owner" role.
     *   C. **They run on the master nodes, which are managed by Google and not visible in your node list.** ✅
     *   D. etcd is not used in GKE.
-<!-- QUIZ_END -->
 
+5.  **Which GKE release channel is recommended for production workloads?**
+    *   A. Rapid
+    *   B. Regular
+    *   C. **Stable** ✅
+    *   D. Extended
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

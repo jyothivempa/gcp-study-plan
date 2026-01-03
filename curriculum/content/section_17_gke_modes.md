@@ -93,32 +93,39 @@ Launch an Autopilot cluster and verify its unique characteristics.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which GKE mode is billed based on the resources (CPU, RAM, Disk) requested by the Pods?**
     *   A. Standard
     *   B. **Autopilot** ✅
-    *   C. Both levels follow Pod-based billing.
+    *   C. Both follow Pod-based billing.
     *   D. Neither; both follow Node-based billing.
 
-2.  **You need to run a legacy application that requires a specific kernel module to be installed on the Linux host. Which mode should you use?**
+2.  **You need to run a legacy application that requires a specific kernel module. Which mode should you use?**
     *   A. Autopilot
     *   B. **Standard** ✅
     *   C. Cloud Run
     *   D. App Engine Standard
 
-3.  **A team wants to 'minimize operational overhead' for their Kubernetes cluster. What is the best GCP recommendation?**
+3.  **A team wants to 'minimize operational overhead' for their Kubernetes cluster. What is the best recommendation?**
     *   A. GKE Standard with Auto-scaling enabled.
     *   B. **GKE Autopilot** ✅
     *   C. Compute Engine with manual Kubernetes installation.
     *   D. GKE Standard with manual node pool management.
 
-4.  **True or False: GKE Autopilot clusters are always Zonal.**
-    *   A. True
-    *   B. **False (Autopilot clusters are always Regional for High Availability)** ✅
-<!-- QUIZ_END -->
+4.  **GKE Autopilot clusters are always:**
+    *   A. Zonal for cost savings
+    *   B. **Regional for High Availability** ✅
+    *   C. Private with no public IPs
+    *   D. Using only E2 machine types
 
+5.  **What happens if you try to run a privileged container in GKE Autopilot?**
+    *   A. It runs with warnings
+    *   B. It runs but costs more
+    *   C. **It is blocked by security guardrails** ✅
+    *   D. It requires Owner role approval
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

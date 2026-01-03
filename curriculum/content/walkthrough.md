@@ -21,6 +21,8 @@ I navigated to the local development server to verify the content rendering.
 
 ![Day 1 Content](/C:/Users/JYOTHI/.gemini/antigravity/brain/4410c013-0004-4b8c-9631-9ccdf699cfbf/day_1_content_1766915221334.png)
 
+
+
 ### Day 7: Mini Mock Exam
 - **Verified:** The "Mini Mock Exam" section is clearly visible.
 - **Verified:** Questions and collapsible answers (if implemented) or text answers are correct.

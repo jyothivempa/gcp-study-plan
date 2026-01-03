@@ -100,9 +100,9 @@ options:
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Your Cloud Build pipeline fails at the 'Deploy' step with a 403 error. Which Service Account likely needs more permissions?**
     *   A. Your personal Google Account.
     *   B. **The Cloud Build Service Account ([NUMBER]@cloudbuild.gserviceaccount.com).** ✅
@@ -133,7 +133,6 @@ options:
     *   C. Rolling.
     *   D. A/B Testing.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

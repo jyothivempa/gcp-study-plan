@@ -31,9 +31,10 @@
     *   "Mark as Complete" triggers a confetti animation.
     *   Sticky footer for easy navigation.
 
+<!-- QUIZ_START -->
 ### 3. Quiz Logic (`static/js/quiz.js`)
 *   Create a script to parse the rendered quiz HTML and handle user interactions (Selection, Validation, Scoring).
-
+<!-- QUIZ_END -->
 ### 4. Styles (`static/css/style.css`)
 *   Refactor to contain only custom overrides (e.g., specific branding colors if not using standard Tailwind palette).
 

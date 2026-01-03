@@ -67,7 +67,7 @@ If you face these requirements in the exam, choose these services:
 
 ## 📝 3. Week 5 Mock Exam (ACE Alignment)
 
-<!-- QUIZ_START -->
+
 1.  **A logistics company needs to track 500,000 trucks in real-time. Each truck sends an update every 5 seconds. The data must be available for real-time dashboards and long-term history. What is the recommended architecture?**
     *   A. Cloud SQL for all data.
     *   B. **Pub/Sub (Ingest) -> Dataflow (Process) -> Bigtable (Real-time) + BigQuery (History).** ✅
@@ -97,7 +97,7 @@ If you face these requirements in the exam, choose these services:
     *   B. **Dataflow is serverless/NoOps; Dataproc provides managed Hadoop/Spark clusters.** ✅
     *   C. Dataflow only handles batch data.
     *   D. Dataproc is only for small datasets.
-<!-- QUIZ_END -->
+
 
 ---
 

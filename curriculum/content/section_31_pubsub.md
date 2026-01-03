@@ -104,9 +104,9 @@ Create a topic, a pull subscription with a DLQ, and test message lifecycle.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Your application processes payments. You need to ensure that even if the network fails, an order is never processed twice. Which Pub/Sub feature is most helpful?**
     *   A. Message Storage.
     *   B. **Exactly-Once Delivery.** ✅
@@ -135,7 +135,6 @@ Create a topic, a pull subscription with a DLQ, and test message lifecycle.
     *   A. True.
     *   B. **False. Pub/Sub is a Global service with regional endpoints for performance.** ✅
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

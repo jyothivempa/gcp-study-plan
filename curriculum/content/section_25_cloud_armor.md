@@ -104,9 +104,9 @@ Deploy a Cloud Armor policy that uses a predefined rule to block common SQL inje
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 4. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You need to ensure that your web application is only accessible from users in the United Kingdom for legal compliance. Which service should you use?**
     *   A. VPC Firewall Rules
     *   B. **Cloud Armor Security Policy (Geo-blocking)** ✅
@@ -137,7 +137,6 @@ Deploy a Cloud Armor policy that uses a predefined rule to block common SQL inje
     *   C. Change the project billing account.
     *   D. Move the data to Coldline storage.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

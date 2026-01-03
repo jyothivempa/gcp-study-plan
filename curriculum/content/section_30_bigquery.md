@@ -105,9 +105,9 @@ Query a 100GB+ public dataset using partitioning logic to keep costs zero.
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You are charged $5,000 for a single query. What is the most likely reason?**
     *   A. You used too many `JOIN` statements.
     *   B. **The query scanned a massive amount of data on a non-partitioned table.** ✅
@@ -136,7 +136,6 @@ Query a 100GB+ public dataset using partitioning logic to keep costs zero.
     *   A. True.
     *   B. **False. Only select the columns you need to save on bytes scanned.** ✅
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

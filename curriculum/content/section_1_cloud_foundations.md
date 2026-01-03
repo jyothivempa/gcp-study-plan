@@ -52,6 +52,7 @@ Understanding the shift from On-Premise to Cloud is easier with an analogy.
 
 ---
 
+
 ## 🏢 3. On-Premise vs. Cloud (Exam Favorite)
 
 The ACE exam frequently tests your understanding of *why* a company would move to the cloud.
@@ -64,7 +65,6 @@ The ACE exam frequently tests your understanding of *why* a company would move t
 | **Availability** | ⚠️ **Limited**<br>Single point of failure. | 🌐 **Global**<br>Redundant across multiple regions. |
 
 > **🎯 ACE Tip:** If a question mentions "cost optimization", "scalability", or "global reach" → **Cloud** is standardly the correct answer.
-
 ---
 
 ## 4. Cloud Service Models (IaaS, PaaS, SaaS) 🧩
@@ -91,6 +91,34 @@ Who manages what? This is the most common confusion for beginners.
 *   **You manage:** Nothing (just configuration/users).
 *   **Provider manages:** Everything (Hardware, OS, App, Data).
 *   **📌 Example:** **Gmail**, **Google Docs**, **Salesforce**
+
+### Responsibility Pyramid (Visual)
+
+```mermaid
+graph TD
+    subgraph "SaaS (You manage: Nothing)"
+        S[Gmail / Docs]
+    end
+    
+    subgraph "PaaS (You manage: Code)"
+        P[App Engine / Cloud Run]
+    end
+    
+    subgraph "IaaS (You manage: OS + App)"
+        I[Compute Engine VMs]
+    end
+    
+    subgraph "On-Premise (You manage: Everything)"
+        O[Your Data Center]
+    end
+    
+    S --> P --> I --> O
+    
+    style S fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style P fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style I fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style O fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+```
 
 > **🎯 Exam Shortcut:**
 > *   “No server management at all” → **SaaS**
@@ -148,31 +176,39 @@ Avoid these traps that catch many first-time learners:
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 8. Quick Knowledge Check (Quiz)
 
 1.  **Cloud computing mainly helps with which problem?**
-    *   A. Buying more hardware
+    *   A. Buying more hardware upfront
     *   B. **Scalability & cost efficiency** ✅
-    *   C. Manual maintenance
+    *   C. Increasing manual maintenance tasks
+    *   D. Building physical data centers
 
 2.  **Which model requires the LEAST amount of management from you?**
-    *   A. IaaS
-    *   B. PaaS
-    *   C. **SaaS** ✅
+    *   A. IaaS (Infrastructure as a Service)
+    *   B. PaaS (Platform as a Service)
+    *   C. **SaaS (Software as a Service)** ✅
+    *   D. On-Premise Infrastructure
 
 3.  **Compute Engine (Virtual Machines) belongs to which model?**
-    *   A. **IaaS** ✅
-    *   B. PaaS
-    *   C. SaaS
+    *   A. **IaaS (Infrastructure as a Service)** ✅
+    *   B. PaaS (Platform as a Service)
+    *   C. SaaS (Software as a Service)
+    *   D. FaaS (Functions as a Service)
 
 4.  **Who manages the physical hardware in the cloud?**
-    *   A. You
+    *   A. The customer (you)
     *   B. **The Cloud Provider (e.g., Google)** ✅
+    *   C. A third-party contractor
+    *   D. No one - it's fully automated
 
-5.  **True or False: Cloud implies "Free Usage" for everyone.**
-    *   A. True
-    *   B. **False** ✅
-
+5.  **What is a key characteristic of cloud pricing models?**
+    *   A. All services are completely free forever
+    *   B. You must sign a 5-year contract upfront
+    *   C. **Pay-as-you-go based on actual usage** ✅
+    *   D. Fixed monthly fee regardless of usage
+<!-- QUIZ_END -->
 ---
 
 ## 🎯 9. ACE Exam Tips (Gold)

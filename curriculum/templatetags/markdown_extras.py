@@ -1,12 +1,18 @@
 from django import template
 from django.template.defaultfilters import stringfilter
 import markdown as md
+import re
 
 register = template.Library()
 
 @register.filter()
 @stringfilter
 def markdown(value):
+    """Convert Markdown to HTML, stripping quiz sections."""
+    if value is None:
+        return ''
+    # Strip out quiz sections wrapped in HTML comments
+    value = re.sub(r'<!-- QUIZ_START -->.*?<!-- QUIZ_END -->', '', value, flags=re.DOTALL)
     return md.markdown(value, extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'markdown.extensions.toc'])
 
 @register.filter()

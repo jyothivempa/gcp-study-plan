@@ -34,6 +34,8 @@ graph TD
     style Project fill:#ecfdf5,stroke:#10b981,stroke-width:2px
 ```
 
+
+
 ### Storage Decision Tree (Exam Gold)
 ```mermaid
 graph TD
@@ -128,6 +130,42 @@ Week 1 was about **Basics**. Week 2 is about **Management at Scale**.
 *   **Load Balancing:** High-performance global distribution.
 *   **Cloud SQL:** Letting Google manage your databases.
 *   **Kubernetes (GKE):** The future of container management.
+
+---
+
+<!-- QUIZ_START -->
+## 📝 6. Week 1 Knowledge Check
+
+1.  **Which pricing model is most associated with Cloud computing?**
+    *   A. Capital Expenditure (CapEx)
+    *   B. **Operational Expenditure (OpEx)** ✅
+    *   C. One-time License Fee
+    *   D. Hardware Depreciation
+
+2.  **At which level of the GCP Resource Hierarchy is billing managed?**
+    *   A. Organization
+    *   B. Folder
+    *   C. **Project** ✅
+    *   D. Resource
+
+3.  **You need to store large media files that will be accessed daily. Which Cloud Storage class is most cost-effective?**
+    *   A. Coldline
+    *   B. Archive
+    *   C. **Standard** ✅
+    *   D. Nearline
+
+4.  **What happens to data on a Local SSD when you STOP the VM?**
+    *   A. Data is preserved
+    *   B. **Data is permanently deleted** ✅
+    *   C. Data is moved to Cloud Storage
+    *   D. Data is compressed
+
+5.  **You want to give a developer read-only access to a specific Cloud Storage bucket. What is the recommended approach?**
+    *   A. Grant the Owner role at the Project level
+    *   B. **Grant the Storage Object Viewer role on that specific bucket** ✅
+    *   C. Share your credentials with the developer
+    *   D. Create a new project for the developer
+<!-- QUIZ_END -->
 
 ---
 

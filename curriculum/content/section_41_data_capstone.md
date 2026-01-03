@@ -113,9 +113,9 @@ resource "google_bigquery_table" "sales" {
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 6. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which BigQuery feature allows the query engine to completely skip entire blocks of data that don't match a time-based filter?**
     *   A. Clustering.
     *   B. **Partitioning.** ✅ (Pruning happens at the partition level).
@@ -144,7 +144,6 @@ resource "google_bigquery_table" "sales" {
     *   C. Move it to a different project.
     *   D. Encrypt it and forget the key.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

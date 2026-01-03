@@ -86,9 +86,9 @@ Configure a custom SLO for an App Engine or GKE service in Cloud Monitoring to m
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You have a request-based service. You define an SLI as the ratio of successful requests to total requests. You set a target of 99.9%. What is this target called?**
     *   A. SLI.
     *   B. **SLO.** ✅
@@ -117,7 +117,6 @@ Configure a custom SLO for an App Engine or GKE service in Cloud Monitoring to m
     *   A. True.
     *   B. **False. 100% is too expensive and prevents innovation; SRE aims for a balance using Error Budgets.** ✅
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

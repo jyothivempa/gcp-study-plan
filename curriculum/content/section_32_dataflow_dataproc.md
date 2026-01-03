@@ -80,9 +80,9 @@ Run a serverless Dataflow job to process a 100MB+ dataset from Cloud Storage int
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **You have a team of developers who are experts in Apache Spark. They need to move their 50 existing processing jobs to GCP with minimal code changes. What should you recommend?**
     *   A. **Cloud Dataproc.** ✅
     *   B. Cloud Dataflow.
@@ -111,7 +111,6 @@ Run a serverless Dataflow job to process a 100MB+ dataset from Cloud Storage int
     *   A. **True.** ✅
     *   B. False.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

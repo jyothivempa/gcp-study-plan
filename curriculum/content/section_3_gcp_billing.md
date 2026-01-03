@@ -61,48 +61,27 @@ These are your two shields against bankruptcy.
 
 ---
 
+
+
+
 ## 5️⃣ Checkpoint Quiz
-<form>
-  <!-- Q1 -->
-  <div class="quiz-question" id="q1">
-    <p class="font-bold">1. True or False: If you exceed your configured Budget Alert, Google Cloud will automatically shut down your virtual machines to prevent further charges.</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q1" value="wrong"> True</label>
-      <label class="block"><input type="radio" name="q1" value="correct"> False</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Budgets are for *notification only*. You need complex automation (Pub/Sub + Functions) to auto-stop resources.
-    </div>
-  </div>
 
-  <!-- Q2 -->
-  <div class="quiz-question mt-6" id="q2">
-    <p class="font-bold">2. You try to create a TPU (Tensor Processing Unit) for AI training but receive a "Quota Exceeded" error. You have a valid credit card attached. What is the issue?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q2" value="wrong"> Your credit card failed.</label>
-      <label class="block"><input type="radio" name="q2" value="correct"> You hit a default Rate/Allocation Quota.</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> TPUs are only for Enterprises.</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> You must enable the "AI API" first.</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> New accounts often have 0 quota for expensive hardware. You must request an increase from Support.
-    </div>
-  </div>
+1. **True or False: If you exceed your configured Budget Alert, Google Cloud will automatically shut down your virtual machines to prevent further charges.**
+    * A. True
+    * B. **False** ✅
 
-  <!-- Q3 -->
-  <div class="quiz-question mt-6" id="q3">
-    <p class="font-bold">3. Which of the following is an example of CapEx (Capital Expenditure)?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q3" value="wrong"> Monthly Cloud SQL bill.</label>
-      <label class="block"><input type="radio" name="q3" value="correct"> Buying a physical server rack for $50,000.</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Pay-as-you-go Network egress fees.</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Spot VM instances.</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> CapEx is upfront investment in physical assets. Cloud is OpEx.
-    </div>
-  </div>
-</form>
+2. **You try to create a TPU (Tensor Processing Unit) for AI training but receive a "Quota Exceeded" error. You have a valid credit card attached. What is the issue?**
+    * A. Your credit card failed.
+    * B. **You hit a default Rate/Allocation Quota.** ✅
+    * C. TPUs are only for Enterprises.
+    * D. You must enable the "AI API" first.
+
+3. **Which of the following is an example of CapEx (Capital Expenditure)?**
+    * A. Monthly Cloud SQL bill.
+    * B. **Buying a physical server rack for $50,000.** ✅
+    * C. Pay-as-you-go Network egress fees.
+    * D. Spot VM instances.
+
 
 ---
 

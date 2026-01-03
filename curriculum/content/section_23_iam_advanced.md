@@ -75,6 +75,7 @@ Two ways to "wear" the badge:
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Quick Knowledge Check (Quiz)
 
 1.  **What is a Service Account?**
@@ -101,7 +102,7 @@ Two ways to "wear" the badge:
     *   A. Viewer
     *   B. **Editor (Very broad!)** ✅
     *   C. Owner
-
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

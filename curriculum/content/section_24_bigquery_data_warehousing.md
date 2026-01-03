@@ -27,6 +27,8 @@ How does Serverless, highly scalable, and cost-effective multi-cloud data wareho
 - **Pattern A**: ...
 - **Pattern B**: ...
 
+
+
 ## 4. Cheat Sheet & Exam Tips
 > [!TIP]
 > **Exam Watch**: Look for keywords like "global", "managed", or "compliant" when seeing questions about Serverless, highly scalable, and cost-effective multi-cloud data warehouse..
@@ -43,4 +45,3 @@ How does Serverless, highly scalable, and cost-effective multi-cloud data wareho
    - C) Wrong answer
    - D) Wrong answer
    > **Correct**: B) ...
-

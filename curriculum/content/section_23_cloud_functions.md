@@ -120,9 +120,9 @@ Deploy a 2nd Gen Python function and use Eventarc to bridge Cloud Storage events
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **Which technology powers Cloud Functions 2nd Gen, allowing for high concurrency and longer timeouts?**
     *   A. App Engine
     *   B. **Cloud Run** ✅
@@ -146,8 +146,13 @@ Deploy a 2nd Gen Python function and use Eventarc to bridge Cloud Storage events
     *   B. **Acting as 'Glue Code' to respond to cloud events.** ✅
     *   C. Storing large amounts of unstructured data.
     *   D. Running long-term stateful databases.
-<!-- QUIZ_END -->
 
+5.  **How can you eliminate cold start latency for production-critical functions?**
+    *   A. Use 1st Gen instead of 2nd Gen
+    *   B. **Set min-instances to 1 to keep an instance warm** ✅
+    *   C. Increase the memory allocation
+    *   D. Deploy to multiple regions
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

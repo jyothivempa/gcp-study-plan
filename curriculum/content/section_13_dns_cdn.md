@@ -16,6 +16,8 @@
 *   **Cache Miss:** Content fetched from backend (Slower).
 *   **Invalidation:** Manually clearing the cache (e.g., you updated `logo.png` but users still see old one).
 
+
+
 ## 4️⃣ Exam Scenarios & Traps 🚨
 *   **Trap:** "Users are complaining about stale content." -> **Invalidate the cache.**
 *   **Trap:** "Need internal DNS names for VMs." -> **Private Managed Zone.**

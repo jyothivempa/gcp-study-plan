@@ -85,9 +85,9 @@ ORDER BY 2 DESC;
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 6. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **A team needs to run a rendering job that can be interrupted and resumed. They want the lowest possible cost. Which compute option is best?**
     *   A. E2 instance with 3-year CUD.
     *   B. **Spot VM.** ✅ (Up to 91% discount for fault-tolerant tasks).
@@ -116,7 +116,6 @@ ORDER BY 2 DESC;
     *   C. Secret Manager.
     *   D. Deployment Manager.
 <!-- QUIZ_END -->
-
 ---
 
 <div class="checklist-card" x-data="{ 

@@ -1,173 +1,282 @@
 # Day 6: IAM (Identity & Access Management)
 
-**Duration:** ⏱️ 45 Minutes  
+**Duration:** ⏱️ 60 Minutes  
 **Level:** Intermediate  
-**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (Security is priority #1)
+**ACE Exam Weight:** ⭐⭐⭐⭐⭐ Critical (Security is 19% of the exam!)
 
 ---
 
 ## 🎯 Learning Objectives
 
-By the end of Day 6, learners will be able to:
-*   **Explain** the "Who, What, Where" of IAM.
-*   **Understand** Principals, Roles, and Policies.
-*   **Follow** the Principle of Least Privilege.
-*   **Secure** Service Accounts and use IAM Conditions.
+By the end of Day 6, you will be able to:
+
+*   **Explain** the WHO, WHAT, WHERE of IAM
+*   **Differentiate** between Basic, Predefined, and Custom roles
+*   **Apply** the Principle of Least Privilege
+*   **Secure** Service Accounts properly
+*   **Use** IAM Conditions for context-aware access
 
 ---
 
-## 🧠 1. What Is IAM? (The "bouncer" Logic)
+## 🧠 1. What Is IAM? (Plain-English)
 
-**IAM** controls **Who** (Identity) can do **What** (Role) on **Which** resource.
+**IAM = The bouncer at your cloud's door.**
 
-```mermaid
-graph LR
-    P["👤 Principal (Who)"] --> R["📜 Role (What)"]
-    R --> Res["📦 Resource (Where)"]
-    
-    subgraph "IAM Policy Binding"
-        P
-        R
-    end
+It controls **WHO** (Identity) can do **WHAT** (Permissions) on **WHICH** resource.
+
+### The IAM Equation
+
+```
+Principal + Role = Access to Resource
 ```
 
-### The Big 3 Concepts:
-1.  **Principal (Who):** A Google Account, a Service Account, or a Google Group.
-2.  **Role (What):** A named collection of specific permissions (e.g., `storage.objects.get`).
-3.  **Policy (Binding):** The "Glue" that attaches a Principal to a Role on a resource.
+### 💡 Real-World Analogy: Hotel Key Card
+
+| IAM Concept | Hotel Analogy |
+|-------------|---------------|
+| **Principal** | The guest (you) |
+| **Role** | Access level (Guest, VIP, Housekeeping) |
+| **Permissions** | Individual actions (open gym, open room 202) |
+| **Resource** | The hotel room or facility |
+| **Policy** | The key card programming |
 
 ---
 
-## 🏨 2. Real-World Analogy: Hotel Key Cards
+## 👥 2. Who Can Access? (Principals)
 
-*   **Principal:** The Guest (You).
-*   **Role:** The Access Level (e.g., "Guest Access" vs "Housekeeping").
-*   **Permissions:** Individual actions (Open Gym, Open Room 202, Reset AC).
-*   **Resource:** The Hotel Room.
-
-> [!IMPORTANT]
-> **Least Privilege:** Never give a guest the "Master Key" (Project Owner). Give them exactly what they need for their stay, and nothing more.
-
----
-
-## 📜 3. Types of Roles (Ace the Exam)
-
-````carousel
-### Basic (Primitive) Roles
-*   **Owner, Editor, Viewer.**
-*   **Why they are ⛔:** Too broad. Project Owner can delete the entire project.
-*   **Use Case:** Small side projects or initial setup only.
-<!-- slide -->
-### Predefined Roles
-*   **Granular roles** managed by Google (e.g., `Compute Admin`).
-*   **Why they are ✅:** Follows Least Privilege. Google updates permissions automatically.
-*   **Use Case:** Professional production environments.
-<!-- slide -->
-### Custom Roles
-*   **Define your own** list of permissions.
-*   **Why they are 🛠️:** Maximum control. 
-*   **Note:** You must maintain them yourself. Not applicable at Folder or Organization levels.
-````
-
----
-
-## 🛡️ 4. Service Accounts (Machine Identities)
-
-Humans use passwords; Machines use **Service Accounts**.
-
-*   **What it is:** A special Google account that belongs to your application (e.g., a GKE pod) instead of an individual end-user.
-*   **Key Security:** Avoid downloading JSON keys! Use **Workload Identity** or **Service Account Impersonation** whenever possible.
-
-> [!WARNING]
-> **Key Leakage:** If you commit a Service Account JSON key to GitHub, your project will be hacked within minutes. Use Cloud KMS or Secret Manager.
-
----
-
-## 🕵️ 5. IAM Conditions (Context-Aware Access)
-
-You can grant access *only if* certain conditions are met:
-*   **Time:** Access granted only during business hours (9 AM - 5 PM).
-*   **IP:** Access granted only if user is on the corporate VPN.
-*   **Resource Name:** Access granted only to buckets starting with `prod-`.
+### Types of Principals
 
 ```mermaid
 graph TD
-    User((User)) --> Request{Access Request}
-    Request --> Auth{Is Authenticated?}
-    Auth -- Yes --> Cond{IAM Conditions?}
-    Cond -- Met --> Permit[✅ Access Granted]
-    Cond -- Not Met --> Deny[❌ Access Denied]
-    Auth -- No --> Deny
+    P[Principals] --> GA[Google Account<br/>user@gmail.com]
+    P --> SA[Service Account<br/>sa@project.iam.gserviceaccount.com]
+    P --> GG[Google Group<br/>team@domain.com]
+    P --> WS[Google Workspace<br/>domain.com]
+    P --> AL[allUsers<br/>Anyone on internet]
+    P --> AU[allAuthenticatedUsers<br/>Any Google account]
+    
+    style SA fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    style AL fill:#ffebee,stroke:#f44336,stroke-width:2px
+```
+
+> **⚠️ Warning:** `allUsers` and `allAuthenticatedUsers` can expose resources publicly. Use with extreme caution!
+
+---
+
+## 📜 3. Types of Roles
+
+### Role Comparison
+
+| Role Type | Created By | Maintenance | Best For |
+|-----------|-----------|-------------|----------|
+| **Basic (Primitive)** | Google | None | ⛔ Avoid in production |
+| **Predefined** | Google | Auto-updated | ✅ Most use cases |
+| **Custom** | You | Manual | 🛠️ Specific needs |
+
+### Basic Roles (Avoid These!)
+
+| Role | Permissions |
+|------|-------------|
+| **Viewer** | Read-only access |
+| **Editor** | Read + Write (but not IAM) |
+| **Owner** | Full control including IAM & billing |
+
+> **🎯 ACE Tip:** If an exam question uses Basic roles as an answer, it's usually WRONG. Look for the Predefined role option.
+
+### Predefined Roles (Use These!)
+```
+roles/storage.objectViewer     # Only view objects
+roles/storage.objectAdmin      # Manage objects
+roles/compute.instanceAdmin    # Manage VMs
+roles/bigquery.dataViewer      # Query BigQuery
+```
+
+### Custom Roles
+```bash
+# Create custom role with specific permissions
+gcloud iam roles create customStorageViewer \
+    --project=my-project \
+    --title="Custom Storage Viewer" \
+    --permissions="storage.objects.get,storage.objects.list" \
+    --stage=GA
 ```
 
 ---
 
-## 🛠️ 6. Hands-On Lab: Granting Access
+## 🤖 4. Service Accounts (Machine Identities)
 
-**🧪 Lab Objective:** Give a user restricted access to view buckets.
+**Humans use passwords. Machines use Service Accounts.**
 
-### ✅ Steps
+### Types of Service Accounts
 
-1.  **Open Console:** Go to **IAM & Admin** > **IAM**.
-2.  **Grant Access:** Click **Grant Access** (or "Add").
-3.  **Principal:** Enter a secondary email address.
-4.  **Role:** Select **Storage Object Viewer**.
-5.  **Add Condition:** (Optional) Try adding a condition so it only works on weekdays.
-6.  **Save & Test:** Verify the user can see files but cannot delete them.
+| Type | Created By | Example |
+|------|-----------|---------|
+| **Default** | GCP (auto) | Compute Engine default SA |
+| **User-managed** | You | Custom app SA |
+| **Google-managed** | Google | Cloud Build service agent |
+
+### ⚠️ The JSON Key Problem
+
+```mermaid
+graph LR
+    DEV[Developer] -->|Downloads| JSON[JSON Key]
+    JSON -->|Commits to| GH[GitHub]
+    GH -->|Scanned by| HACKER[Hackers]
+    HACKER -->|Mines crypto with| YOUR_PROJECT[Your Project $$$]
+    
+    style JSON fill:#ffebee,stroke:#f44336,stroke-width:2px
+    style HACKER fill:#ffcdd2,stroke:#f44336
+```
+
+### Best Practices
+```bash
+# ❌ BAD: Download keys
+gcloud iam service-accounts keys create key.json
+
+# ✅ GOOD: Use attached service account
+gcloud compute instances create my-vm \
+    --service-account=my-sa@project.iam.gserviceaccount.com
+
+# ✅ BEST: Use Workload Identity (no keys at all!)
+```
 
 ---
 
-## 📝 7. Quick Knowledge Check (Quiz)
+## 🎯 5. IAM Conditions (Context-Aware Access)
 
-1.  **Which role type should you generally AVOID in production?**
+Add **WHEN** and **WHERE** to your access rules.
+
+### Condition Types
+
+| Condition | Use Case |
+|-----------|----------|
+| **Time-based** | Access only during business hours |
+| **IP-based** | Access only from corporate VPN |
+| **Resource-based** | Access only to `dev-*` resources |
+| **Expiring** | Temporary contractor access |
+
+### Example: Weekdays Only Access
+```bash
+gcloud projects add-iam-policy-binding my-project \
+    --member="user:contractor@example.com" \
+    --role="roles/storage.objectViewer" \
+    --condition='
+      expression=request.time.getDayOfWeek() >= 1 && request.time.getDayOfWeek() <= 5,
+      title=WeekdaysOnly,
+      description=Access only on weekdays'
+```
+
+---
+
+## 🛠️ 6. Hands-On Lab: Least Privilege in Action
+
+### Step 1: Create a Service Account
+```bash
+gcloud iam service-accounts create storage-reader \
+    --display-name="Storage Reader SA"
+```
+
+### Step 2: Grant Minimal Permissions
+```bash
+# Only grant what's needed - object viewer, not admin
+gcloud projects add-iam-policy-binding my-project \
+    --member="serviceAccount:storage-reader@my-project.iam.gserviceaccount.com" \
+    --role="roles/storage.objectViewer"
+```
+
+### Step 3: Create VM with SA
+```bash
+gcloud compute instances create reader-vm \
+    --service-account=storage-reader@my-project.iam.gserviceaccount.com \
+    --scopes=storage-ro \
+    --zone=us-central1-a
+```
+
+### Step 4: Verify Permissions
+```bash
+# SSH into VM
+gcloud compute ssh reader-vm --zone=us-central1-a
+
+# This should work
+gcloud storage ls gs://my-bucket/
+
+# This should FAIL (no write permission)
+echo "test" | gcloud storage cp - gs://my-bucket/test.txt
+```
+
+---
+
+## ⚠️ 7. Exam Traps & Pro Tips
+
+### ❌ Common Mistakes
+| Mistake | Reality |
+|---------|---------|
+| "Use Owner role for simplicity" | No! Always use Predefined roles |
+| "Download SA keys for CI/CD" | No! Use Workload Identity Federation |
+| "Grant permissions to users directly" | No! Use Google Groups for scalability |
+
+### ✅ Pro Tips
+*   **Use Groups** - Add permissions to groups, add users to groups
+*   **Audit with IAM Recommender** - Find unused permissions
+*   **Never use Basic roles** in production
+*   **Rotate SA keys** if you must use them (ideally, don't)
+
+---
+
+<!-- QUIZ_START -->
+## 📝 8. Knowledge Check Quiz
+
+1. **Which role type should you generally AVOID in production?**
     *   A. Predefined
     *   B. **Basic (Primitive)** ✅
     *   C. Custom
+    *   D. Viewer
 
-2.  **What is the "Principle of Least Privilege"?**
-    *   A. **Give only the permissions needed to do the job.** ✅
-    *   B. Give everyone Owner access.
-    *   C. Use only Service Accounts.
+2. **What is the "Principle of Least Privilege"?**
+    *   A. **Give only the permissions needed to do the job** ✅
+    *   B. Give everyone Owner access
+    *   C. Use only Service Accounts
+    *   D. Always use custom roles
 
-3.  **An identity for an application to make API calls is called a:**
+3. **An identity for an application to make API calls is called a:**
     *   A. User Account
     *   B. **Service Account** ✅
     *   C. Billing Account
+    *   D. Organization Account
 
-4.  **Can you assign a Custom Role at the Organization level?**
-    *   A. Yes.
-    *   B. **No, only at Project or Organization level (depends on specific constraints, but usually limited).** ✅ (Actually, custom roles can be created at Org level, but it's a trap question often about their limitations).
+4. **You need to grant temporary access to a contractor that expires automatically. What should you use?**
+    *   A. Basic Roles
+    *   B. Custom Roles
+    *   C. **IAM Conditions with expiration** ✅
+    *   D. Service Account keys
 
-5.  **Which feature allows access based on the visitor's IP address?**
+5. **Which feature allows access based on the user's IP address or time of day?**
     *   A. Basic Roles
     *   B. **IAM Conditions** ✅
     *   C. Service Accounts
+    *   D. VPC Firewall Rules
+<!-- QUIZ_END -->
 
 ---
 
-<div class="checklist-card" x-data="{ 
-    items: [
-        { text: 'I can explain Principal, Role, and Policy.', checked: false },
-        { text: 'I understand the risk of Basic roles.', checked: false },
-        { text: 'I know when to use a Service Account.', checked: false },
-        { text: 'I understand how IAM Conditions add extra security.', checked: false }
-    ]
-}">
-    <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" class="text-blurple">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        Day 6 Checklist
-    </h3>
-    <template x-for="(item, index) in items" :key="index">
-        <div class="checklist-item" @click="item.checked = !item.checked">
-            <div class="checklist-box" :class="{ 'checked': item.checked }">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
-            <span x-text="item.text" :class="{ 'line-through text-slate-400': item.checked }"></span>
-        </div>
-    </template>
-</div>
+## ✅ Day 6 Checklist
+
+- [ ] Understand Principal, Role, and Policy
+- [ ] Know why Basic roles are risky
+- [ ] Create a least-privilege Service Account
+- [ ] Apply an IAM Condition
+- [ ] Complete the hands-on lab
+
+---
+
+<!-- FLASHCARDS
+[
+  {"term": "Principal", "def": "WHO can access. User, Service Account, Group, or Domain."},
+  {"term": "Role", "def": "WHAT permissions. Collection of specific actions allowed."},
+  {"term": "Policy", "def": "Binding that attaches Principal to Role on a Resource."},
+  {"term": "Least Privilege", "def": "Grant only the minimum permissions needed. Core security principle."},
+  {"term": "Service Account", "def": "Identity for applications. Use instead of user accounts for machines."},
+  {"term": "IAM Conditions", "def": "Context-aware access. Add TIME, IP, or RESOURCE constraints to policies."},
+  {"term": "Basic Roles", "def": "Owner/Editor/Viewer. Too broad for production. Use Predefined instead."}
+]
+-->

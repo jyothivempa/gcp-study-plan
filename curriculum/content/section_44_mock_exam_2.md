@@ -51,7 +51,7 @@ graph TD
 
 ## 📝 3. Final Knowledge Check (Mixed Domains)
 
-<!-- QUIZ_START -->
+
 1.  **A company wants to migrate an on-premises Hadoop cluster to GCP with minimal operational change. What is the best service?**
     *   A. Cloud Spanner.
     *   B. **Cloud Dataproc.** ✅ (Managed Spark/Hadoop).
@@ -79,7 +79,7 @@ graph TD
 5.  **True or False: A Subscriber in Pub/Sub consumes messages from a 'Topic' directly.**
     *   A. True
     *   B. **False.** ✅ (Subscribers always consume from a **Subscription**, which is linked to a Topic).
-<!-- QUIZ_END -->
+
 
 ---
 

@@ -117,6 +117,42 @@ Week 2 was about **Scale**. Week 3 is about **Orchestration**.
 
 ---
 
+<!-- QUIZ_START -->
+## 📝 6. Week 2 Knowledge Check
+
+1.  **Your Load Balancer returns a 502 Bad Gateway error. What is the MOST likely cause?**
+    *   A. The backend VMs are too small
+    *   B. **Firewall rules are blocking health check probes** ✅
+    *   C. The SSL certificate is expired
+    *   D. Cloud CDN is misconfigured
+
+2.  **Which serverless compute option can scale to ZERO instances when not in use?**
+    *   A. GKE Autopilot
+    *   B. App Engine Flexible
+    *   C. **Cloud Run** ✅
+    *   D. Compute Engine with Autoscaler
+
+3.  **You need to handle read-heavy traffic on Cloud SQL. What should you configure?**
+    *   A. Increase the machine type
+    *   B. Enable High Availability
+    *   C. **Create Read Replicas** ✅
+    *   D. Switch to Firestore
+
+4.  **A Managed Instance Group (MIG) automatically replaces a crashed VM. What feature enables this?**
+    *   A. Autoscaling
+    *   B. **Auto-healing with Health Checks** ✅
+    *   C. Load Balancing
+    *   D. Instance Templates
+
+5.  **You need to deploy a containerized application with maximum portability and no vendor lock-in. Which service is best?**
+    *   A. App Engine Standard
+    *   B. **Cloud Run** ✅
+    *   C. Cloud Functions
+    *   D. App Engine Flexible
+<!-- QUIZ_END -->
+
+---
+
 <div class="checklist-card" x-data="{ 
     items: [
         { text: 'I know when to use Cloud Run vs App Engine.', checked: false },

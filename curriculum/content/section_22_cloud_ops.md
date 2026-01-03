@@ -114,9 +114,9 @@ Install the **Ops Agent** to gain internal OS visibility and create an Uptime Ch
 
 ---
 
+<!-- QUIZ_START -->
 ## 📝 5. Knowledge Check
 
-<!-- QUIZ_START -->
 1.  **A company needs to analyze log data from the last 2 years using SQL. Where should they export their logs?**
     *   A. Cloud Storage
     *   B. **BigQuery** ✅
@@ -129,9 +129,9 @@ Install the **Ops Agent** to gain internal OS visibility and create an Uptime Ch
     *   C. To improve disk performance.
     *   D. To enable auto-scaling.
 
-3.  **You want to receive an SMS notification when a specific error message ('DATABASE_CONNECTION_REFUSED') appears in your application logs. What is the best approach?**
+3.  **You want an SMS notification when 'DATABASE_CONNECTION_REFUSED' appears in logs. What is the best approach?**
     *   A. Check the Logs Explorer every hour.
-    *   B. **Create a Log-based Metric and then an Alerting Policy based on that metric.** ✅
+    *   B. **Create a Log-based Metric and then an Alerting Policy.** ✅
     *   C. Create an Uptime Check.
     *   D. Export logs to Cloud Storage.
 
@@ -140,8 +140,13 @@ Install the **Ops Agent** to gain internal OS visibility and create an Uptime Ch
     *   B. **30 days** ✅
     *   C. 1 year
     *   D. Permanently
-<!-- QUIZ_END -->
 
+5.  **What does an Uptime Check monitor?**
+    *   A. RAM usage on a VM
+    *   B. **Whether a URL or service is reachable** ✅
+    *   C. Disk space utilization
+    *   D. CPU temperature
+<!-- QUIZ_END -->
 ---
 
 <div class="checklist-card" x-data="{ 

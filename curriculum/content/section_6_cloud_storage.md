@@ -75,49 +75,31 @@ graph LR
 
 ---
 
+
+
+
+
+
 ## 6️⃣ Checkpoint Quiz
-<form>
-  <!-- Q1 -->
-  <div class="quiz-question" id="q1">
-    <p class="font-bold">1. You need to store tax records for exactly 7 years to meet legal requirements. No one, not even the admin, should be able to delete them. What feature do you use?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q1" value="wrong"> Standard Storage Class</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Lifecycle Rule</label>
-      <label class="block"><input type="radio" name="q1" value="correct"> Retention Policy (Bucket Lock)</label>
-      <label class="block"><input type="radio" name="q1" value="wrong"> Signed URL</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Retention Policies enforce WORM compliance.
-    </div>
-  </div>
 
-  <!-- Q2 -->
-  <div class="quiz-question mt-6" id="q2">
-    <p class="font-bold">2. Your application allows users to upload profile photos. You want the user to upload directly to the bucket without routing traffic through your web server. What should you generate?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q2" value="wrong"> A Service Account Key</label>
-      <label class="block"><input type="radio" name="q2" value="correct"> A Signed URL</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> A Public Bucket</label>
-      <label class="block"><input type="radio" name="q2" value="wrong"> An ACL (Access Control List)</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Signed URLs provide secure, time-limited upload/download access.
-    </div>
-  </div>
+1. **You need to store tax records for exactly 7 years to meet legal requirements. No one, not even the admin, should be able to delete them. What feature do you use?**
+    * A. Standard Storage Class
+    * B. Lifecycle Rule
+    * C. **Retention Policy (Bucket Lock)** ✅
+    * D. Signed URL
 
-  <!-- Q3 -->
-  <div class="quiz-question mt-6" id="q3">
-    <p class="font-bold">3. What is the retrieval cost for "Standard" storage?</p>
-    <div class="space-y-2">
-      <label class="block"><input type="radio" name="q3" value="correct"> $0 (Free retrieval)</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> High cost</label>
-      <label class="block"><input type="radio" name="q3" value="wrong"> Depends on the file type</label>
-    </div>
-    <div class="feedback hidden mt-2 p-2 rounded bg-gray-100 text-sm">
-      <span class="text-green-600 font-bold">Correct!</span> Standard class is expensive to store, but free to access (retrieval).
-    </div>
-  </div>
-</form>
+2. **Your application allows users to upload profile photos. You want the user to upload directly to the bucket without routing traffic through your web server. What should you generate?**
+    * A. A Service Account Key
+    * B. **A Signed URL** ✅
+    * C. A Public Bucket
+    * D. An ACL (Access Control List)
+
+3. **What is the retrieval cost for "Standard" storage?**
+    * A. **$0 (Free retrieval)** ✅
+    * B. High cost
+    * C. Depends on the file type
+
+
 
 ---
 
