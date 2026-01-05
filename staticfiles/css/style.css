@@ -1,9 +1,0 @@
-/* 
-  Legacy styles removed in favor of Tailwind CSS.
-  Keep this file for custom overrides that are hard to do with utility classes.
-*/
-
-/* Custom scrollbar handling for the sidebar if needed */
-.lesson-layout {
-    /* Deprecated, handled by Flexbox in template */
-}

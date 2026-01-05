@@ -28,6 +28,9 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
+# Static files
+staticfiles/
+
 # Temporary Test Files
 test_failures.txt
 run_single_test.py
