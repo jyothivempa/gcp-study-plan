@@ -7,6 +7,9 @@ class Course(models.Model):
     description = models.TextField(blank=True)
     icon_class = models.CharField(max_length=50, default="fa-brands fa-google", help_text="FontAwesome class")
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return self.title
 
@@ -34,7 +37,6 @@ class Day(models.Model):
     outcome = models.CharField(max_length=255, help_text="What the learner will achieve")
     interview_questions = models.TextField(help_text="Markdown for interview questions", blank=True)
     video_url = models.URLField(blank=True, null=True, help_text="YouTube URL for the lesson video")
-    video_url = models.URLField(blank=True, null=True, help_text="YouTube URL for the lesson video")
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,9 +52,11 @@ class UserProgress(models.Model):
     day = models.ForeignKey(Day, related_name='user_progress', on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     completed_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ['user', 'day']
+        verbose_name_plural = "User Progress"
 
     def __str__(self):
         return f"{self.user.username} - Day {self.day.number} ({'Done' if self.completed else 'Pending'})"
@@ -91,6 +95,22 @@ class QuizQuestion(models.Model):
 
     def __str__(self):
         return f"[{self.get_question_type_display()}] {self.question_text}"
+
+class QuizScore(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quiz_scores', on_delete=models.CASCADE)
+    day = models.ForeignKey(Day, related_name='quiz_scores', on_delete=models.CASCADE)
+    score = models.IntegerField()
+    total_questions = models.IntegerField()
+    percentage = models.FloatField()
+    passed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = "Quiz Scores"
+
+    def __str__(self):
+        return f"{self.user.username} - Day {self.day.number} Score: {self.score}/{self.total_questions}"
 
 class SearchLog(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)

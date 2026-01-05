@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json
 
-from django.db.models import Q, Count
+from django.views.decorators.cache import cache_page
+from django.db.models import Q, Count, Prefetch
 from .verification import verify_capstone_project
 from .gamification import award_xp, update_streak, XP_LESSON_COMPLETE, XP_LAB_VERIFIED
 
@@ -41,23 +42,30 @@ def search_lessons(request):
     }
     return render(request, 'search_results.html', context)
 
+@cache_page(60 * 15)
 def curriculum_overview(request):
     # Automatically redirect to the GCP course for a cleaner, single-course experience
     return redirect('course_detail', course_slug='gcp')
 
 def course_detail(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
-    weeks = Week.objects.prefetch_related('days').filter(course=course)
+    
+    # Optimized query with prefetch_related
+    weeks = Week.objects.prefetch_related(
+        Prefetch('days', queryset=Day.objects.only('id', 'number', 'title', 'description', 'week_id'))
+    ).filter(course=course).order_by('number')
+    
     completed_day_ids = []
     progress_percentage = 0
     
     if request.user.is_authenticated:
-        # Filter progress for this course ONLY
-        completed_day_ids = UserProgress.objects.filter(
+        # Optimized progress fetching
+        progress_qs = UserProgress.objects.filter(
             user=request.user, 
             completed=True,
             day__week__course=course
         ).values_list('day_id', flat=True)
+        completed_day_ids = list(progress_qs)
         
         # Calculate progress
         total = Day.objects.filter(week__course=course).count()
@@ -72,22 +80,28 @@ def course_detail(request, course_slug):
     }
     return render(request, 'course_detail.html', context)
 
+@cache_page(60 * 60)
 def ace_guide(request):
     return render(request, 'ace_guide.html')
 
+@cache_page(60 * 60)
 def style_guide(request):
     return render(request, 'style_guide.html')
 
+@cache_page(60 * 60)
 def ace_cheat_sheet(request):
     return render(request, 'ace_cheat_sheet.html')
 
 def lesson_detail(request, course_slug, day_number):
-    # Ensure day belongs to course
-    day = get_object_or_404(Day, number=day_number, week__course__slug=course_slug)
+    # Highly optimized query with select_related and prefetch_related
+    day = get_object_or_404(
+        Day.objects.select_related('week__course').prefetch_related('quiz_questions'), 
+        number=day_number, 
+        week__course__slug=course_slug
+    )
     course = day.week.course
     
     # Access Control: Day 1 of ANY course is free
-    # Note: Logic assumes day.number is unique per course (1, 2, 3...)
     if not request.user.is_authenticated and day.number > 1:
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
@@ -99,7 +113,6 @@ def lesson_detail(request, course_slug, day_number):
             progress.completed = not progress.completed
             if progress.completed:
                 progress.completed_at = timezone.now()
-                # GAMIFICATION
                 award_xp(request.user, XP_LESSON_COMPLETE)
                 update_streak(request.user)
             else:
@@ -108,29 +121,19 @@ def lesson_detail(request, course_slug, day_number):
             return redirect('lesson_detail', course_slug=course.slug, day_number=day.number)
         is_completed = progress.completed
 
-    next_day = Day.objects.filter(number=day.number + 1, week__course=course).first()
-    prev_day = Day.objects.filter(number=day.number - 1, week__course=course).first()
+    # Use single query for navigation if possible, or simple filters
+    next_day = Day.objects.filter(number=day.number + 1, week__course=course).only('number').first()
+    prev_day = Day.objects.filter(number=day.number - 1, week__course=course).only('number').first()
     
-    # Calculate global progress for navbar (Course specific now)
-    progress_percentage = 0
-    if request.user.is_authenticated:
-        total = Day.objects.filter(week__course=course).count()
-        if total > 0:
-            completed_count = UserProgress.objects.filter(
-                user=request.user, 
-                completed=True,
-                day__week__course=course
-            ).count()
-            progress_percentage = int((completed_count / total) * 100)
-
-
+    # Context data
     context = {
         'course': course,
         'day': day,
         'next_day': next_day,
         'prev_day': prev_day,
+        'is_completed': is_completed,
         'has_verification': day.number in [4, 6, 8, 12, 13, 18, 19, 42, 43, 44, 45],
-        'week_title': f"Week {day.week.number}" # Fix for missing title field on Week model
+        'week_title': f"Week {day.week.number}"
     }
     return render(request, 'lesson_detail.html', context)
 
@@ -280,6 +283,7 @@ def verify_capstone(request):
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
+@cache_page(60 * 60 * 24)
 def faq(request):
     """FAQ page view"""
     return render(request, 'faq.html')

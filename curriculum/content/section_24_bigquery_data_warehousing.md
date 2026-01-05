@@ -1,47 +1,246 @@
 # Day 24: BigQuery & Data Warehousing
 
+> **Official Doc Reference**: [BigQuery Documentation](https://cloud.google.com/bigquery/docs)
+
 ## Learning Objectives
 By the end of this day, you should be able to:
-- Understand the core concepts of Serverless, highly scalable, and cost-effective multi-cloud data warehouse..
-- Identify when to use Serverless, highly scalable, and cost-effective multi-cloud data warehouse. in an enterprise architecture.
-- configure basic settings for Serverless, highly scalable, and cost-effective multi-cloud data warehouse. in the Google Cloud Console.
+- Understand BigQuery's serverless architecture and when to use it
+- Create datasets, tables, and run SQL queries
+- Implement partitioning and clustering for cost optimization
+- Load data from Cloud Storage and other sources
 
-## 1. Core Concepts
+---
 
-### What is Serverless, highly scalable, and cost-effective multi-cloud data warehouse.?
-*Detailed explanation goes here matching the specific topic.*
+## 1️⃣ What is BigQuery? 🏛️
 
-[Mermaid Diagram Placeholder]
+**BigQuery** is Google's fully-managed, serverless data warehouse designed for large-scale analytics. Think of it as a **massive library** where:
+- You don't manage the building (infrastructure)
+- You just ask questions (SQL queries)
+- You pay only for the books you read (data scanned)
 
-### Key Features
-- **Feature 1**: ...
-- **Feature 2**: ...
-- **Feature 3**: ...
+### Architecture Overview
 
-## 2. Real-World Analogy
-**The Scenario**: Imagine you are building...
-*Analogy text.*
+```mermaid
+graph TB
+    subgraph "BigQuery Architecture"
+        Client[👤 User/Application]
+        BQ[🔷 BigQuery API]
+        
+        subgraph "Dremel Engine"
+            Root[Root Server]
+            Mix1[Mixer 1]
+            Mix2[Mixer 2]
+            Leaf1[Leaf 1]
+            Leaf2[Leaf 2]
+            Leaf3[Leaf 3]
+            Leaf4[Leaf 4]
+        end
+        
+        subgraph "Colossus Storage"
+            Col1[(Column 1)]
+            Col2[(Column 2)]
+            Col3[(Column 3)]
+        end
+    end
+    
+    Client --> BQ
+    BQ --> Root
+    Root --> Mix1 & Mix2
+    Mix1 --> Leaf1 & Leaf2
+    Mix2 --> Leaf3 & Leaf4
+    Leaf1 & Leaf2 & Leaf3 & Leaf4 --> Col1 & Col2 & Col3
+```
 
-## 3. Architecture Patterns
-How does Serverless, highly scalable, and cost-effective multi-cloud data warehouse. fit into a larger system?
-- **Pattern A**: ...
-- **Pattern B**: ...
+### Key Concepts
 
+| Concept | Description | Analogy |
+|---------|-------------|---------|
+| **Dataset** | Container for tables | A folder in your library |
+| **Table** | Structured data storage | A book with chapters |
+| **View** | Virtual table from a query | A bookmark to specific pages |
+| **Partitioned Table** | Table split by date/integer | Books organized by year |
+| **Clustered Table** | Data sorted within partitions | Alphabetized chapters |
 
+---
 
-## 4. Cheat Sheet & Exam Tips
+## 2️⃣ Real-World Analogy: The Infinite Library 📚
+
+Imagine a library with **infinite shelves** and **1000 librarians**:
+- You ask: "Find all books about 'Cloud' published in 2024"
+- All 1000 librarians search simultaneously (parallel processing)
+- They only look at the 2024 section (partitioning)
+- Within 2024, books are alphabetized (clustering)
+- You pay per page they read, not per librarian
+
+**That's BigQuery** - massively parallel, column-oriented, pay-per-query.
+
+---
+
+## 3️⃣ BigQuery Pricing 💰
+
+| Pricing Model | How It Works | Best For |
+|---------------|--------------|----------|
+| **On-Demand** | $5 per TB scanned | Occasional queries |
+| **Flat-Rate** | $2,000+/month for slots | Heavy, predictable usage |
+| **Storage** | $0.02/GB/month (active) | All data |
+
 > [!TIP]
-> **Exam Watch**: Look for keywords like "global", "managed", or "compliant" when seeing questions about Serverless, highly scalable, and cost-effective multi-cloud data warehouse..
+> **Cost Optimization**: Use `SELECT specific_columns` instead of `SELECT *`. You pay for data scanned!
 
-## 5. Hands-on Lab
-**Objective**: Set up a basic Serverless, highly scalable, and cost-effective multi-cloud data warehouse. instance.
-1. Go to Console > Serverless, highly scalable, and cost-effective multi-cloud data warehouse..
-2. Click Create...
+---
 
-## 6. Daily Quiz
-1. **Question 1**: What is the primary use case for Serverless, highly scalable, and cost-effective multi-cloud data warehouse.?
-   - A) Wrong answer
-   - B) Correct answer
-   - C) Wrong answer
-   - D) Wrong answer
-   > **Correct**: B) ...
+## 4️⃣ Hands-On Lab: Your First BigQuery Analysis 🛠️
+
+### Step 1: Create a Dataset
+```bash
+# In Cloud Shell
+bq mk --dataset --location=US my_dataset
+```
+
+### Step 2: Query Public Data (Free!)
+```sql
+-- Query GitHub public dataset
+SELECT 
+  repo_name,
+  COUNT(*) as commit_count
+FROM `bigquery-public-data.github_repos.commits`
+WHERE 
+  author.date > '2024-01-01'
+GROUP BY repo_name
+ORDER BY commit_count DESC
+LIMIT 10;
+```
+
+### Step 3: Create a Partitioned Table
+```sql
+CREATE TABLE my_dataset.sales_partitioned
+PARTITION BY DATE(sale_date)
+CLUSTER BY region, product_id
+AS
+SELECT 
+  order_id,
+  sale_date,
+  region,
+  product_id,
+  amount
+FROM my_dataset.raw_sales;
+```
+
+### Step 4: Load Data from Cloud Storage
+```bash
+bq load \
+  --source_format=CSV \
+  --skip_leading_rows=1 \
+  my_dataset.customers \
+  gs://my-bucket/customers.csv \
+  name:STRING,email:STRING,signup_date:DATE
+```
+
+---
+
+## 5️⃣ Partitioning vs Clustering
+
+```mermaid
+graph LR
+    subgraph "Without Optimization"
+        A[Full Table Scan 💸]
+    end
+    
+    subgraph "With Partitioning"
+        B[Scan Only 2024 Partition ✅]
+    end
+    
+    subgraph "With Clustering"
+        C[Scan Only 'US' Region ✅✅]
+    end
+    
+    A -->|100 TB scanned| Cost1[$500]
+    B -->|10 TB scanned| Cost2[$50]
+    C -->|1 TB scanned| Cost3[$5]
+```
+
+| Feature | Partitioning | Clustering |
+|---------|--------------|------------|
+| **What** | Divides table into segments | Sorts data within partitions |
+| **By** | Date, timestamp, or integer | Up to 4 columns |
+| **Benefit** | Reduces data scanned | Further reduces data scanned |
+| **Limit** | 4,000 partitions | N/A |
+
+---
+
+## 6️⃣ Exam Scenarios & Traps 🚨
+
+| Scenario | Answer |
+|----------|--------|
+| "Analyze petabytes of log data with SQL" | **BigQuery** |
+| "Need ACID transactions on relational data" | **Cloud SQL** or **Spanner** (NOT BigQuery) |
+| "Real-time streaming analytics" | **BigQuery Streaming Insert** + **Dataflow** |
+| "Reduce query costs for date-based queries" | **Partition by date** |
+| "Query runs slow on large table" | Check if table is **partitioned/clustered** |
+
+> [!CAUTION]
+> **Trap**: BigQuery is NOT for OLTP (transactional workloads). Use Cloud SQL or Spanner for that!
+
+---
+
+## 7️⃣ Cheat Sheet
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│                    BIGQUERY CHEAT SHEET                 │
+├─────────────────────────────────────────────────────────┤
+│ bq mk --dataset DATASET           # Create dataset     │
+│ bq ls                              # List datasets      │
+│ bq query "SELECT..."              # Run query          │
+│ bq load DATASET.TABLE FILE        # Load data          │
+│ bq extract DATASET.TABLE gs://... # Export data        │
+├─────────────────────────────────────────────────────────┤
+│ PARTITION BY DATE(col)            # Date partitioning  │
+│ CLUSTER BY col1, col2             # Clustering         │
+│ SELECT * EXCEPT(col)              # Exclude columns    │
+│ APPROX_COUNT_DISTINCT(col)        # Fast distinct      │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 8️⃣ Checkpoint Quiz
+
+1. **What is the primary pricing model for BigQuery on-demand?**
+   - A) Per hour of query execution
+   - B) Per TB of data scanned ✅
+   - C) Per row returned
+   - D) Flat monthly fee
+
+2. **Which feature reduces costs for queries filtering by date?**
+   - A) Views
+   - B) Clustering
+   - C) Partitioning ✅
+   - D) Caching
+
+3. **You need to analyze 10 years of sales data occasionally. Which pricing?**
+   - A) Flat-rate
+   - B) On-demand ✅
+   - C) Free tier
+   - D) Committed use
+
+4. **BigQuery is best suited for:**
+   - A) High-frequency transactional writes
+   - B) Large-scale analytical queries ✅
+   - C) Document storage
+   - D) Real-time gaming leaderboards
+
+5. **True or False: You can cluster a table by up to 10 columns.**
+   - Answer: **False** (Maximum is 4 columns)
+
+---
+
+<!-- FLASHCARDS
+[
+  {"term": "BigQuery", "def": "Serverless, petabyte-scale data warehouse for analytics."},
+  {"term": "Partitioning", "def": "Dividing a table by date/integer to reduce scan costs."},
+  {"term": "Clustering", "def": "Sorting data within partitions by up to 4 columns."},
+  {"term": "Dremel", "def": "BigQuery's query engine that enables parallel processing."},
+  {"term": "On-Demand Pricing", "def": "$5 per TB of data scanned by queries."}
+]
+-->

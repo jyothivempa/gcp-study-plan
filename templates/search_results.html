@@ -20,7 +20,7 @@
                 {% if results %}
                 <div class="space-y-6">
                     {% for day in results %}
-                    <a href="{% url 'lesson_detail' day.number %}" class="block group">
+                    <a href="{% url 'lesson_detail' day.week.course.slug day.number %}" class="block group">
                         <div
                             class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md hover:border-brand-200 transition-all">
                             <div class="flex items-start justify-between">
