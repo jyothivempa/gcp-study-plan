@@ -186,7 +186,7 @@
                                 'C': `{{ q.option_3|escapejs }}`,
                                 'D': `{{ q.option_4|escapejs }}`
                             },
-                            correct: '{{ q.correct_option }}',
+                            correct: ['A', 'B', 'C', 'D'][parseInt('{{ q.correct_option }}') - 1] || 'A',
                             explanation: `{{ q.explanation|escapejs }}`,
                             selected: null
                         },
