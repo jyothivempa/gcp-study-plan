@@ -12,12 +12,11 @@ class Command(BaseCommand):
         # QUIZ DATA BANK (3 Questions per day)
         quiz_data = {
             1: [
-                {"q": "What is the main difference between CapEx and OpEx?", "o1": "CapEx is pay-as-you-go, OpEx is upfront", "o2": "OpEx is monthly expense, CapEx is upfront investment", "o3": "They are the same", "o4": "CapEx is for software only", "ans": 2},
-                {"q": "Which characteristic allows scaling up automatically?", "o1": "Button click", "o2": "Elasticity", "o3": "Pooling", "o4": "Broad Access", "ans": 2},
-                {"q": "Who manages the hard drives in Google Cloud?", "o1": "The User", "o2": "The Government", "o3": "Google / Provider", "o4": "Your ISP", "ans": 3},
-                {"q": "NEXT LEVEL: What is 'Workload Identity Federation' used for?", "o1": "Federating billing accounts.", "o2": "Allowing AWS/GitHub to login to GCP without Service Account Keys.", "o3": "Merging two GCP organizations.", "o4": "Federating SQL databases.", "ans": 2},
-                {"q": "NEXT LEVEL: You need to set a hard limit on how many vCPUs a project can use. What do you configure?", "o1": "Budget Alert.", "o2": "Quota.", "o3": "Firewall Rule.", "o4": "IAM Policy.", "ans": 2},
-                {"q": "NEXT LEVEL: Which resource defaults to 'Zonal' availability?", "o1": "Images.", "o2": "Snapshots.", "o3": "Virtual Machine Instances.", "o4": "VPC Networks.", "ans": 3}
+                {"q": "What is cloud computing?", "o1": "Remote servers / On-demand IT resources", "o2": "Physical hardware you own", "o3": "Local storage only", "o4": "None of the above", "ans": 1, "explanation": "Cloud computing is the on-demand delivery of compute, storage, and other IT resources via the internet with pay-as-you-go pricing."},
+                {"q": "Which of these is a valid Google Cloud region?", "o1": "us-east1", "o2": "aws-west", "o3": "azure-central", "o4": "None of the above", "ans": 1, "explanation": "us-east1 (South Carolina) is a standard GCP region. aws-west and azure-central belong to other providers."},
+                {"q": "What is the GCP Console?", "o1": "A Web-based User Interface (UI)", "o2": "A Command line tool only", "o3": "An API endpoint", "o4": "A Desktop Software", "ans": 1, "explanation": "The Google Cloud Console is the primary web interface used to manage your GCP resources visually."},
+                {"q": "What is a major benefit of Cloud Storage?", "o1": "Massive Scalability", "o2": "Fixed cost regardless of use", "o3": "Local-only access", "o4": "Limited capacity", "ans": 1, "explanation": "Cloud Storage is designed for 'Exabyte' scale, allowing you to store virtually unlimited data that grows with your needs."},
+                {"q": "GCP stands for?", "o1": "Google Cloud Platform", "o2": "General Computing Platform", "o3": "Global CPU Provider", "o4": "None of the above", "ans": 1, "explanation": "GCP stands for Google Cloud Platform."}
             ],
             2: [
                 {"q": "What is a GCP Project?", "o1": "Resource container", "o2": "VM only", "o3": "User account", "o4": "Billing", "ans": 1, "explanation": "A project is the fundamental container for all resources in Google Cloud. Billing and APIs are managed at this level."},

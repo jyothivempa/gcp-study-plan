@@ -179,35 +179,40 @@ Avoid these traps that catch many first-time learners:
 <!-- QUIZ_START -->
 ## 📝 8. Quick Knowledge Check (Quiz)
 
-1.  **Cloud computing mainly helps with which problem?**
-    *   A. Buying more hardware upfront
-    *   B. **Scalability & cost efficiency** ✅
-    *   C. Increasing manual maintenance tasks
-    *   D. Building physical data centers
+1.  **What is cloud computing?**
+    *   A. **Remote servers / On-demand IT resources** ✅
+    *   B. Physical hardware
+    *   C. Local storage
+    *   D. None
+    *   **Explanation:** Cloud computing is the on-demand delivery of compute, storage, and other IT resources via the internet with pay-as-you-go pricing.
 
-2.  **Which model requires the LEAST amount of management from you?**
-    *   A. IaaS (Infrastructure as a Service)
-    *   B. PaaS (Platform as a Service)
-    *   C. **SaaS (Software as a Service)** ✅
-    *   D. On-Premise Infrastructure
+2.  **Which is a Google Cloud region?**
+    *   A. **us-east1** ✅
+    *   B. aws-west
+    *   C. azure-central
+    *   D. None
+    *   **Explanation:** us-east1 (South Carolina) is a standard GCP region. aws-west and azure-central belong to other providers.
 
-3.  **Compute Engine (Virtual Machines) belongs to which model?**
-    *   A. **IaaS (Infrastructure as a Service)** ✅
-    *   B. PaaS (Platform as a Service)
-    *   C. SaaS (Software as a Service)
-    *   D. FaaS (Functions as a Service)
+3.  **What is GCP Console?**
+    *   A. **Web UI** ✅
+    *   B. Command line
+    *   C. API
+    *   D. SDK
+    *   **Explanation:** The Google Cloud Console is the primary web interface used to manage your GCP resources visually.
 
-4.  **Who manages the physical hardware in the cloud?**
-    *   A. The customer (you)
-    *   B. **The Cloud Provider (e.g., Google)** ✅
-    *   C. A third-party contractor
-    *   D. No one - it's fully automated
+4.  **Cloud storage benefit?**
+    *   A. **Scalability** ✅
+    *   B. Fixed cost
+    *   C. Local only
+    *   D. Limited
+    *   **Explanation:** Cloud Storage is designed for 'Exabyte' scale, allowing you to store virtually unlimited data that grows with your needs.
 
-5.  **What is a key characteristic of cloud pricing models?**
-    *   A. All services are completely free forever
-    *   B. You must sign a 5-year contract upfront
-    *   C. **Pay-as-you-go based on actual usage** ✅
-    *   D. Fixed monthly fee regardless of usage
+5.  **GCP stands for?**
+    *   A. **Google Cloud Platform** ✅
+    *   B. General Computing
+    *   C. Global CPU
+    *   D. None
+    *   **Explanation:** GCP stands for Google Cloud Platform.
 <!-- QUIZ_END -->
 ---
 
