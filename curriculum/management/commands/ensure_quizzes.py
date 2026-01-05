@@ -20,12 +20,11 @@ class Command(BaseCommand):
                 {"q": "NEXT LEVEL: Which resource defaults to 'Zonal' availability?", "o1": "Images.", "o2": "Snapshots.", "o3": "Virtual Machine Instances.", "o4": "VPC Networks.", "ans": 3}
             ],
             2: [
-                {"q": "What is a Zone in GCP?", "o1": "A collection of regions", "o2": "A single failure domain within a region", "o3": "A global network", "o4": "A billing account", "ans": 2},
-                {"q": "How many zones are usually in a region?", "o1": "1", "o2": "3 or more", "o3": "10", "o4": "Infinite", "ans": 2},
-                {"q": "Which resource is Global?", "o1": "VM Instance", "o2": "Disk", "o3": "VPC Network", "o4": "Subnet", "ans": 3},
-                {"q": "NEXT LEVEL: If a Region fails, which resource survives?", "o1": "Regional Persistent Disk.", "o2": "Global HTTP(S) Load Balancer.", "o3": "Zonal VM.", "o4": "Regional Bucket.", "ans": 2},
-                {"q": "NEXT LEVEL: You want to deploy an application with 99.99% availability. What is the minimum requirement?", "o1": "Single Zone.", "o2": "Multi-Zone in one Region.", "o3": "Multi-Region.", "o4": "Single Region with bigger VMs.", "ans": 3},
-                {"q": "NEXT LEVEL: What is the primary trade-off when moving from Multi-Region to Single-Region?", "o1": "Higher Latency.", "o2": "Lower Availability / Disaster Recovery capability.", "o3": "Higher Cost.", "o4": "Less Storage.", "ans": 2}
+                {"q": "What is a GCP Project?", "o1": "Resource container", "o2": "VM only", "o3": "User account", "o4": "Billing", "ans": 1, "explanation": "A project is the fundamental container for all resources in Google Cloud. Billing and APIs are managed at this level."},
+                {"q": "What is the top level of the Resource Hierarchy?", "o1": "Organization", "o2": "Folder", "o3": "Project", "o4": "Resource", "ans": 1, "explanation": "The Organization is the root node of the Google Cloud resource hierarchy, typically representing a company."},
+                {"q": "What is a Zone in Google Cloud?", "o1": "A group of regions", "o2": "A single failure domain (datacenter building)", "o3": "A region", "o4": "A project", "ans": 2, "explanation": "A zone is a deployment area within a region. Deploying across multiple zones ensures High Availability (HA)."},
+                {"q": "What is the primary benefit of a Multi-Region deployment?", "o1": "Low cost", "o2": "Maximum High Availability", "o3": "Simplicity", "o4": "Local access", "ans": 2, "explanation": "Multi-region deployments provide the highest level of availability and disaster recovery across geographical distances."},
+                {"q": "What does a Region contain?", "o1": "Multiple zones", "o2": "One zone", "o3": "Projects", "o4": "Users", "ans": 1, "explanation": "A region is a geographical location that consists of three or more zones."}
             ],
             3: [
                 {"q": "What is used to organize all resources in GCP?", "o1": "Folders", "o2": "Projects", "o3": "Buckets", "o4": "Nodes", "ans": 2},
@@ -344,7 +343,8 @@ class Command(BaseCommand):
                         option_2=q['o2'],
                         option_3=q['o3'],
                         option_4=q['o4'],
-                        correct_option=q['ans']
+                        correct_option=q['ans'],
+                        explanation=q.get('explanation', '')
                     )
                 self.stdout.write(self.style.SUCCESS(f'Created quiz for Day {day_num}'))
             except Day.DoesNotExist:

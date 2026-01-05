@@ -152,35 +152,40 @@ Organization Policies give you central control over your cloud environment.
 <!-- QUIZ_START -->
 ## 📝 6. Checkpoint Quiz
 
-1.  **Which level of the hierarchy is used to manage billing?**
-    *   A. Organization
+1.  **What is a GCP Project?**
+    *   A. **Resource container** ✅ (A project is the fundamental unit for organizing resources.)
+    *   B. VM only
+    *   C. User account
+    *   D. Billing
+    *   **Explanation:** A project is the fundamental container for all resources in Google Cloud. Billing and APIs are managed at this level.
+
+2.  **What is the top level of the Resource Hierarchy?**
+    *   A. **Organization** ✅
     *   B. Folder
-    *   C. **Project** ✅
+    *   C. Project
     *   D. Resource
+    *   **Explanation:** The Organization is the root node of the Google Cloud resource hierarchy, typically representing a company.
 
-2.  **Which project identifier is required when running `gcloud` commands?**
-    *   A. Project Name
-    *   B. **Project ID** ✅
-    *   C. Project Number
-    *   D. Billing Account ID
+3.  **What is a Zone in Google Cloud?**
+    *   A. A group of regions
+    *   B. **A single failure domain (datacenter building)** ✅
+    *   C. A region
+    *   D. A project
+    *   **Explanation:** A zone is a deployment area within a region. Deploying across multiple zones ensures High Availability (HA).
 
-3.  **You need to ensure NO service in your company can create public storage buckets. What do you use?**
-    *   A. IAM Role
-    *   B. VPC Firewall
-    *   C. **Organization Policy** ✅
-    *   D. Billing Alert
+4.  **What is the primary benefit of a Multi-Region deployment?**
+    *   A. Low cost
+    *   B. **Maximum High Availability** ✅
+    *   C. Simplicity
+    *   D. Local access
+    *   **Explanation:** Multi-region deployments provide the highest level of availability and disaster recovery across geographical distances.
 
-4.  **What is the relationship between Regions and Zones?**
-    *   A. A Zone contains multiple Regions
-    *   B. **A Region contains multiple Zones** ✅
-    *   C. Regions and Zones are the same thing
-    *   D. Zones are global, Regions are local
-
-5.  **IAM controls WHO can do things. What controls WHAT can be done?**
-    *   A. VPC Firewall
-    *   B. Cloud Armor
-    *   C. **Organization Policy** ✅
-    *   D. Service Account
+5.  **What does a Region contain?**
+    *   A. **Multiple zones** ✅
+    *   B. One zone
+    *   C. Projects
+    *   D. Users
+    *   **Explanation:** A region is a geographical location that consists of three or more zones.
 <!-- QUIZ_END -->
 ---
 
