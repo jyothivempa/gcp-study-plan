@@ -1,0 +1,283 @@
+/* Reader Mode / Concept Redesign Styles - STRIPE (Modern Technical) THEME */
+
+/* 1. Layout & Container */
+.reader-container {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.reader-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+    .reader-layout {
+        grid-template-columns: 1fr 280px;
+        /* Content + Sidebar */
+        gap: 4rem;
+    }
+}
+
+/* 2. Typography (Inter + Outfit) - STRIPE PALETTE */
+.prose-reader {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    /* 18px */
+    line-height: 1.7;
+    /* Slightly tighter than Sepia for "technical" feel */
+    color: #3c4257;
+    /* Stripe Slate (Body) */
+    letter-spacing: -0.01em;
+}
+
+.prose-reader h1,
+.prose-reader h2,
+.prose-reader h3 {
+    font-family: 'Outfit', sans-serif;
+    color: #1a1f36;
+    /* Dark Navy (Headings) */
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+    line-height: 1.25;
+}
+
+.prose-reader h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0a2540;
+    /* Brand Navy */
+    letter-spacing: -0.025em;
+}
+
+.prose-reader h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e3e8ee;
+}
+
+.prose-reader h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: #4f566b;
+    /* Muted Slate */
+}
+
+.prose-reader p {
+    margin-bottom: 1.5em;
+}
+
+.prose-reader strong {
+    color: #1a1f36;
+    font-weight: 600;
+}
+
+.prose-reader a {
+    color: #635bff;
+    /* Stripe Blurple */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.prose-reader a:hover {
+    color: #0a2540;
+    /* Darker Navy on hover */
+}
+
+/* 3. Callouts / Admonitions - STRIPE VARIANTS */
+.callout {
+    padding: 1.5rem;
+    border-radius: 4px;
+    /* Sharper corners */
+    margin: 2rem 0;
+    border-left: 3px solid;
+    font-size: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    /* Stripe Shadow */
+}
+
+.callout strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Note: Subtle Blurple */
+.callout-note {
+    border-color: #635bff;
+    color: #4f566b;
+    background: #fff;
+}
+
+/* Tip: Teal/Success */
+.callout-tip {
+    border-color: #0570de;
+    color: #0a2540;
+    background: #f6f9fc;
+}
+
+/* Warning: Amber */
+.callout-warning {
+    border-color: #f5a623;
+    color: #875200;
+    background: #fff;
+}
+
+/* Important: Red */
+.callout-important {
+    border-color: #e5424d;
+    color: #8f1319;
+    background: #fff;
+}
+
+/* 4. Code Blocks */
+.prose-reader pre {
+    background: #1a1f36 !important;
+    /* Dark Navy Background */
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+    position: relative;
+    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3);
+    /* Deep Shadow */
+    color: #cdd5df;
+    /* Light Slate text */
+}
+
+.prose-reader code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+}
+
+/* Inline Code */
+.prose-reader :not(pre)>code {
+    background: #f6f9fc;
+    /* Light Gray */
+    color: #3c4257;
+    /* Dark Slate */
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1px #e3e8ee;
+    /* Subtle border */
+}
+
+/* 5. Sticky TOC */
+.sticky-toc {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+}
+
+.toc-link {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+    color: #697386;
+    /* Slate 400 */
+    border-left: 2px solid transparent;
+    padding-left: 1rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.toc-link:hover {
+    color: #1a1f36;
+    border-left-color: #cdd5df;
+}
+
+.toc-link.active {
+    color: #635bff;
+    /* Blurple */
+    border-left-color: #635bff;
+    font-weight: 600;
+}
+
+/* 6. Custom Checklist Card (Added for Day 5 Polish) */
+.checklist-card {
+    background: #ffffff;
+    border: 1px solid #e3e8ee;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    /* Stripe Shadow */
+    margin-top: 2rem;
+}
+
+.checklist-card h3 {
+    margin-top: 0 !important;
+    color: #635bff;
+    /* Blurple */
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f2f5ff;
+    font-family: 'Inter', sans-serif;
+    color: #3c4257;
+    font-size: 1.05rem;
+    transition: all 0.2s;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item:hover {
+    background: #f6f9fc;
+    padding-left: 0.5rem;
+    /* Subtle indent on hover */
+    border-radius: 4px;
+}
+
+.checklist-box {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #cdd5df;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checklist-box.checked {
+    background: #635bff;
+    border-color: #635bff;
+    box-shadow: 0 2px 5px rgba(99, 91, 255, 0.4);
+}
+
+.checklist-box svg {
+    width: 14px;
+    height: 14px;
+    color: white;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s;
+}
+
+.checklist-box.checked svg {
+    opacity: 1;
+    transform: scale(1);
+}

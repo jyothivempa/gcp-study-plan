@@ -108,8 +108,13 @@ def lesson_detail(request, course_slug, day_number):
     # Handle Progress Toggle
     is_completed = False
     if request.user.is_authenticated:
-        progress, created = UserProgress.objects.get_or_create(user=request.user, day=day)
+        # Optimization: Use filter().first() to avoid automatic DB writes on basic reads
+        progress = UserProgress.objects.filter(user=request.user, day=day).first()
+        
         if request.method == 'POST' and 'toggle_complete' in request.POST:
+            if not progress:
+                progress = UserProgress.objects.create(user=request.user, day=day)
+                
             progress.completed = not progress.completed
             if progress.completed:
                 progress.completed_at = timezone.now()
@@ -118,8 +123,14 @@ def lesson_detail(request, course_slug, day_number):
             else:
                 progress.completed_at = None
             progress.save()
+            # Cache Invalidation: Clear the progress percentage cache for the user
+            from django.core.cache import cache
+            cache.delete(f"user_progress_{request.user.id}")
+            
             return redirect('lesson_detail', course_slug=course.slug, day_number=day.number)
-        is_completed = progress.completed
+            
+        if progress:
+            is_completed = progress.completed
 
     # Use single query for navigation if possible, or simple filters
     next_day = Day.objects.filter(number=day.number + 1, week__course=course).only('number').first()
@@ -137,10 +148,12 @@ def lesson_detail(request, course_slug, day_number):
     }
     return render(request, 'lesson_detail.html', context)
 
+@cache_page(60 * 15)
 def get_sidebar_data(request, course_slug, day_number):
     """
     API Endpoint to fetch sidebar data as JSON.
     Separates UI rendering from Data Logic.
+    Cached for 15 minutes to reduce DB load on navigation.
     """
     day = get_object_or_404(Day, number=day_number, week__course__slug=course_slug)
     
@@ -278,6 +291,10 @@ def verify_capstone(request):
             # GAMIFICATION
             award_xp(request.user, XP_LAB_VERIFIED)
             update_streak(request.user)
+            
+            # Cache Invalidation: Clear the progress percentage cache for the user
+            from django.core.cache import cache
+            cache.delete(f"user_progress_{request.user.id}")
         
         return JsonResponse({'success': success, 'message': message})
     except Exception as e:

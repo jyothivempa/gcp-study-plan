@@ -15,7 +15,7 @@ class Course(models.Model):
 
 class Week(models.Model):
     course = models.ForeignKey(Course, related_name='weeks', on_delete=models.CASCADE, null=True, blank=True)
-    number = models.PositiveIntegerField(help_text="Week number (1-4)")
+    number = models.PositiveIntegerField(db_index=True, help_text="Week number (1-4)")
     description = models.TextField(help_text="Overview of what is covered this week")
 
     def __str__(self):
@@ -27,7 +27,7 @@ class Week(models.Model):
 
 class Day(models.Model):
     week = models.ForeignKey(Week, related_name='days', on_delete=models.CASCADE)
-    number = models.PositiveIntegerField(help_text="Day number (1-45)")
+    number = models.PositiveIntegerField(db_index=True, help_text="Day number (1-45)")
     title = models.CharField(max_length=200, help_text="Title of the day's topic")
     description = models.TextField(blank=True, help_text="Short description for the curriculum card")
     
@@ -50,7 +50,7 @@ class Day(models.Model):
 class UserProgress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='progress', on_delete=models.CASCADE)
     day = models.ForeignKey(Day, related_name='user_progress', on_delete=models.CASCADE)
-    completed = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False, db_index=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
