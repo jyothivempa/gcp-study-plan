@@ -67,16 +67,33 @@ BigQuery charges for two things: **Storage** (very cheap) and **Analysis** (can 
 
 ---
 
-## ⚡ 3. Optimization Tier: Partitioning & Clustering
+| Technique | How it Works | Analogy | Cost Benefit |
+| :--- | :--- | :--- | :--- |
+| **Partitioning** | Divides by Date/Integer | Bookshelf sections | 🚀 Huge (Skips whole files) |
+| **Clustering** | Sorts within partition | Alphabetical sorting | 📈 Good (Sorts data for faster scan) |
 
-To save money and increase speed, you must reduce the amount of data Dremel reads from Colossus.
+> [!IMPORTANT]
+> **Constraint:** You can have up to 4,000 partitions per table. If your data is more granular, use **Clustering** alongside Partitioning.
 
-| Technique | How it Works | Analogy |
-| :--- | :--- | :--- |
-| **Partitioning** | Divides the table by **Date** or **Integer ID**. | A bookshelf with 12 sections (one per month). |
-| **Clustering** | Sorts data *within* the partition based on columns (like `CustomerID`). | Each monthly section is sorted alphabetically by name. |
+---
 
-**Performance Rule:** Always use `WHERE` clauses on partitioned columns to enable **Pruning** (skipping files).
+## 🔬 4. Advanced BigQuery (The "Market Best" Edge)
+
+### 🤖 BigQuery ML (SQL + AI)
+You don't need Python to build ML models. You can do it in SQL!
+```sql
+CREATE MODEL `my_dataset.my_model`
+OPTIONS(model_type='linear_reg') AS
+SELECT label, feature1, feature2 FROM `my_table`;
+```
+
+### 🛡️ Data Governance & Security
+*   **Column-Level Security:** Restrict access to specific columns (e.g., PII like `ssn`) using Policy Tags.
+*   **Data Masking:** Show only the last 4 digits of a credit card to certain users.
+*   **Authorized Views:** Share query results with others without giving them access to the underlying table.
+
+### 🌐 BigQuery Omni
+Query data residing in **AWS S3** or **Azure Blob Storage** directly from the BigQuery UI without moving the data.
 
 ---
 

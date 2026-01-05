@@ -22,7 +22,10 @@ By the end of Day 5, you will be able to:
 
 **VPC (Virtual Private Cloud) = Your private network inside Google Cloud.**
 
-It isolates your resources from other customers and provides the foundation for all networking.
+It isolates your resources from other customers and provides the foundation for all networking. 
+
+> [!NOTE]
+> **GCP Differentiator:** Unlike AWS or Azure where VPCs are regional, **GCP VPCs are Global**. You can have a single network spanning the entire planet without complex peering.
 
 ### 💡 Real-World Analogy: Office Building
 
@@ -139,37 +142,26 @@ graph LR
 
 ### Firewall Rule Components
 
-| Component | Description |
-|-----------|-------------|
-| **Direction** | Ingress (in) or Egress (out) |
-| **Priority** | 0-65535 (lower = higher priority) |
-| **Action** | Allow or Deny |
-| **Target** | All instances, specific tags, or service accounts |
-| **Source/Destination** | IP ranges, tags, or service accounts |
-| **Protocols/Ports** | tcp:22, udp:53, icmp, etc. |
+| Component | Description | ACE Exam Trap |
+|-----------|-------------|---------------|
+| **Direction** | Ingress (in) or Egress (out) | Default Egress is ALLOW, Ingress is DENY. |
+| **Priority** | 0-65535 (lower = higher priority) | **Shadowing:** A rule with priority 1000 will "hide" a rule with priority 2000. |
+| **Action** | Allow or Deny | Always use "Deny" for blocking specific bad actors. |
+| **Target** | All instances, tags, or service accounts | **Tags** are best for dynamic environments. |
 
-### Common Ports to Know
+### 🛠️ Pro-Tip: The "Shadowing" Trap
+If you have:
+1.  **Rule A:** Priority 100, DENY port 80 (Target: all)
+2.  **Rule B:** Priority 500, ALLOW port 80 (Target: tag 'web')
 
-| Port | Protocol | Service |
-|------|----------|---------|
-| **22** | TCP | SSH (Linux) |
-| **80** | TCP | HTTP |
-| **443** | TCP | HTTPS |
-| **3389** | TCP | RDP (Windows) |
-| **3306** | TCP | MySQL |
-| **5432** | TCP | PostgreSQL |
+**Result:** Traffic to the 'web' tag on port 80 will be **DENIED**. The lower number (100) wins, regardless of the tag.
 
-### Best Practices
-```bash
-# ❌ BAD: Allow SSH from anywhere
---source-ranges=0.0.0.0/0
-
-# ✅ GOOD: Allow SSH from specific IP only
---source-ranges=203.0.113.5/32
-
-# ✅ BEST: Use IAP (Identity-Aware Proxy) instead
---source-ranges=35.235.240.0/20  # IAP's IP range
-```
+### 🕸️ Essential Networking Add-ons
+| Service | Purpose | Exam Keyword |
+|---------|---------|--------------|
+| **Cloud NAT** | Allows private VMs (no external IP) to download updates from the internet. | "Outbound only", "No public IP" |
+| **VPC Flow Logs** | Records network traffic for a subnet. | "Troubleshooting", "Audit", "Connectivity checks" |
+| **Cloud Router** | Handles BGP for hybrid connections. | "Dynamic routing", "Enterprise connectivity" |
 
 ---
 

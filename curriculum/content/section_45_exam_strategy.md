@@ -63,6 +63,20 @@ flowchart TD
 | "Kubernetes required" | **GKE** |
 | "Store images, videos" | **Cloud Storage** |
 | "Cache frequently accessed data" | **Memorystore (Redis)** |
+| "Low RTO/RPO for Disaster Recovery" | **VPC Peering/VPN with Multi-Region GCS** |
+
+---
+
+## 🏗️ 2.5 HA vs DR: The Resilience Duo
+For the "Best in Market" edge, understand the difference between High Availability and Disaster Recovery:
+
+*   **HA (High Availability):** Active-Active. Keeping the system UP during failures (e.g., Multi-Zonal MIG).
+*   **DR (Disaster Recovery):** Active-Passive. Restoring the system AFTER a failure (e.g., Archive data, cross-region backups).
+*   **RPO (Recovery Point Objective):** How much data can you afford to lose? (Time since last backup).
+*   **RTO (Recovery Time Objective):** How quickly must you be back online? (Time to restore).
+
+> [!TIP]
+> **ACE Rule:** If they ask for "Global HA", look for **Multi-Region** or **Global** services like Spanner or Global LB.
 
 ---
 

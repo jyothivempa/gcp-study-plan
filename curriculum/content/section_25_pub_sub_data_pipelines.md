@@ -62,13 +62,14 @@ graph LR
 
 ### Key Concepts
 
-| Concept | Description |
-|---------|-------------|
-| **Topic** | Named channel where messages are sent |
-| **Subscription** | Named entity representing a message stream from a topic |
-| **Message** | Data (up to 10MB) + optional attributes |
-| **Acknowledgment (Ack)** | Subscriber confirms message received |
-| **Dead Letter Topic** | Where unprocessable messages go after max retries |
+| Concept | Description | ACE Exam Key |
+|---------|-------------|--------------|
+| **Topic** | Named flow for messages | "Communication Channel" |
+| **Subscription** | How messages are pulled/pushed | "Destination" |
+| **Message** | Payload + Attributes | Max size: 10MB |
+| **Acknowledgment (Ack)** | "I got it, don't resend" | Ack Deadline: 10-600s |
+| **Dead Letter Topic** | Store unprocessable messages | "Troubleshooting poison pills" |
+| **Snapshot/Seek** | **Replay** messages from the past | "Bug recovery", "Retesting" |
 
 ---
 
@@ -100,16 +101,19 @@ graph TB
 
 ---
 
-## 4️⃣ Real-World Analogy: The News Agency 📰
+---
 
-Imagine a **news agency** (Pub/Sub):
+## 4️⃣ Advanced Features (The Best-in-Market Edge)
 
-1. **Reporters** (Publishers) send stories to the "Breaking News" desk (Topic)
-2. The agency copies each story to every subscriber's folder:
-   - **TV Channel** (Push: gets instant call when news arrives)
-   - **Newspaper** (Pull: checks folder every hour for batch print)
-   - **Archive Service** (Pull: stores everything for history)
-3. Each subscriber works independently - if TV is slow, it doesn't block the newspaper
+### 🎯 Exactly-Once Delivery
+Pub/Sub now supports **Exactly-once delivery** for a specific subscription. This prevents duplicates *before* they reach your code.
+> **Note:** Requires a 7-day retention period.
+
+### 🔍 Filtering
+Don't waste money! You can filter messages at the **subscription** level so the subscriber only receives what it needs (e.g., `attributes.priority = "high"`).
+
+### 📐 Schemas (Registry)
+Enforce data quality using **Protocol Buffers** or **Avro**. If a publisher sends a message that doesn't match the schema, Pub/Sub rejects it.
 
 ---
 

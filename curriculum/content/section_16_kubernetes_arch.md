@@ -32,6 +32,9 @@ graph LR
     end
 
     subgraph "Your Project (VPC)"
+        NP_STD[Node Pool: Standard]
+        NP_SPOT[Node Pool: Spot/Preemptible]
+        
         Node1[Worker Node 1]
         Node2[Worker Node 2]
         
@@ -46,6 +49,8 @@ graph LR
 
     API <-.-> KLT
     API <-.-> KPRX
+    NP_STD --> Node1
+    NP_SPOT --> Node2
 ```
 
 | Component | Responsibility | ACE Exam Note |
@@ -58,13 +63,32 @@ graph LR
 
 ---
 
-## 🏗️ 2. The GKE Difference: Shared Responsibility
+---
 
-In standard Kubernetes (on-prem), you manage the ETCD database and control plane. In **GKE**, Google handles the heavy lifting.
+## 🌊 3. Node Pools: Organizing the Muscle
+In GKE, you don't just add single nodes; you manage **Node Pools**. A pool is a group of nodes with identical configuration.
 
-> [!IMPORTANT]
-> **ACE Exam Alert: The Control Plane Cost**
-> For GKE **Standard** clusters, you pay a management fee per cluster per hour ($0.10/hr). For **Autopilot**, the management fee is usually included, but you pay for the resource usage of the pods. 
+| Pool Type | Ideal For | ACE Exam Key |
+|-----------|-----------|--------------|
+| **Standard** | Regular workloads | "High availability", "Reliable" |
+| **Spot / Preemptible** | Batch processing, Testing | "Extreme cost savings (up to 80%)", "Fault tolerant workloads" |
+| **Custom / GPU** | ML / Video Rendering | "Compute Intensive" |
+
+> [!CAUTION]
+> **Spot Nodes** can be reclaimed by Google at any time with 30 seconds' notice. Never use them for non-distributed databases or stateful apps without a clear strategy.
+
+---
+
+## ⌨️ 4. Kubectl Mastery: The CLI Cheatsheet
+The ACE exam expects you to know basic troubleshooting commands.
+
+| Command | Purpose | When to use? |
+|---------|---------|--------------|
+| `kubectl get pods` | List all pods | Checking status (Running, Pending, Error). |
+| `kubectl describe pod [NAME]` | Detailed view of a pod | Finding WHY a pod failed (Logs/Events). |
+| `kubectl logs [NAME]` | View app stdout | Debugging code errors inside the container. |
+| `kubectl exec -it [NAME] -- bash` | Open shell inside pod | Manual debugging or DB connectivity tests. |
+| `kubectl get nodes` | List worker nodes | Checking for "Ready" status. |
 
 ---
 

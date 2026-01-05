@@ -36,24 +36,28 @@ By the end of Day 9, you will be able to:
 
 ## 🏗️ 2. GCP Load Balancer Types
 
-### The Decision Matrix
+### The "ACE Master" Decision Tree
 
 ```mermaid
 flowchart TD
-    A[Need Load Balancing?] --> B{HTTP/HTTPS Traffic?}
-    B -->|Yes| C{Global Users?}
-    B -->|No| D{TCP/UDP?}
-    
-    C -->|Yes| GLB[Global External HTTP/S LB]
-    C -->|No| RLB[Regional HTTP/S LB]
-    
-    D -->|Yes| E{External?}
-    D -->|No| ILB[Internal TCP/UDP LB]
-    
-    E -->|Yes| NLB[Network LB]
-    E -->|No| ILB
-    
-    style GLB fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    Start([Need Load Balancing?]) --> Traffic{Traffic Type?}
+    Traffic -- HTTP/HTTPS --> L7[Layer 7: Application LB]
+    Traffic -- TCP/UDP/SSL --> L4[Layer 4: Network LB]
+
+    L7 --> L7Scope{Scope?}
+    L7Scope -- Global --> G7[Global External HTTP/S LB]
+    L7Scope -- Regional --> R7[Regional External HTTP/S LB]
+    L7Scope -- Private --> I7[Internal HTTP/S LB]
+
+    L4 --> L4Ext{External?}
+    L4Ext -- Yes --> L4Proxy{Proxy or Pass thru?}
+    L4Proxy -- Proxy / Anycast --> G4[Global External Proxy LB]
+    L4Proxy -- Pass through --> RN4[Regional Network LB]
+    L4Ext -- No --> I4[Internal TCP/UDP LB]
+
+    style G7 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style G4 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style Start fill:#f1f5f9
 ```
 
 ### Complete LB Comparison
@@ -132,41 +136,17 @@ flowchart LR
 
 ---
 
-## 🚀 5. Cloud CDN (Content Delivery Network)
+---
 
-### How CDN Caching Works
+## 🛡️ 6. Cloud Armor: The Bodyguard
+When using the **Global HTTP(S) Load Balancer**, you can enable **Cloud Armor**.
 
-```mermaid
-flowchart LR
-    subgraph Users
-        U1[User 1]
-        U2[User 2]
-    end
-    
-    subgraph Edge["Google Edge (CDN)"]
-        CACHE[Cache]
-    end
-    
-    subgraph Origin
-        LB[Load Balancer]
-        BE[Backend]
-    end
-    
-    U1 -->|Request| CACHE
-    CACHE -->|Cache Miss| LB --> BE
-    BE -->|Response| CACHE
-    CACHE -->|Cached| U2
-    
-    style CACHE fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-```
+*   **DDoS Protection:** Blocks volumetric attacks at the edge.
+*   **WAF (Web Application Firewall):** Blocks common attacks like SQL Injection (SQLi) and Cross-Site Scripting (XSS).
+*   **IP Whitelisting/Blacklisting:** Allow or block specific CIDR ranges.
 
-### CDN Cache Control Headers
-```
-Cache-Control: max-age=3600  # Cache for 1 hour
-Cache-Control: public        # Cacheable by CDN
-Cache-Control: no-cache      # Must revalidate
-Cache-Control: private       # Don't cache in CDN
-```
+> [!IMPORTANT]
+> **ACE Tip:** Cloud Armor only works with **External HTTP(S) Load Balancers**. It cannot be used directly on VMs or Internal LBs.
 
 ---
 

@@ -27,8 +27,11 @@ It controls **WHO** (Identity) can do **WHAT** (Permissions) on **WHICH** resour
 ### The IAM Equation
 
 ```
-Principal + Role = Access to Resource
+Principal + Role = Access (at a specific level in the Hierarchy)
 ```
+
+> [!IMPORTANT]
+> **Policy Inheritance:** Permissions flow **DOWN** the tree (Org → Folder → Project → Resource). If you are an Editor at the Project level, you are an Editor on every VM in that project. **You cannot "un-grant" a permission further down.**
 
 ### 💡 Real-World Analogy: Hotel Key Card
 
@@ -130,15 +133,21 @@ graph LR
 
 ### Best Practices
 ```bash
-# ❌ BAD: Download keys
-gcloud iam service-accounts keys create key.json
-
 # ✅ GOOD: Use attached service account
 gcloud compute instances create my-vm \
     --service-account=my-sa@project.iam.gserviceaccount.com
 
-# ✅ BEST: Use Workload Identity (no keys at all!)
+# ✅ BEST: Use Workload Identity Federation (WIF)
+# Allows external identities (GitHub, Azure) to assume a GCP role WITHOUT long-lived JSON keys.
 ```
+
+### 🧠 Strategic Comparison: IAM vs. Org Policy
+| Feature | IAM | Org Policy |
+|---------|-----|------------|
+| **Focus** | **Identity** (Who can do it?) | **Resource** (What can be done?) |
+| **Action** | **Allow-only** | **Allow or Deny** (often used for Deny) |
+| **Logic** | **Union:** If any policy allows it, it's allowed. | **Restriction:** If any policy denies it, it's blocked. |
+| **Precedence** | Lower levels add permissions. | Higher levels set guardrails that lower levels cannot break. |
 
 ---
 

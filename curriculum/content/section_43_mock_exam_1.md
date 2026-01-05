@@ -150,6 +150,57 @@ This is it. 20 high-fidelity questions that replicate the difficulty, phrasing, 
     *   C. Connects to on-premises.
     *   D. Enables VPC Peering.
 
+21. **Scenario: Your gcloud command is failing with "Insufficient permissions". You want to see which exact identity is being used. Which command do you run?**
+    *   A. `gcloud auth login`.
+    *   B. **`gcloud config list` or `gcloud auth list`.** ✅ (Shows the active account).
+    *   C. `kubectl auth can-i`.
+    *   D. `gcloud iam roles list`.
+
+22. **Requirement: You need to migrate a 10 TB SQL Server database from on-premises to GCP with minimal downtime. Which service should you choose?**
+    *   A. Cloud Storage Transfer Service.
+    *   B. **Database Migration Service (DMS).** ✅ (Designed for minimal downtime migrations).
+    *   C. Manual export/import.
+    *   D. BigQuery Data Transfer Service.
+
+23. **You are using GKE Autopilot. You want to ensure your pod runs on a node with an SSD. How do you specify this?**
+    *   A. Create a new Node Pool with SSDs.
+    *   B. **Use a `nodeSelector` or `ephemeral-storage` request in your Pod spec.** ✅ (Autopilot manages the underlying nodes based on Pod needs).
+    *   C. SSH into the node and mount the SSD.
+    *   D. You cannot use SSDs in Autopilot.
+
+24. **A team says they can't see the Cloud Console. You find out the Organization Policy "Disable Service Usage" is on. Where is this likely applied?**
+    *   A. At the Project level.
+    *   B. **At the Organization or Folder level.** ✅ (Org policies are usually applied high up to set guardrails).
+    *   C. In the IAM Role.
+    *   D. Inside the VPC.
+
+25. **Which command is used to sync a local directory to a Cloud Storage bucket?**
+    *   A. `gcloud storage cp`.
+    *   B. **`gcloud storage rsync`.** ✅ (Syncs changes only, mirroring the local state).
+    *   C. `gsutil cat`.
+    *   D. `terraform apply`.
+
+---
+
+## 📖 Question Explanations (The Deep Dive)
+
+1.  **Billing Export:** Billing is a **Billing Account** level resource. While projects *contain* resources, the billing account *pays* for them and holds the export settings.
+2.  **Org Policy:** Firewalls control traffic (IPs), but **Org Policies** control resource creation rules (No External IPs allowed).
+3.  **Cloud Spanner:** Relational + Global + 99.999% SLA = Spanner. Cloud SQL is regional. Bigtable is Non-relational.
+4.  **Spot VMs:** Previously called Preemptible. They are 60-91% cheaper for interruptible jobs.
+5.  **App Engine Promote:** The `--no-promote` flag is the standard for "Canary" or "Blue/Green" testing before moving 100% traffic.
+6.  **GKE Resize:** Changing node count is a **GCP** infrastructure change, so use `gcloud`. `kubectl scale` changes pod counts inside K8s.
+7.  **Disk Resize:** Increasing bits on a disk (GCP level) doesn't change the partition (OS level). You must tell the OS to use the new space.
+8.  **Logging:** Audit logs are the "Forensics" of GCP. They answer "Who did what, where, and when?".
+9.  **Service Accounts:** JSON keys are a security risk if leaked. **Service Accounts** attached to VMs use the metadata server to get temporary tokens automatically.
+10. **Signed URL:** For one-off, time-limited access to private objects for people without Google accounts.
+11-20. [Summarized logic: Always choose the most managed, cost-effective, and secure option according to the Shared Responsibility Model.]
+21. **gcloud identity:** `gcloud config list` shows your active project, account, and zone—the FIRST place to check for permission errors.
+22. **Migration:** **DMS** handles the underlying replication (CDC) to keep the target in sync until you are ready to cut over.
+23. **Autopilot SSD:** In Autopilot, your Pod Spec IS your infrastructure request. Google provisions the right hardware to match your Pod demands.
+24. **Org Policy Scope:** These are almost always applied at the **Org/Folder** level to ensure "Inherited" compliance across all sub-projects.
+25. **rsync:** `cp` copies everything; `rsync` only copies what's different. Pro-choice for massive data moves.
+
 
 ---
 
