@@ -18,6 +18,38 @@ By the end of Day 8, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Auto-Scaling in Production
+
+> [!NOTE]
+> **Role Lens:** MIGs are the foundation of production deployments. Every Cloud Engineer must master this.
+
+### Job Roles & MIG Usage
+
+| Role | How They Use MIGs | Day-to-Day Tasks |
+|------|------------------|------------------|
+| **Cloud Engineer** | Deploy production workloads | Creating MIGs, configuring scaling |
+| **DevOps Engineer** | Automate infrastructure | Instance templates, rolling updates |
+| **SRE** | Ensure reliability | Health checks, auto-healing configs |
+| **Platform Engineer** | Standardize deployments | Template management, policies |
+
+### Production Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Regional MIG + LB** | 3-zone MIG behind Global LB | Production web apps |
+| **Scheduled Scaling** | Scale up before traffic peak | Predictable load patterns |
+| **Custom Metrics** | Scale on queue depth | Job processing systems |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use Zonal MIG for production" | Single zone = single point of failure | "I use Regional MIG for zone redundancy" |
+| "I store session data on VM disk" | Data lost when VM is replaced | "I use external state: Cloud SQL, Redis" |
+| "I don't set initial delay for health checks" | VMs fail before app starts | "I set initial delay to allow boot time" |
+
+---
+
 ## 🧠 1. What Are Instance Groups? (Plain-English)
 
 **Instance Group = Collection of VMs treated as one unit.**

@@ -6,23 +6,34 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Project Summary)**  
+> Build an automated security monitoring system that: (1) Detects when someone deletes a firewall rule, (2) Sends you an email alert automatically, (3) Creates an audit trail so you know WHO did it and WHEN. You'll use Cloud Logging + Log-based Metrics + Alerting Policies.
+
+---
+
 ## 🎯 Project Objectives
 
-By the end of this project, you will:
-
-*   **Master** Cloud Shell and gcloud CLI for automation
-*   **Create** custom log-based metrics for security events
-*   **Configure** alerting policies for real-time notifications
-*   **Investigate** security incidents using Cloud Logging
-*   **Build** a complete audit trail system
+| ✅ Skill | What You'll Learn |
+|---------|-------------------|
+| **Cloud Shell Mastery** | Navigate and automate with gcloud CLI |
+| **Log-Based Metrics** | Create custom metrics from security events |
+| **Alerting Policies** | Set up real-time email/Slack notifications |
+| **Incident Investigation** | Find WHO/WHEN/WHAT from audit logs |
+| **Audit Trail** | Build a complete compliance-ready system |
 
 ---
 
 ## 🧠 1. Project Scenario (Mission Briefing)
 
-**Situation:** Your security team received a complaint that someone deleted a critical firewall rule last night. Your manager wants answers: **WHO did it, WHEN, and how do we prevent silent deletions?**
+> [!WARNING]
+> **Real-World Incident**  
+> Your security team received a complaint: someone deleted a critical firewall rule last night. Production was exposed for 3 hours. Your manager wants answers:
+> - **WHO** made the change?
+> - **WHEN** did it happen?
+> - **HOW** do we prevent silent deletions in the future?
 
-Your mission: Build an automated security auditor that detects and alerts on suspicious GCP activities.
+**Your Mission:** Build an automated security auditor that detects suspicious GCP activities and alerts your team in real-time — before damage is done.
 
 ### 🏗️ Solution Architecture
 

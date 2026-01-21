@@ -1,14 +1,52 @@
 # SECTION 6: Cloud Storage (Buckets)
 
+**Duration:** ⏱️ 45 Minutes  
+**Level:** Beginner  
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Storage decisions appear in every exam)
+
 > **Official Doc Reference**: [Cloud Storage Documentation](https://cloud.google.com/storage/docs)
 
-## 1️⃣ Overview: The "Infinite" Drive ♾️
-Cloud Storage is **Object Storage**. It is NOT a filesystem (like NTFS).
-*   **Capacity:** Infinite. (You can store exabytes).
-*   **Durability:** **11 Nines** (99.999999999%). If you store 10,000 objects, you might lose one every 10 million years.
-*   **Consistency:** **Global Strong Consistency**. If you upload a file in New York, a user in Tokyo sees the *new* file instantly. (This is a huge GCP competitive advantage).
+---
+
+> [!TIP]
+> **TL;DR (Cloud Storage Essentials)**  
+> Cloud Storage = Object storage (not a filesystem). 11 nines durability. **Storage classes:** Standard (hot, $0 retrieval) → Nearline (30 days) → Coldline (90 days) → Archive (365 days). Use **Signed URLs** for temporary access. **Bucket Lock** for compliance (WORM). Global strong consistency—upload in NY, read in Tokyo instantly.
 
 ---
+
+## 🏢 Industry Context: Storage in Production
+
+> [!NOTE]
+> **Role Lens:** Every cloud role touches Cloud Storage daily. Know this service cold.
+
+### Job Roles & Storage Usage
+
+| Role | How They Use Storage | Day-to-Day Tasks |
+|------|---------------------|------------------|
+| **Cloud Engineer** | Manage buckets, lifecycle rules | Creating buckets, IAM, cross-project access |
+| **Data Engineer** | Data lake storage | Ingestion, partitioned data, BigQuery integration |
+| **DevOps Engineer** | Artifact storage, backups | Build artifacts, log archival |
+| **Security Engineer** | Access control, compliance | UBLA, retention policies, audit logs |
+
+### Production Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Data Lake** | Standard for hot data + Lifecycle to Archive | Analytics, ML training data |
+| **Static Website** | Public bucket + Cloud CDN | Marketing sites, docs |
+| **Backup Pipeline** | Upload → Nearline (30d) → Coldline (90d) → Archive | Cost-optimized DR |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I make buckets public for sharing" | Security disaster | "I use Signed URLs for temporary access" |
+| "I use Standard for everything" | Wasting money on cold data | "I set lifecycle rules to transition to Nearline/Coldline" |
+| "I use ACLs for access control" | Outdated approach | "I use Uniform Bucket-Level Access with IAM" |
+
+---
+
+## 1️⃣ Overview: The "Infinite" Drive ♾️
 
 ## 2️⃣ Storage Classes (The Cost Ladder) 📉
 Memorize the "Minimums".

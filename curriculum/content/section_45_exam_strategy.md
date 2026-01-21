@@ -6,14 +6,20 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Your Exam Cheat Sheet)**  
+> When stuck between two answers: pick **Managed over DIY**, **Serverless over Clusters**, **Predefined Role over Basic Role**, and **Groups over Users**. Security is 19% of the exam (highest!). Pass score is 70%, not 100%. Time strategy: 60 min first pass, flag hard questions, 30 min review.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of this session, you will:
-
-*   **Apply** the "Google Way" elimination strategy
-*   **Recognize** keyword-to-service mappings
-*   **Avoid** common exam traps
-*   **Execute** a winning exam day strategy
+| ✅ What You'll Master | How It Helps |
+|-----------------------|--------------|
+| **"Google Way" elimination** | Break ties between similar answers |
+| **Keyword-to-service mapping** | Instantly recognize correct service |
+| **Common exam traps** | Avoid the mistakes 80% of test-takers make |
+| **Exam day strategy** | Manage time and reduce anxiety |
 
 ---
 
@@ -82,30 +88,16 @@ For the "Best in Market" edge, understand the difference between High Availabili
 
 ## 🚨 3. Top Exam Traps (Avoid These!)
 
-### Trap 1: The LIMIT Myth
-> **Question:** "How to reduce BigQuery costs?"  
-> ❌ **Wrong:** Add `LIMIT 10` (you still scan all data)  
-> ✅ **Right:** Use partitioning + select specific columns
+> [!CAUTION]
+> These are the **most common mistakes** that cause people to fail. Memorize them!
 
-### Trap 2: The Public Bucket Shortcut
-> **Question:** "Give contractor access to one file for 1 hour"  
-> ❌ **Wrong:** Make bucket public  
-> ✅ **Right:** Generate a Signed URL
-
-### Trap 3: The Private VM Internet Access
-> **Question:** "VM with no public IP needs to download patches"  
-> ❌ **Wrong:** Open firewall ports  
-> ✅ **Right:** Configure Cloud NAT
-
-### Trap 4: The VPC Scope
-> **Question:** "VPCs are..."  
-> ❌ **Wrong:** Regional  
-> ✅ **Right:** Global (subnets are regional)
-
-### Trap 5: The Default SA
-> **Question:** "Best practice for VM service account"  
-> ❌ **Wrong:** Use default SA with Editor role  
-> ✅ **Right:** Create custom SA with minimal permissions
+| 🚩 Trap | ❌ Wrong Answer | ✅ Right Answer | Why |
+|---------|-----------------|-----------------|-----|
+| **The LIMIT Myth** | Add `LIMIT 10` to reduce BigQuery cost | Use partitioning + select columns | LIMIT still scans all data first |
+| **Public Bucket Shortcut** | Make bucket public for contractor | Generate a Signed URL | Public = security risk |
+| **Private VM Internet** | Open firewall ports | Configure Cloud NAT | NAT = outbound only, more secure |
+| **VPC Scope** | VPCs are Regional | VPCs are **Global** | Subnets are regional, not VPCs |
+| **Default SA** | Use default SA with Editor | Create custom SA with minimal perms | Least privilege principle |
 
 ---
 

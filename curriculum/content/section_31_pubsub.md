@@ -16,6 +16,38 @@ By the end of Day 31, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Messaging in Production
+
+> [!NOTE]
+> **Role Lens:** Event-driven architecture is core to modern systems. Data Engineers and Backend Developers use Pub/Sub daily.
+
+### Job Roles & Pub/Sub Usage
+
+| Role | How They Use Pub/Sub | Day-to-Day Tasks |
+|------|---------------------|------------------|
+| **Data Engineer** | Event streaming, data pipelines | Topics, subscriptions, Dataflow integration |
+| **Backend Developer** | Async processing, webhooks | Pub/Sub triggers, DLQ handling |
+| **DevOps Engineer** | System notifications | Alerting, CI/CD events |
+| **SRE** | Decoupling for resilience | Message retention, monitoring |
+
+### Production Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Fan-Out** | 1 topic → multiple subscriptions | Multiple consumers need same events |
+| **Event-Driven** | Pub/Sub → Cloud Function | Serverless processing |
+| **Buffering** | Pub/Sub as shock absorber | Protect backend from traffic spikes |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I always use Push subscriptions" | Not always appropriate | "I choose Push for webhooks, Pull for batch processing" |
+| "I don't configure DLQ" | Poison messages crash workers | "I always set up Dead Letter Queue for failed messages" |
+| "Messages are processed exactly once by default" | Default is at-least-once | "Default is at-least-once; I enable exactly-once when needed" |
+
+---
+
 ## 🏗️ 1. Why Decouple? The Silent Hero
 
 In a synchronous system, a failure in the database crashes the frontend. In an **asynchronous** system, Pub/Sub acts as a persistent buffer, absorbing spikes and ensuring no data is lost during downstream outages.

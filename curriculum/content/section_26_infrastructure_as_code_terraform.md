@@ -18,6 +18,38 @@ By the end of this lesson, you will:
 
 ---
 
+## 🏢 Industry Context: IaC in Production
+
+> [!NOTE]
+> **Role Lens:** Terraform is THE most valuable skill for Cloud Engineers and DevOps. It's on every job description.
+
+### Job Roles & IaC Usage
+
+| Role | How They Use IaC | Day-to-Day Tasks |
+|------|-----------------|------------------|
+| **Cloud Engineer** | Provision infrastructure | Writing modules, managing state |
+| **DevOps Engineer** | Automate everything | CI/CD + Terraform pipelines |
+| **Platform Engineer** | Create standardized modules | Module development, governance |
+| **SRE** | Infrastructure reliability | Drift detection, rollback |
+
+### Production IaC Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Monorepo** | All IaC in one repo | Small teams, simpler governance |
+| **Module Registry** | Shared modules + consuming repos | Large organizations |
+| **GitOps** | Terraform + CI/CD auto-apply | Mature DevOps teams |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I commit state files to git" | Security disaster (contains secrets) | "I use remote state in GCS with versioning" |
+| "I run terraform apply without plan" | Dangerous, unexpected changes | "I always review terraform plan first" |
+| "I hardcode everything" | Not reusable | "I use variables and modules" |
+
+---
+
 ## 🧠 1. What Is Infrastructure as Code? (Plain-English)
 
 **IaC = Write code to create infrastructure instead of clicking buttons.**

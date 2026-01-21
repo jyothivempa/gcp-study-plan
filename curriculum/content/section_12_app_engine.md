@@ -18,6 +18,41 @@ By the end of Day 12, you will be able to:
 
 ---
 
+## 🏢 Industry Context: App Engine in Production
+
+> [!NOTE]
+> **Role Lens:** App Engine is less common in new projects (Cloud Run preferred), but critical for exam and legacy systems.
+
+### Job Roles & App Engine Usage
+
+| Role | How They Use App Engine | Day-to-Day Tasks |
+|------|------------------------|------------------|
+| **Backend Developer** | Quick deployments, simple microservices | Deploy, traffic splitting |
+| **DevOps Engineer** | Manage legacy App Engine apps | Version management, migrations |
+| **Cloud Architect** | Evaluate PaaS options | Standard vs Flex vs Cloud Run decisions |
+
+### When to Use What
+
+| Requirement | Best Choice | Why |
+|-------------|-------------|-----|
+| Simple app, scale to zero | **App Engine Standard** | Zero cost when idle |
+| Custom Docker, VPC access | **App Engine Flexible** | More control |
+| Modern serverless, containers | **Cloud Run** | Industry standard now |
+| Event-driven glue code | **Cloud Functions** | Simplest option |
+
+> [!TIP]
+> **Interview Tip:** "For new projects, I recommend Cloud Run over App Engine because it offers more flexibility and industry adoption. I'd only use App Engine Standard when scale-to-zero and legacy compatibility matter."
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "App Engine Flexible scales to zero" | It doesn't, costs ~$40/month minimum | "Only Standard scales to zero" |
+| "I'd use App Engine for new microservices" | Not modern best practice | "I'd evaluate Cloud Run first for containers" |
+| "You can create multiple apps per project" | Only one allowed | "One Application per project, multiple services are allowed" |
+
+---
+
 ## 🧠 1. What is App Engine? (Plain-English)
 
 **App Engine = You write code, Google runs it. No servers to manage.**

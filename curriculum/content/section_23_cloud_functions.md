@@ -16,6 +16,42 @@ By the end of Day 23, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Serverless in Production
+
+> [!NOTE]
+> **Role Lens:** Serverless is critical for Backend Developers and DevOps. It's the fastest path from code to production.
+
+### Job Roles & Serverless Usage
+
+| Role | How They Use Functions | Day-to-Day Tasks |
+|------|----------------------|------------------|
+| **Backend Developer** | Build event-driven APIs | Writing functions, Eventarc triggers |
+| **DevOps Engineer** | Automation and glue code | CI/CD triggers, cleanup automation |
+| **Data Engineer** | ETL triggers and processing | File upload → transform → BigQuery |
+| **SRE** | Alerting and remediation | Auto-remediation on incidents |
+
+### Cloud Run vs Cloud Functions Decision
+
+| Factor | Cloud Functions | Cloud Run |
+|--------|----------------|-----------|
+| **Best For** | Event-driven, simple logic | Complex apps, containers |
+| **Cold Starts** | Higher | Lower (with min-instances) |
+| **Concurrency** | 1000 (2nd Gen) | 1000 |
+| **Container Control** | None (Google builds) | Full (your Dockerfile) |
+
+> [!TIP]
+> **Interview Tip:** "For simple event triggers, I use Cloud Functions. For APIs or complex apps, I use Cloud Run. Both are serverless, but Cloud Run gives me more control."
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use 1st Gen Functions for everything" | Missing 2nd Gen benefits | "I use 2nd Gen for longer timeouts and higher concurrency" |
+| "Cold starts are acceptable" | Shows no production awareness | "I set min-instances=1 for latency-sensitive functions" |
+| "I put secrets in environment variables" | Security issue | "I use Secret Manager with Cloud Functions integration" |
+
+---
+
 ## 🧠 1. The Serverless "Rube Goldberg" Machine
 
 Cloud Functions are designed for **Glue Code**. They connect disparate services without requiring you to manage a single server, container, or runtime environment.

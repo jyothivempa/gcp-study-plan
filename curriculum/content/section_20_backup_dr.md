@@ -6,14 +6,20 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Backup & DR Essentials)**  
+> **RPO** = How much data can you lose? **RTO** = How long can you be offline? Snapshots are GLOBAL (restore anywhere), INCREMENTAL (saves money), and INDEPENDENT (deleting VM keeps snapshots). DR tiers: Cold (cheap, RTO=days) → Warm (RTO=hours) → Hot (expensive, RTO=minutes).
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of this lesson, you will:
-
-*   **Understand** RTO and RPO and how they drive architecture
-*   **Configure** snapshot schedules for automated backups
-*   **Design** Cold/Warm/Hot DR strategies
-*   **Implement** cross-region replication patterns
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Understand** RTO and RPO | Drives all DR architecture decisions |
+| **Configure** snapshot schedules | Automate backups without manual work |
+| **Design** Cold/Warm/Hot DR | Match cost to business requirements |
+| **Implement** cross-region replication | Survive regional outages |
 
 ---
 

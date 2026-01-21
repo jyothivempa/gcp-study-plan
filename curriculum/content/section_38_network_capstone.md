@@ -6,14 +6,23 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (What You'll Fix)**  
+> A VM is completely isolated — no internet in, no internet out, can't even ping. You'll diagnose the problem systematically: check for missing Cloud NAT (outbound), missing firewall rules (inbound), and missing network tags. By the end, you'll have a bulletproof troubleshooting mindset for the ACE exam.
+
+---
+
 ## 🕵️‍♂️ The Scenario: "Nothing Works!"
 
-A junior developer has provisioned a "secure" custom VPC environment. However, the application server is completely isolated:
-1.  **Inbound:** Customers cannot reach the web UI.
-2.  **Outbound:** The server cannot download security patches.
-3.  **Internal:** The DB server cannot be reached by the Web Tier.
+A junior developer has provisioned a "secure" custom VPC environment. However, the application server is completely isolated.
 
-**Your Goal:** Restore connectivity while maintaining the principle of least privilege.
+| 🚨 Problem | What's Broken |
+|-----------|---------------|
+| **Inbound** | Customers cannot reach the web UI (port 80/443) |
+| **Outbound** | Server cannot download OS security patches |
+| **Internal** | Database server unreachable from web tier |
+
+**Your Goal:** Restore connectivity while maintaining the **principle of least privilege** — don't open more than necessary.
 
 ---
 
@@ -42,19 +51,28 @@ graph TD
 
 ## 🛠️ 2. Step-by-Step Troubleshooting Flow
 
-Follow this logical path used by Google Cloud Support Engineers:
+> [!IMPORTANT]
+> **Pro Tip:** This is the exact logical path used by Google Cloud Support Engineers. Memorize this flow for the exam!
 
 ### Phase A: Outbound Connectivity (The "NAT" Problem)
-*   **The Symptom:** `ping 8.8.8.8` fails from the VM.
-*   **The Check:** Does the VM have an External IP?
-    *   **NO:** You need **Cloud NAT** + **Cloud Router**.
-    *   **YES:** Check the **Default Internet Gateway** route (`0.0.0.0/0`).
-*   **GCP Best Practice:** Production VMs should **NOT** have public IPs. Use Cloud NAT for outbound-only access.
+
+| Step | Check | If True | If False |
+|------|-------|---------|----------|
+| 1️⃣ | Run `ping 8.8.8.8` from VM | Go to Step 2 | **Problem found!** |
+| 2️⃣ | Does VM have External IP? | Check default route `0.0.0.0/0` | **Add Cloud NAT + Cloud Router** |
+| 3️⃣ | Does route exist? | Check egress firewall rules | Add default internet gateway |
+
+> **🔒 Best Practice:** Production VMs should **NOT** have public IPs. Use Cloud NAT for outbound-only access.
 
 ### Phase B: Inbound Connectivity (The "Firewall" Problem)
-*   **The Symptom:** `curl [IP]` times out from the internet.
-*   **The Check:** Is there a VPC Firewall Rule allowing ingress on port 80/443?
-    *   **The Trap:** Ensure the rule targets the correct **Network Tag** (e.g., `http-server`).
+
+| Step | Check | If True | If False |
+|------|-------|---------|----------|
+| 1️⃣ | Run `curl http://[VM-IP]` from internet | App works! | **Problem found!** |
+| 2️⃣ | Is there a firewall rule for port 80/443? | Check target tags | **Create ingress rule** |
+| 3️⃣ | Does VM have the matching network tag? | Rule is misconfigured | **Add tag to VM** |
+
+> **⚠️ Common Trap:** The firewall rule targets `http-server` tag, but the VM has `web-server` tag. Always verify the exact tag name!
 
 ---
 

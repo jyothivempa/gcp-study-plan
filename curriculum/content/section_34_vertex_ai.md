@@ -6,15 +6,21 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (AI/ML & Migration Quick Reference)**  
+> **AutoML** = No-code ML (upload data, get model). **Custom Training** = Bring your own TensorFlow/PyTorch. **Database Migration Service (DMS)** = Minimal-downtime migrations to Cloud SQL. **Feature Store** = Share reusable ML features. For exam: "Build model without coding" = AutoML, "Migrate MySQL" = DMS.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of this lesson, you will:
-
-*   **Understand** Vertex AI platform and its components
-*   **Compare** AutoML vs Custom Training approaches
-*   **Design** database migration strategies to GCP
-*   **Apply** best practices for workload modernization
-*   **Identify** the right AI/ML service for different use cases
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Understand** Vertex AI platform | Unified ML platform for all skill levels |
+| **Compare** AutoML vs Custom Training | Pick the right approach for the team |
+| **Design** database migration strategies | Move legacy DBs to GCP |
+| **Apply** modernization best practices | Avoid common migration pitfalls |
+| **Identify** the right AI/ML service | Match service to use case |
 
 ---
 

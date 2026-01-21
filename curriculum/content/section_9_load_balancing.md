@@ -6,15 +6,21 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Load Balancing Decision Guide)**  
+> **Layer 7** (HTTP/S LB) = Web apps, can inspect headers/cookies. **Layer 4** (Network LB) = TCP/UDP, gaming, non-HTTP. **Global HTTP(S) LB** gives you an **Anycast IP** (single IP, routes to nearest backend). **Cloud CDN** caches static content at edge. **Cloud Armor** = WAF + DDoS protection (only works with External HTTP(S) LB). Global LB takes **5-10 minutes** to start working.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of Day 9, you will be able to:
-
-*   **Understand** Layer 4 vs Layer 7 load balancing
-*   **Explain** how Anycast IPs provide global routing
-*   **Choose** the right load balancer for each scenario
-*   **Configure** Cloud CDN for content caching
-*   **Implement** SSL termination and health checks
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Understand** Layer 4 vs Layer 7 | Pick the right LB type |
+| **Explain** Anycast IPs | How global routing works |
+| **Choose** the right load balancer | Match scenario to LB type |
+| **Configure** Cloud CDN | Cache static content at edge |
+| **Implement** SSL termination | Offload encryption from backends |
 
 ---
 

@@ -6,15 +6,65 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (IAM in 30 Seconds)**  
+> IAM answers: **WHO** (Principal) can do **WHAT** (Role/Permissions) on **WHICH** resource. Never use Basic roles (Owner/Editor/Viewer) in production — use Predefined roles. Never download Service Account JSON keys — use Workload Identity instead. Permissions flow **DOWN** the hierarchy (Org → Folder → Project → Resource).
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of Day 6, you will be able to:
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Explain** WHO/WHAT/WHERE of IAM | Foundation of all GCP security |
+| **Differentiate** role types | Pick the right level of access |
+| **Apply** Least Privilege | Core security principle for ACE exam |
+| **Secure** Service Accounts | Prevent crypto-mining attacks! |
+| **Use** IAM Conditions | Time/IP-based access control |
 
-*   **Explain** the WHO, WHAT, WHERE of IAM
-*   **Differentiate** between Basic, Predefined, and Custom roles
-*   **Apply** the Principle of Least Privilege
-*   **Secure** Service Accounts properly
-*   **Use** IAM Conditions for context-aware access
+---
+
+## 🏢 Industry Context: Who Uses IAM Daily?
+
+> [!NOTE]
+> **Role Lens:** This section is critical for ALL cloud roles. Master this, and you'll stand out in interviews.
+
+### Job Roles & IAM Usage
+
+| Role | How They Use IAM | Day-to-Day Tasks |
+|------|------------------|------------------|
+| **Cloud Engineer** | Grant developers access to resources | Creating SAs, assigning predefined roles |
+| **Security Engineer** | Audit permissions, enforce least privilege | Running IAM Recommender, reviewing policies |
+| **DevOps Engineer** | Set up CI/CD service accounts | Workload Identity for GitHub/GitLab |
+| **SRE** | Incident response, permission audits | Investigating compromised credentials |
+| **Platform Engineer** | Design org-wide IAM strategy | Custom roles, Org Policies |
+
+### Real Production Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Team-Based Access** | Google Group → Predefined Role → Project | Standard team permissions |
+| **Service Mesh** | SA per microservice → least privilege | Microservices on GKE |
+| **Cross-Project Access** | SA impersonation across projects | Shared services (logging, monitoring) |
+| **External CI/CD** | Workload Identity Federation | GitHub Actions, GitLab CI |
+
+### ❌ Beginner Mistakes That Get You Rejected in Interviews
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use Owner role for simplicity" | Shows no security awareness | "I use predefined roles with least privilege" |
+| "I download JSON keys for CI/CD" | Security red flag | "I use Workload Identity Federation" |
+| "I grant to individual users" | Doesn't scale | "I use Google Groups for scalability" |
+
+### 🔍 Role Lens: What Each Role Focuses On
+
+> **🔵 Cloud Engineer:** Focus on granting access correctly. Know predefined roles by heart. Understand Service Accounts for VMs.
+
+> **🟢 DevOps Engineer:** Master Workload Identity Federation for CI/CD. Know how to eliminate JSON keys from your pipelines.
+
+> **🟠 Security Engineer:** Know IAM Recommender, how to audit policies, and incident response for leaked credentials.
+
+> **🔴 SRE:** Focus on least privilege for production workloads and how to quickly revoke compromised credentials.
 
 ---
 
@@ -229,6 +279,94 @@ echo "test" | gcloud storage cp - gs://my-bucket/test.txt
 *   **Audit with IAM Recommender** - Find unused permissions
 *   **Never use Basic roles** in production
 *   **Rotate SA keys** if you must use them (ideally, don't)
+
+---
+
+## 🚨 8. Incident Response: JSON Key Leaked to GitHub
+
+> [!CAUTION]
+> **Real-World Scenario:** Your security team alerts you that a service account JSON key was committed to a public GitHub repository. The key has Editor permissions on your production project.
+
+### Immediate Response (< 5 minutes)
+
+```bash
+# Step 1: Disable the key IMMEDIATELY
+gcloud iam service-accounts keys disable KEY_ID \
+    --iam-account=compromised-sa@PROJECT.iam.gserviceaccount.com
+
+# Step 2: Delete the key
+gcloud iam service-accounts keys delete KEY_ID \
+    --iam-account=compromised-sa@PROJECT.iam.gserviceaccount.com
+
+# Step 3: Check for suspicious activity
+gcloud logging read 'protoPayload.authenticationInfo.principalEmail="compromised-sa@PROJECT.iam.gserviceaccount.com"' \
+    --limit=50 --format="table(timestamp,protoPayload.methodName)"
+```
+
+### Investigate Impact
+
+```bash
+# What did they access?
+gcloud logging read 'protoPayload.authenticationInfo.principalEmail="compromised-sa@PROJECT.iam.gserviceaccount.com" AND timestamp>="2024-01-01T00:00:00Z"' \
+    --format=json > incident_log.json
+```
+
+### Post-Incident
+
+1. Create new SA with **least privilege** (not Editor!)
+2. Implement **Workload Identity** instead of JSON keys
+3. Set up **Secret Manager** for any remaining secrets
+4. Add **IAM Recommender** alerts
+
+> **💼 Interview Tip:** When asked about incident response, always mention: Disable → Delete → Investigate → Prevent Recurrence.
+
+---
+
+## 💼 9. Interview Question Bank
+
+### Beginner Level (Conceptual)
+
+**Q1: What is the difference between a Role and a Permission?**
+> **Strong Answer:** "A permission is a single action like `storage.objects.get`. A role is a collection of permissions bundled together. For example, `roles/storage.objectViewer` contains multiple read permissions. I always use predefined roles instead of granting individual permissions for maintainability."
+
+**Q2: Why should you avoid using Basic Roles (Owner/Editor/Viewer)?**
+> **Strong Answer:** "Basic roles are too broad. Editor grants write access to almost everything in a project, including resources the user doesn't need. This violates least privilege and increases blast radius if credentials are compromised. I use predefined roles like `roles/compute.instanceAdmin` for specific access."
+
+### Intermediate Level (Trade-offs)
+
+**Q3: When would you create a Custom Role vs using a Predefined Role?**
+> **Strong Answer:** "I use predefined roles 95% of the time because Google maintains them and adds new permissions automatically. I create custom roles only when predefined roles are too permissive AND there's no narrower option. The trade-off is maintenance—I have to update custom roles when APIs change."
+
+**Q4: How do you decide between granting permissions to individual users vs Google Groups?**
+> **Strong Answer:** "I always use Google Groups. It scales better—when someone joins or leaves a team, I update group membership, not project IAM. It also creates a cleaner audit trail. The trade-off is the extra step of group management, but it's worth it for any team larger than 3 people."
+
+### Advanced Level (Scenario-Based)
+
+**Q5: Your CI/CD pipeline needs to deploy to GKE and push images to Artifact Registry. How do you set this up securely?**
+> **Strong Answer:** "I use Workload Identity Federation to eliminate JSON keys. For GitHub Actions, I create a Workload Identity Pool, configure the OIDC provider with GitHub's issuer URL, and grant the pool permission to impersonate a service account. The SA gets `roles/artifactregistry.writer` and `roles/container.developer`—no more, no less."
+
+**Q6: A developer reports 'Permission Denied' when trying to create a VM. Walk me through troubleshooting.**
+> **Strong Answer:**
+> 1. **Check their identity:** `gcloud auth list` to confirm which account they're using
+> 2. **Check project:** `gcloud config get-value project` 
+> 3. **Check IAM binding:** `gcloud projects get-iam-policy PROJECT | grep -A2 developer@`
+> 4. **Test permissions:** `gcloud alpha iam test-iam-permissions --project=PROJECT --permissions=compute.instances.create`
+> 5. **Check Org Policies:** Could be blocked at org/folder level
+> "Most common cause is wrong project or wrong account. Second is the role is bound at resource level, not project level."
+
+**Q7: Design IAM for a startup with 3 teams: Dev, QA, and Ops. Each needs different access to 2 projects: dev-project and prod-project.**
+> **Strong Answer:**
+> - Create 3 Google Groups: `dev@company.com`, `qa@company.com`, `ops@company.com`
+> - **dev-project:**
+>   - Dev → `roles/editor` (they build here)
+>   - QA → `roles/viewer` (read-only)
+>   - Ops → `roles/compute.admin` (manage infra)
+> - **prod-project:**
+>   - Dev → `roles/viewer` (can debug, can't change)
+>   - QA → `roles/viewer`
+>   - Ops → `roles/owner` (full control)
+> - Use Org Policy to prevent public buckets in prod
+> "I'd also set up IAM Conditions so Dev can only access prod during incidents with approval."
 
 ---
 

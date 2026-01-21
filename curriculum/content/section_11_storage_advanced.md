@@ -18,6 +18,38 @@ By the end of Day 11, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Advanced Storage in Production
+
+> [!NOTE]
+> **Role Lens:** Storage cost optimization is a key Cloud Engineer skill. Lifecycle rules save companies millions.
+
+### Job Roles & Advanced Storage Usage
+
+| Role | How They Use These Features | Day-to-Day Tasks |
+|------|---------------------------|------------------|
+| **Cloud Engineer** | Cost optimization, lifecycle | Setting up tiered storage |
+| **Security Engineer** | Retention, compliance | Bucket Lock, audit requirements |
+| **Data Engineer** | Data pipeline storage | Versioning, partitioned uploads |
+| **FinOps Analyst** | Storage cost analysis | Lifecycle rules, class transitions |
+
+### Cost Optimization Patterns
+
+| Pattern | Savings | Implementation |
+|---------|---------|----------------|
+| **Auto-Tier** | 50-90% | Lifecycle: Standard → Nearline → Coldline |
+| **Version Cleanup** | 80%+ | Delete versions older than N days |
+| **Abort Incomplete** | 10-20% | Delete failed multipart uploads |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use Standard for backups" | Wasting money | "I use Nearline or Coldline with lifecycle rules" |
+| "Versioning has no cost" | You pay for all versions | "I combine versioning with lifecycle rules to limit versions" |
+| "I share files by making bucket public" | Security risk | "I generate Signed URLs with short expiration" |
+
+---
+
 ## 🧠 1. Storage Classes Recap
 
 ### Cost vs Access Time Tradeoff

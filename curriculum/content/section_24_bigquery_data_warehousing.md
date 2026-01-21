@@ -11,6 +11,49 @@ By the end of this day, you should be able to:
 
 ---
 
+## 🏢 Industry Context: BigQuery in Production
+
+> [!NOTE]
+> **Role Lens:** BigQuery is THE interview topic for Data Engineers. Cost optimization questions are guaranteed.
+
+### Job Roles & BigQuery Usage
+
+| Role | How They Use BigQuery | Day-to-Day Tasks |
+|------|----------------------|------------------|
+| **Data Engineer** | Build data pipelines | ETL, partitioning, scheduling |
+| **Data Analyst** | Query and analyze | SQL, dashboards, reporting |
+| **FinOps Analyst** | Optimize costs | Slot usage, query patterns |
+| **ML Engineer** | Feature engineering | BigQuery ML, training data |
+
+### Cost Optimization Patterns
+
+| Pattern | Savings | Implementation |
+|---------|---------|----------------|
+| **Partitioning** | 90%+ | Filter by partition column |
+| **Clustering** | 50-80% | Sort by frequently filtered columns |
+| **SELECT specific columns** | 50%+ | Avoid SELECT * |
+| **Slot-based pricing** | Predictable | Switch at > $10k/month |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use SELECT * for convenience" | Wastes money scanning all columns | "I always select only needed columns" |
+| "BigQuery is for everything" | Not for OLTP | "BigQuery for analytics; Cloud SQL for transactions" |
+| "I don't partition tables" | Full scans are expensive | "I partition by date for time-based queries" |
+
+### 🔍 Role Lens: What Each Role Focuses On
+
+> **🔵 Data Engineer:** Master partitioning, clustering, and Dataflow integration. Know how to optimize ETL costs.
+
+> **🟢 Data Analyst:** Focus on SQL proficiency, scheduled queries, and dashboard integration with Looker.
+
+> **🟠 FinOps Analyst:** Understand slot pricing vs on-demand, identify expensive queries from INFORMATION_SCHEMA.
+
+> **🔴 ML Engineer:** Know BigQuery ML syntax, feature engineering techniques, and export to Vertex AI.
+
+---
+
 ## 1️⃣ What is BigQuery? 🏛️
 
 **BigQuery** is Google's fully-managed, serverless data warehouse designed for large-scale analytics. Think of it as a **massive library** where:

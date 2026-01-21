@@ -1,15 +1,27 @@
 # Day 25: Pub/Sub & Data Pipelines
 
+**Duration:** ⏱️ 60 Minutes  
+**Level:** Intermediate  
+**ACE Exam Weight:** ⭐⭐⭐⭐ High (Event-driven architecture is heavily tested)
+
 > **Official Doc Reference**: [Pub/Sub Documentation](https://cloud.google.com/pubsub/docs)
 
-## Learning Objectives
-By the end of this day, you should be able to:
-- Understand Pub/Sub's publish-subscribe messaging architecture
-- Create topics and subscriptions for event-driven systems
-- Choose between push and pull delivery methods
-- Build simple data pipelines combining Pub/Sub with Dataflow
+---
+
+> [!TIP]
+> **TL;DR (Pub/Sub in 30 Seconds)**  
+> Pub/Sub = Asynchronous messaging between services. Publishers send to **Topics**, subscribers receive from **Subscriptions**. **Pull** = subscriber requests messages (batch processing). **Push** = Pub/Sub sends to HTTPS endpoint (Cloud Functions). Message size limit: 10MB. Delivery: **At-least-once** (design for duplicates!). Combine with **Dataflow** for real-time processing.
 
 ---
+
+## 🎯 Learning Objectives
+
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Understand** publish-subscribe architecture | Foundation of event-driven systems |
+| **Create** topics and subscriptions | Core hands-on skill |
+| **Choose** Push vs Pull delivery | Right tool for each scenario |
+| **Build** data pipelines with Dataflow | Real-time streaming pattern |
 
 ## 1️⃣ What is Pub/Sub? 📬
 

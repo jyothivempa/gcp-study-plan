@@ -6,14 +6,20 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Advanced IAM Essentials)**  
+> **Workload Identity Federation** = Exchange external tokens (GitHub, AWS, Azure) for GCP access. **NO JSON KEYS NEEDED!** **IAM Conditions** = Add WHEN (time) and WHERE (IP/resource) to access control using CEL expressions. **Deny Policies** = Override all allow policies for hard guardrails (e.g., prevent audit log deletion). This is the gold standard for CI/CD security.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of this lesson, you will:
-
-*   **Implement** Workload Identity Federation to eliminate JSON keys
-*   **Configure** IAM Conditions for context-aware access control
-*   **Apply** IAM Deny Policies for guardrails
-*   **Design** Zero Trust access patterns
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Implement** Workload Identity Federation | Eliminate long-lived JSON keys |
+| **Configure** IAM Conditions | Context-aware access (time, IP, resource) |
+| **Apply** IAM Deny Policies | Create unbreakable guardrails |
+| **Design** Zero Trust patterns | Modern security architecture |
 
 ---
 

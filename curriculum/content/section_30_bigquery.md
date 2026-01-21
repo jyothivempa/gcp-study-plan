@@ -6,14 +6,21 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (BigQuery Cost-Saving Essentials)**  
+> BigQuery = Serverless data warehouse. Charged $5 per TB scanned. **LIMIT does NOT reduce cost** (data is scanned before limiting). Use **Partitioning** (skip whole files) and **Clustering** (sort within partitions) to reduce scans. **Colossus** = storage, **Dremel** = compute. Always check the **Query Validator** before running expensive queries.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of Day 30, you will be able to:
-*   **Explain** the serverless architecture of BigQuery (Colossus vs. Dremel).
-*   **Execute** queries on massive public datasets with zero provisioning.
-*   **Optimize** query performance and cost using Partitioning and Clustering.
-*   **Differentiate** between On-Demand and Capacity (Slots) pricing models.
-*   **Implement** data ingestion strategies (Streaming vs. Batch).
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Explain** serverless architecture | Understand Colossus vs Dremel |
+| **Execute** queries on public datasets | Hands-on skill |
+| **Optimize** with Partitioning/Clustering | Save money on queries |
+| **Differentiate** pricing models | On-Demand vs Capacity (Slots) |
+| **Implement** data ingestion | Streaming vs Batch |
 
 ---
 

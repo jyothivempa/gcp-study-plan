@@ -17,6 +17,39 @@ By the end of this lesson, you will:
 
 ---
 
+## 🏢 Industry Context: Encryption in Production
+
+> [!NOTE]
+> **Role Lens:** Security Engineers own encryption strategy. Cloud Engineers implement it. Everyone is tested on it.
+
+### Job Roles & Encryption Usage
+
+| Role | How They Use KMS | Day-to-Day Tasks |
+|------|-----------------|------------------|
+| **Security Engineer** | Define encryption policy | Key hierarchy, rotation, compliance |
+| **Cloud Engineer** | Implement CMEK on resources | Bucket encryption, GKE secrets |
+| **Compliance Officer** | Audit key usage | Access logs, key lifecycle |
+| **Data Engineer** | Encrypt sensitive data | Column-level encryption, tokenization |
+
+### Compliance Requirements
+
+| Regulation | Typical Requirement | Solution |
+|------------|---------------------|----------|
+| **HIPAA** | Customer-controlled keys | CMEK |
+| **PCI-DSS** | Key rotation | Auto-rotation in KMS |
+| **FedRAMP** | Hardware security | Cloud HSM |
+| **Data Residency** | Keys in specific region | Regional keyrings |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "GCP encrypts data, so I don't need to do anything" | Shows no compliance awareness | "Default is fine, but compliance may require CMEK" |
+| "I can recover data after destroying a key" | Data is permanently lost | "Destroying a key means crypto-shredding—data is gone forever" |
+| "CMEK = CSEK" | Very different concepts | "CMEK stores keys in KMS; CSEK requires you to provide keys per-request" |
+
+---
+
 ## 🧠 1. GCP Encryption Overview (Plain-English)
 
 **All data in GCP is encrypted at rest by default.** You don't have to do anything.

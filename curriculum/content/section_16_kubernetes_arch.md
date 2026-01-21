@@ -16,6 +16,42 @@ By the end of Day 16, you will be able to:
 
 ---
 
+## 🏢 Industry Context: GKE in Production
+
+> [!NOTE]
+> **Role Lens:** GKE knowledge is essential for DevOps, Platform Engineering, and SRE roles. This is where companies run production workloads.
+
+### Job Roles & GKE Usage
+
+| Role | How They Use GKE | Day-to-Day Tasks |
+|------|-----------------|------------------|
+| **Platform Engineer** | Design cluster architecture | Node pools, Workload Identity, policies |
+| **DevOps Engineer** | Deploy and scale applications | Deployments, Services, CI/CD integration |
+| **SRE** | Maintain cluster reliability | Monitoring, autoscaling, troubleshooting |
+| **Security Engineer** | Harden cluster security | RBAC, network policies, Pod Security |
+
+### Autopilot vs Standard Decision
+
+| Factor | Autopilot | Standard |
+|--------|-----------|----------|
+| **Node Management** | Google | You |
+| **Per-Pod Billing** | Yes | No (per-node) |
+| **Customization** | Limited | Full control |
+| **Best For** | Teams without K8s expertise | Advanced teams needing control |
+
+> [!TIP]
+> **Interview Tip:** "When asked GKE mode, I say: Autopilot for teams that want to focus on apps, Standard for teams needing custom node configs or special hardware like GPUs."
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I always use Standard mode" | Shows no cost awareness | "I evaluate Autopilot vs Standard based on team needs" |
+| "I manually scale node pools" | Doesn't leverage auto-scaling | "I configure cluster autoscaler with min/max nodes" |
+| "I don't know what Kubelet does" | Basic K8s knowledge gap | "Kubelet is the node agent that ensures containers run in pods" |
+
+---
+
 ## 🧠 1. The Kubernetes "Command & Control" Center
 
 A GKE cluster consists of two distinct pools of responsibility: the **Control Plane** (The Brain) and the **Nodes** (The Muscle).

@@ -16,6 +16,38 @@ By the end of Day 15, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Containers in Production
+
+> [!NOTE]
+> **Role Lens:** Container skills are mandatory for DevOps and Platform Engineering roles. This is your gateway to Kubernetes.
+
+### Job Roles & Container Usage
+
+| Role | How They Use Containers | Day-to-Day Tasks |
+|------|------------------------|------------------|
+| **DevOps Engineer** | Build CI/CD pipelines with containers | Writing Dockerfiles, optimizing images |
+| **Platform Engineer** | Standardize base images across org | Golden image management, security scanning |
+| **SRE** | Debug container issues in production | Container logs, resource limits |
+| **Backend Developer** | Containerize applications | Local dev with Docker, multi-stage builds |
+
+### Production Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Multi-Stage Builds** | Build in one image, run in slim image | Reduce image size, security |
+| **Distroless Images** | Google's minimal runtime images | Production, minimal attack surface |
+| **Golden Image Pipeline** | Base image → Team images → App images | Large organizations |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use Ubuntu as base image" | Too large, slow pulls | "I use slim or alpine for production" |
+| "COPY . . at the top of Dockerfile" | Breaks layer caching | "I put frequently changed steps at the bottom" |
+| "I run containers as root" | Security vulnerability | "I use non-root USER directive" |
+
+---
+
 ## 🧠 1. Containers vs. Virtual Machines
 
 Understanding the difference is critical for the ACE exam. While VMs virtualize **Hardware**, Containers virtualize the **Operating System**.

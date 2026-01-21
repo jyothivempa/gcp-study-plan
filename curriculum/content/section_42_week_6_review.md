@@ -6,6 +6,12 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Week 6 Takeaways)**  
+> You've mastered the capstone skills: Network troubleshooting (Cloud NAT, firewall tags), Security hardening (custom IAM roles, IAP tunnels), DevOps automation (Cloud Build, Artifact Registry), and Data optimization (BigQuery partitioning). **SRE concepts**: SLI = current metric, SLO = target goal, SLA = legal contract, Error Budget = permission to break things. Use your portfolio projects for interviews!
+
+---
+
 ## 🏗️ 1. The Capstone Skills Tree
 
 This week, you transitioned from a "student" to a "builder." You solved four real-world scenarios that mirrored the complexity of the ACE exam's highest-weighted questions.

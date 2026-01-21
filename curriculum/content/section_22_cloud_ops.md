@@ -16,6 +16,39 @@ By the end of Day 22, you will be able to:
 
 ---
 
+## 🏢 Industry Context: Observability in Production
+
+> [!NOTE]
+> **Role Lens:** SRE and DevOps roles are DEFINED by observability skills. This section is career-critical.
+
+### Job Roles & Observability Usage
+
+| Role | How They Use Ops Suite | Day-to-Day Tasks |
+|------|----------------------|------------------|
+| **SRE** | Define SLIs/SLOs, incident response | Dashboards, alerting, postmortems |
+| **DevOps Engineer** | Pipeline monitoring, logging | Log sinks, build metrics |
+| **Cloud Engineer** | Infrastructure health | VM monitoring, uptime checks |
+| **Security Engineer** | Audit logging, compliance | Log exports to BigQuery for analysis |
+
+### Production Observability Stack
+
+| Component | Purpose | Storage Duration |
+|-----------|---------|------------------|
+| **Cloud Monitoring** | Metrics, dashboards, alerts | 6 weeks (free tier) |
+| **Cloud Logging** | Logs, audit trails | 30 days default |
+| **Log Sink → BigQuery** | Long-term analysis | Years (you pay) |
+| **Log Sink → GCS** | Compliance archive | Years (cheapest) |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I use logging for everything" | Costs add up, hard to query | "I use log-based metrics for alerting, sinks for storage" |
+| "I don't set up alerts" | Reactive, not proactive | "I create alerting policies for SLO violations" |
+| "Ops Agent is optional" | Missing RAM/disk visibility | "I always install Ops Agent for full OS metrics" |
+
+---
+
 ## 🧠 1. The Operations Ecosystem
 
 The **Google Cloud Operations Suite** (formerly Stackdriver) is your centralized observability platform. It is split into three core pillars: **Health** (Monitoring), **Traceability** (Logging), and **Intelligence** (Error Reporting/Trace/Profiler).

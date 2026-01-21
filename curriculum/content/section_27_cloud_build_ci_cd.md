@@ -17,6 +17,38 @@ By the end of this lesson, you will:
 
 ---
 
+## 🏢 Industry Context: CI/CD in Production
+
+> [!NOTE]
+> **Role Lens:** CI/CD skills are non-negotiable for DevOps roles. Cloud Build is Google's native answer.
+
+### Job Roles & CI/CD Usage
+
+| Role | How They Use CI/CD | Day-to-Day Tasks |
+|------|------------------|------------------|
+| **DevOps Engineer** | Build and maintain pipelines | Writing cloudbuild.yaml, managing triggers |
+| **Platform Engineer** | Standardize deployment patterns | Templates, private pools |
+| **Backend Developer** | Ship code to production | Trigger builds, review logs |
+| **SRE** | Deployment safety | Rollback configs, canary analysis |
+
+### Production CI/CD Patterns
+
+| Pattern | Architecture | When to Use |
+|---------|--------------|-------------|
+| **Build + Push + Deploy** | All in one pipeline | Simple apps |
+| **Build + Store, Deploy Separately** | Cloud Build + Cloud Deploy | GKE with approvals |
+| **Multi-environment** | Dev → Staging → Prod triggers | Enterprise deployments |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "I deploy directly from my laptop" | No audit trail, not reproducible | "I use CI/CD pipelines for all deployments" |
+| "I hardcode secrets in cloudbuild.yaml" | Security vulnerability | "I use Secret Manager integration" |
+| "I don't test before deployment" | Broken production | "I include test steps in my pipeline" |
+
+---
+
 ## 🧠 1. What Is CI/CD? (Plain-English)
 
 **CI/CD = Automate the boring stuff between "git push" and "live in production".**

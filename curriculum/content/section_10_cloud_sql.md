@@ -6,15 +6,21 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Cloud SQL Essentials)**  
+> Cloud SQL = Fully managed MySQL, PostgreSQL, or SQL Server. Google handles patching, backups, and failover. **Read Replicas** improve READ performance. **Vertical scaling** (more CPU/RAM) improves WRITE performance. Cloud SQL is **regional** (max 64TB). Need global? Use **Cloud Spanner**. Always connect via **Cloud SQL Auth Proxy** for security.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of Day 10, you will be able to:
-
-*   **Explain** managed databases vs. self-managed VMs
-*   **Select** the right database engine (MySQL, PostgreSQL, SQL Server)
-*   **Implement** High Availability and Read Replicas
-*   **Connect** securely using Cloud SQL Auth Proxy
-*   **Compare** Cloud SQL vs Spanner vs BigQuery
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Explain** managed vs self-managed | Understand the operational benefits |
+| **Select** the right database engine | MySQL, PostgreSQL, or SQL Server |
+| **Implement** HA and Read Replicas | Production-ready configurations |
+| **Connect** securely via Auth Proxy | Security best practice |
+| **Compare** Cloud SQL vs Spanner vs BigQuery | Pick the right service |
 
 ---
 

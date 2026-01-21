@@ -11,6 +11,38 @@ By the end of this day, you should be able to:
 
 ---
 
+## 🏢 Industry Context: Hybrid Networking in Production
+
+> [!NOTE]
+> **Role Lens:** Network Engineers and Solutions Architects make these decisions. Know the trade-offs cold.
+
+### Job Roles & Hybrid Connectivity Usage
+
+| Role | How They Use Hybrid | Day-to-Day Tasks |
+|------|---------------------|------------------|
+| **Network Engineer** | Design and maintain connections | VPN tunnels, BGP peering, Interconnect |
+| **Solutions Architect** | Choose connectivity strategy | Cost/bandwidth/latency trade-offs |
+| **Cloud Engineer** | Troubleshoot connectivity | Tunnel status, routing issues |
+| **Security Engineer** | Secure data in transit | IPsec, private connectivity |
+
+### Decision Factors
+
+| Requirement | Best Choice | Why |
+|-------------|-------------|-----|
+| < 3 Gbps, quick setup | **Cloud VPN** | Hours to set up, encrypted |
+| > 10 Gbps, dedicated | **Dedicated Interconnect** | Physical fiber, lowest latency |
+| No colocation access | **Partner Interconnect** | Via service provider |
+
+### ❌ Interview Mistakes to Avoid
+
+| Mistake | Why It's Bad | What to Say Instead |
+|---------|--------------|---------------------|
+| "Classic VPN gives 99.99% SLA" | Only HA VPN does | "HA VPN with 4 tunnels + BGP for 99.99%" |
+| "VPN is always the cheapest" | At scale, Interconnect is cheaper | "VPN for < 3 Gbps; Interconnect for consistent high bandwidth" |
+| "I don't know what BGP does" | Critical networking knowledge | "BGP dynamically exchanges routes between networks" |
+
+---
+
 ## 1️⃣ Why Hybrid Connectivity? 🔗
 
 Most enterprises don't move 100% to the cloud overnight. **Hybrid connectivity** bridges your on-premises data center with Google Cloud.

@@ -6,15 +6,21 @@
 
 ---
 
+> [!TIP]
+> **TL;DR (Cloud Run in 30 Seconds)**  
+> Cloud Run = Container + Serverless = Best of both worlds. Deploy any Docker container, Google handles scaling (even to zero). Default concurrency: 80 requests/instance. Set `min-instances=1` to avoid cold starts. It's stateless — don't save files locally. For the exam: Cloud Run is for containers WITHOUT Kubernetes.
+
+---
+
 ## 🎯 Learning Objectives
 
-By the end of Day 13, you will be able to:
-
-*   **Explain** the serverless container model
-*   **Compare** Cloud Run vs App Engine vs GKE vs Functions
-*   **Deploy** applications from container images
-*   **Configure** concurrency, scaling, and traffic management
-*   **Implement** secure service-to-service communication
+| ✅ Skill | Why It Matters |
+|---------|----------------|
+| **Explain** serverless container model | Core concept for modern GCP |
+| **Compare** Cloud Run vs alternatives | Pick the right compute service |
+| **Deploy** containers | Hands-on skill for ACE exam |
+| **Configure** concurrency/scaling | Optimize cost and performance |
+| **Implement** secure service-to-service | Real-world microservices pattern |
 
 ---
 
