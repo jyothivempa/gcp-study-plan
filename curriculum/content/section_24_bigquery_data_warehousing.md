@@ -1,4 +1,40 @@
-# Day 24: BigQuery & Data Warehousing
+# Module 14: BigQuery Analytics
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
 
 > **Official Doc Reference**: [BigQuery Documentation](https://cloud.google.com/bigquery/docs)
 
@@ -287,3 +323,19 @@ graph LR
   {"term": "On-Demand Pricing", "def": "$5 per TB of data scanned by queries."}
 ]
 -->
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

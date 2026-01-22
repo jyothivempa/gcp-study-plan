@@ -1,4 +1,40 @@
-# Day 2: Global Infrastructure & Resource Hierarchy
+# Module 3: Resource Hierarchy
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
 
 **Duration:** ⏱️ 45 Minutes  
 **Level:** Beginner  
@@ -215,3 +251,19 @@ Organization Policies give you central control over your cloud environment.
         </div>
     </template>
 </div>
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

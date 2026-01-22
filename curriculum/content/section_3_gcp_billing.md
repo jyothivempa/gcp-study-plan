@@ -1,5 +1,41 @@
 # SECTION 3: Billing, Budgets & Cost Management
 
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
 > **Official Doc Reference**: [Cloud Billing Docs](https://cloud.google.com/billing/docs)
 
 ## 1️⃣ How Google Charges You 💸
@@ -98,3 +134,19 @@ These are your two shields against bankruptcy.
   {"term": "Free Tier", "def": "Always Free resource limits available to all users (separate from Free Trial)."}
 ]
 -->
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

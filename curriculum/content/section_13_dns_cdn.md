@@ -254,3 +254,20 @@ gcloud compute url-maps invalidate-cdn-cache my-cdn-map \
   {"term": "TTL", "def": "Time-to-Live - how long DNS/cache records remain valid."}
 ]
 -->
+
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

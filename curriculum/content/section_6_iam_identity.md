@@ -1,4 +1,40 @@
-# Day 6: IAM (Identity & Access Management)
+# Module 7: IAM & Identity
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
 
 **Duration:** ⏱️ 60 Minutes  
 **Level:** Intermediate  
@@ -427,3 +463,19 @@ gcloud logging read 'protoPayload.authenticationInfo.principalEmail="compromised
   {"term": "Basic Roles", "def": "Owner/Editor/Viewer. Too broad for production. Use Predefined instead."}
 ]
 -->
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

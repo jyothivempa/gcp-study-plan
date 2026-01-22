@@ -378,3 +378,20 @@ gcloud storage rm -r gs://my-advanced-bucket-${PROJECT_ID}
   {"term": "Archive Class", "def": "Cheapest storage for rarely accessed data. 365-day minimum storage."}
 ]
 -->
+
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

@@ -1,4 +1,40 @@
-# Day 4: Compute Engine (Virtual Machines)
+# Module 5: Compute Engine Basics
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
 
 **Duration:** ⏱️ 60 Minutes  
 **Level:** Intermediate  
@@ -337,37 +373,41 @@ gcloud compute instances describe VM_NAME --format="get(metadata.items[ssh-keys]
 ---
 
 <!-- QUIZ_START -->
-## 📝 7. Knowledge Check Quiz
+## 📝 7. Knowledge Check
 
-1. **You need to run a 4-hour batch job that can restart from checkpoints. Which is most cost-effective?**
-    *   A. **Spot VM** ✅
-    *   B. Standard E2 Instance
-    *   C. Memory Optimized VM
-    *   D. Sole-Tenant Node
+### Level 1: Beginner (Recall)
 
-2. **Your company runs SAP HANA requiring 4TB of RAM. Which machine family?**
-    *   A. Compute Optimized (C2)
-    *   B. General Purpose (E2)
-    *   C. **Memory Optimized (M2)** ✅
-    *   D. Accelerator Optimized (A2)
+1.  **Which Compute Engine machine family is best for cost-effective batch processing?**
+    *   A. E2
+    *   B. C2
+    *   C. **Spot VMs** ✅
+    *   D. N2
 
-3. **What happens when you set a startup script for a VM?**
-    *   A. It runs every hour
-    *   B. **It runs once, every time the VM boots** ✅
-    *   C. It runs only when you SSH
-    *   D. It defines the machine type
+2.  **How do you enable a VM to automatically restart on a different host after a hardware failure?**
+    *   A. Enable "Preemptibility"
+    *   B. **Set "On Host Maintenance" to "Migrate" and "Automatic Restart" to "On"** ✅
+    *   C. Use a Shielded VM
+    *   D. Use a Local SSD
 
-4. **Which feature allows Google to patch hardware without rebooting your VM?**
-    *   A. Auto-healing
-    *   B. **Live Migration** ✅
-    *   C. Preemption
-    *   D. Snapshot restore
+### Level 2: ACE Exam (Scenario)
 
-5. **You want consistent performance for a production database. Which should you choose?**
-    *   A. E2 (cheapest)
-    *   B. **N2 (consistent performance)** ✅
-    *   C. Spot VM (discounted)
-    *   D. T2A (ARM-based)
+3.  **You need to deploy a web application that requires high availability across three zones. The application is stateless. Which configuration should you choose?**
+    *   A. Three standalone VMs in different zones with a DNS round-robin.
+    *   B. **A Regional Managed Instance Group (MIG) with an HTTP Load Balancer.** ✅
+    *   C. A Zonal MIG with a Network Load Balancer.
+    *   D. An Unmanaged Instance Group with a Regional external IP.
+
+4.  **A developer wants to SSH into a VM that has no external IP address. The VM is in a private subnet. What is the most secure way to allow access?**
+    *   A. Create a firewall rule allowing 0.0.0.0/0 on port 22.
+    *   B. Assign a public IP to the VM temporarily.
+    *   C. **Use Identity-Aware Proxy (IAP) TCP forwarding.** ✅
+    *   D. Set up a VPN connection just for this single user.
+
+### Level 3: Interview (Reasoning)
+
+5.  **Interviewer: "Why would you choose a Custom Machine Type over a Predefined one?"**
+    *   **Strong Answer:** "I would choose a Custom Machine Type when my workload's resource ratio doesn't match predefined types—for example, a memory-intensive cache that needs 64GB RAM but only 2 vCPUs. Using a standard `n2-highmem-8` would force me to pay for 6 extra vCPUs I don't need. Custom types save money by right-sizing resources to the exact application profile."
+
 <!-- QUIZ_END -->
 
 ---
@@ -392,3 +432,19 @@ gcloud compute instances describe VM_NAME --format="get(metadata.items[ssh-keys]
   {"term": "Machine Family", "def": "Category of VM types optimized for different workloads (E2, N2, C2, M2)."}
 ]
 -->
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

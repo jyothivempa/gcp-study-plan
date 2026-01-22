@@ -387,3 +387,20 @@ This comparison is one of the **most common exam questions**. Both are serverles
   {"term": "Trigger", "def": "The event that causes a function to execute (HTTP, Pub/Sub, Storage, etc)."}
 ]
 -->
+
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

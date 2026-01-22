@@ -228,3 +228,20 @@ Take a deep breath. You didn't just read about the cloud—**you built it.**
   {"term": "Security Domain", "def": "Highest weight at 19%. Focus on IAM and firewalls."}
 ]
 -->
+
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

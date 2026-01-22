@@ -1,4 +1,40 @@
-# Day 5: VPC Networking & Firewalls
+# Module 6: VPC Networking
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
+
+> **🎯 Objectives:**
+> *   Master core concepts
+> *   Build hands-on resources
+> *   Pass the ACE exam scenarios
+
+| 📚 Concepts | 🧪 Lab | 📝 Quiz | 💼 Interview |
+|---|---|---|---|
+| [Jump to Theory](#concepts) | [Jump to Lab](#hands-on-lab) | [Jump to Quiz](#knowledge-check) | [Jump to Interview](#interview-questions) |
+
+---
+
 
 **Duration:** ⏱️ 60 Minutes  
 **Level:** Intermediate  
@@ -398,37 +434,41 @@ gcloud compute firewall-rules list --filter="network:VPC_NAME"
 ---
 
 <!-- QUIZ_START -->
-## 📝 8. Knowledge Check Quiz
+## 📝 8. Knowledge Check
 
-1. **A VPC in Google Cloud is:**
-    *   A. Regional
-    *   B. **Global** ✅
-    *   C. Zonal
-    *   D. Project-specific only
+### Level 1: Beginner (Recall)
 
-2. **A Subnet in Google Cloud is:**
-    *   A. Global
-    *   B. **Regional** ✅
-    *   C. Zonal
-    *   D. Cross-project
+1.  **What is the scope of a VPC network in GCP?**
+    *   A. Zonal
+    *   B. Regional
+    *   C. **Global** ✅
+    *   D. Multi-Cloud
 
-3. **By default, what is the behavior of Ingress (Incoming) traffic?**
-    *   A. Allowed
-    *   B. **Blocked** ✅
-    *   C. Allowed only from Google
-    *   D. Allowed only from same project
+2.  **Which GCP resource creates a private connection between your VPC and on-premises network?**
+    *   A. Cloud NAT
+    *   B. **Cloud VPN** ✅
+    *   C. VPC Peering
+    *   D. Cloud CDN
 
-4. **Which CIDR notation represents "The entire internet" in IP ranges?**
-    *   A. 127.0.0.1
-    *   B. **0.0.0.0/0** ✅
-    *   C. 192.168.1.1
-    *   D. 10.0.0.0/8
+### Level 2: ACE Exam (Scenario)
 
-5. **Which port do you need to open for a secure HTTPS web server?**
-    *   A. 80
-    *   B. 22
-    *   C. **443** ✅
-    *   D. 3389
+3.  **You have created a new custom VPC. You create a subnet in `us-central1`. You try to create a VM in `us-east1` but the subnet dropdown is empty. Why?**
+    *   A. You reached your quota for subnets.
+    *   B. **Subnets are regional. You must create a subnet in `us-east1` first.** ✅
+    *   C. The VPC needs to be in "Auto Mode" to support multiple regions.
+    *   D. You need to enable "Global Routing" on the VPC.
+
+4.  **You need to allow a web server in a private subnet to download patches from the internet. The server must NOT be accessible from the internet. What should you configure?**
+    *   A. Assign an External IP to the VM.
+    *   B. Configure a Proxy VM.
+    *   C. **Configure Cloud NAT.** ✅
+    *   D. Enable Private Google Access.
+
+### Level 3: Interview (Reasoning)
+
+5.  **Interviewer: "Explain the difference between VPC Peering and Shared VPC. When would you use each?"**
+    *   **Strong Answer:** "VPC Peering connects two independent VPCs allowing them to talk via private IPs. It's decentralized and good for connecting different organizations (e.g., SaaS provider to customer). Shared VPC is centralized—it allows multiple service projects to consume a single network managed by a host project. I'd use Shared VPC for my company's internal structure to enforce central firewall/security policies while letting devs manage their own resources."
+
 <!-- QUIZ_END -->
 
 ---
@@ -460,3 +500,19 @@ gcloud compute firewall-rules list --filter="network:VPC_NAME"
   {"term": "IAP", "def": "Identity-Aware Proxy. Secure alternative to opening SSH to the internet."}
 ]
 -->
+---
+
+### 🗑️ Lab Cleanup (Mandatory)
+
+> **⚠️ Critical:** Delete resources to avoid unecessary billing!
+
+1.  **Delete Project:** (Fastest way)
+    ```bash
+    gcloud projects delete $PROJECT_ID
+    ```
+2.  **Or Delete Resources Individually:**
+    ```bash
+    # Example commands (verify before running)
+    gcloud compute instances delete [INSTANCE_NAME] --quiet
+    gcloud storage rm -r gs://[BUCKET_NAME]
+    ```

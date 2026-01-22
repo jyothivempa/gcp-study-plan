@@ -1,0 +1,350 @@
+/* LMS Enhancements - Additional Styles */
+
+/* ================================================
+   1. FOCUS MODE
+   ================================================ */
+.focus-mode #sidebar,
+.focus-mode aside:first-of-type {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.focus-mode main {
+    margin-left: 0 !important;
+}
+
+.focus-mode .reader-layout {
+    grid-template-columns: 1fr !important;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ================================================
+   2. KEYBOARD SHORTCUTS MODAL
+   ================================================ */
+.shortcuts-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+
+.shortcuts-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.shortcuts-modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.shortcuts-modal.open .shortcuts-modal-content {
+    transform: scale(1);
+}
+
+.dark .shortcuts-modal-content {
+    background: #1f2937;
+    color: #f3f4f6;
+}
+
+.shortcut-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .shortcut-row {
+    border-color: #374151;
+}
+
+.shortcut-row:last-child {
+    border-bottom: none;
+}
+
+.shortcut-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    box-shadow: 0 2px 0 #d1d5db;
+}
+
+.dark .shortcut-key {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+    box-shadow: 0 2px 0 #4b5563;
+}
+
+/* ================================================
+   3. SECTION PROGRESS DOTS
+   ================================================ */
+.progress-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px 24px;
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.dark .progress-dots {
+    background: linear-gradient(to right, #1e293b, #0f172a);
+}
+
+.progress-dot-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.3s;
+}
+
+.progress-dot-item.active {
+    color: #635bff;
+}
+
+.progress-dot-item.completed {
+    color: #10b981;
+}
+
+.progress-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    color: #94a3b8;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.dark .progress-dot {
+    background: #334155;
+    color: #64748b;
+}
+
+.progress-dot-item.active .progress-dot {
+    background: #635bff;
+    color: white;
+    box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.2);
+}
+
+.progress-dot-item.completed .progress-dot {
+    background: #10b981;
+    color: white;
+}
+
+.progress-connector {
+    width: 40px;
+    height: 2px;
+    background: #e2e8f0;
+}
+
+.dark .progress-connector {
+    background: #334155;
+}
+
+.progress-connector.completed {
+    background: #10b981;
+}
+
+/* ================================================
+   4. MARK COMPLETE FLOATING BUTTON
+   ================================================ */
+.mark-complete-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #635bff 0%, #4f46e5 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 40px -10px rgba(99, 91, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mark-complete-fab:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 14px 50px -10px rgba(99, 91, 255, 0.6);
+}
+
+.mark-complete-fab:active {
+    transform: scale(0.98);
+}
+
+.mark-complete-fab.completed {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.5);
+}
+
+.mark-complete-fab i {
+    font-size: 18px;
+}
+
+/* XP Animation */
+@keyframes xp-pop {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(1.2);
+    }
+}
+
+.xp-popup {
+    position: fixed;
+    bottom: 100px;
+    right: 50px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #f59e0b;
+    text-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+    pointer-events: none;
+    animation: xp-pop 1s ease-out forwards;
+}
+
+/* ================================================
+   5. MOBILE SIDEBAR ENHANCEMENTS
+   ================================================ */
+@media (max-width: 1280px) {
+    .mobile-sidebar-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 80px;
+        left: 16px;
+        z-index: 150;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .dark .mobile-sidebar-toggle {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .mobile-sidebar-toggle:hover {
+        transform: scale(1.05);
+    }
+
+    .mobile-sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 140;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+    }
+
+    .mobile-sidebar-overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* ================================================
+   6. FOCUS MODE TOGGLE BUTTON
+   ================================================ */
+.focus-mode-btn {
+    position: fixed;
+    top: 80px;
+    right: 16px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #64748b;
+}
+
+.dark .focus-mode-btn {
+    background: #1f2937;
+    border-color: #374151;
+    color: #94a3b8;
+}
+
+.focus-mode-btn:hover {
+    color: #635bff;
+    border-color: #635bff;
+}
+
+.focus-mode .focus-mode-btn {
+    background: #635bff;
+    color: white;
+    border-color: #635bff;
+}
+
+/* ================================================
+   7. SMOOTH TRANSITIONS
+   ================================================ */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#sidebar,
+aside {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+main {
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
