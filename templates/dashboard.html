@@ -6,7 +6,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-    <!-- 👋 Welcome Header -->
+    <!--- 👋 Welcome Header -->
     <div class="relative mb-12 rounded-3xl overflow-hidden p-8 md:p-12 shadow-2xl">
         <!-- Background Banner -->
         <div
@@ -24,6 +24,15 @@
                 <p class="text-brand-100 text-lg font-medium max-w-xl">
                     You're on a roll! Keep up the momentum to reach your Cloud Engineer certification goals.
                 </p>
+
+                <!-- Resume Learning Button -->
+                {% if last_accessed_day %}
+                <a href="{% url 'lesson_detail' 'gcp' last_accessed_day.number %}"
+                    class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-white text-brand-600 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">
+                    <i class="fa-solid fa-play"></i>
+                    Resume Day {{ last_accessed_day.number }}
+                </a>
+                {% endif %}
             </div>
 
             <!-- Quick Stats -->
@@ -38,6 +47,23 @@
                     <div class="text-2xl font-black text-white">{{ user.profile.xp }}</div>
                     <div class="text-[10px] uppercase tracking-widest text-brand-200 font-bold">Total XP</div>
                 </div>
+                <div
+                    class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[100px]">
+                    <div class="text-2xl font-black text-white">{{ completion_percentage|default:0 }}%</div>
+                    <div class="text-[10px] uppercase tracking-widest text-brand-200 font-bold">Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Progress Bar -->
+        <div class="relative z-10 mt-6">
+            <div class="flex justify-between text-sm text-brand-100 mb-2">
+                <span>Overall Progress</span>
+                <span>{{ completed_days|default:0 }} / {{ total_days|default:45 }} Days</span>
+            </div>
+            <div class="h-3 bg-white/20 rounded-full overflow-hidden">
+                <div class="h-full bg-white rounded-full transition-all duration-1000"
+                    style="width: {{ completion_percentage|default:0 }}%"></div>
             </div>
         </div>
     </div>
@@ -96,6 +122,9 @@
                         <div class="h-full bg-gradient-to-r from-brand-500 to-indigo-500 rounded-full transition-all duration-1000"
                             style="width: {{ course.progress_percent|default:'0' }}%"></div>
                     </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                        {{ course.completed_count|default:0 }} / {{ course.total_count|default:45 }} days completed
+                    </p>
                 </div>
             </div>
 

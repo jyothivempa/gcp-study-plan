@@ -1,0 +1,96 @@
+<!-- Cost Safety Component - Reusable Template -->
+<!-- Include this in every hands-on lab section -->
+
+<div
+    class="cost-safety-box my-8 p-6 rounded-2xl border-2 border-yellow-200 dark:border-yellow-900/50 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+    <!-- Icon Header -->
+    <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-xl bg-yellow-500 text-white flex items-center justify-center text-2xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="text-xl font-bold text-yellow-900 dark:text-yellow-100 m-0">
+            ⚠️ Cost Safety
+        </h3>
+    </div>
+
+    <!-- Content -->
+    <div class="space-y-3 text-sm">
+        <!-- Expected Cost -->
+        <div class="flex items-start gap-2">
+            <i class="fa-solid fa-dollar-sign text-green-600 dark:text-green-400 mt-0.5"></i>
+            <div>
+                <strong class="text-slate-900 dark:text-slate-100">Expected Cost:</strong>
+                <span class="text-slate-700 dark:text-slate-300">
+                    <!-- CUSTOMIZE THIS -->
+                    $0 (Free Tier) / <$1 per hour </span>
+            </div>
+        </div>
+
+        <!-- Cleanup Checklist -->
+        <div class="flex items-start gap-2">
+            <i class="fa-solid fa-list-check text-blue-600 dark:text-blue-400 mt-0.5"></i>
+            <div class="flex-1">
+                <strong class="text-slate-900 dark:text-slate-100 block mb-2">Required Cleanup:</strong>
+                <div class="space-y-1 pl-4">
+                    <!-- CUSTOMIZE THIS CHECKLIST -->
+                    <label
+                        class="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100">
+                        <input type="checkbox" class="w-4 h-4 accent-brand-500 rounded">
+                        <span>Delete VM instance</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100">
+                        <input type="checkbox" class="w-4 h-4 accent-brand-500 rounded">
+                        <span>Delete persistent disk</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100">
+                        <input type="checkbox" class="w-4 h-4 accent-brand-500 rounded">
+                        <span>Verify billing dashboard shows $0</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Traps -->
+        <div class="flex items-start gap-2">
+            <i class="fa-solid fa-bug text-red-600 dark:text-red-400 mt-0.5"></i>
+            <div>
+                <strong class="text-slate-900 dark:text-slate-100">Common Billing Traps:</strong>
+                <ul class="list-disc list-inside text-slate-700 dark:text-slate-300 mt-1 space-y-1">
+                    <!-- CUSTOMIZE THIS -->
+                    <li>Forgetting to delete persistent disks (charges separately from VMs)</li>
+                    <li>Leaving VM running overnight</li>
+                    <li>Creating resources in wrong region (higher costs)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Cleanup Command -->
+        <div class="mt-4 p-3 bg-slate-900 dark:bg-black rounded-lg">
+            <div class="text-xs text-slate-400 mb-1">Quick cleanup (gcloud):</div>
+            <code class="text-green-400 text-xs font-mono">
+                <!-- CUSTOMIZE THIS -->
+                gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet
+            </code>
+        </div>
+    </div>
+
+    <!-- Footer Warning -->
+    <div class="mt-4 pt-4 border-t border-yellow-300 dark:border-yellow-700">
+        <p class="text-xs text-yellow-900 dark:text-yellow-200 font-medium">
+            💡 <strong>Pro Tip:</strong> Set up a billing alert at $1 in your GCP project to avoid surprises.
+        </p>
+    </div>
+</div>
+
+<style>
+    /* Additional styles for cost safety box */
+    .cost-safety-box {
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+    }
+
+    .dark .cost-safety-box {
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.1);
+    }
+</style>

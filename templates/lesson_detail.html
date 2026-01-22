@@ -133,7 +133,8 @@
                             class="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-brand-500 transition">Previous</span>
                         <span
                             class="text-lg font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition flex items-center gap-2">
-                            <i class="fa-solid fa-arrow-left"></i> Day {{ prev_day.number }}
+                            <i class="fa-solid fa-arrow-left"></i> Day {{ prev_day.number }}: {{
+                            prev_day.title|truncatewords:4 }}
                         </span>
                     </a>
                     {% else %}<div></div>{% endif %}
@@ -145,7 +146,8 @@
                             class="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-brand-500 transition">Next</span>
                         <span
                             class="text-lg font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition flex items-center gap-2">
-                            Day {{ next_day.number }} <i class="fa-solid fa-arrow-right"></i>
+                            Day {{ next_day.number }}: {{ next_day.title|truncatewords:4 }} <i
+                                class="fa-solid fa-arrow-right"></i>
                         </span>
                     </a>
                     {% endif %}
@@ -196,6 +198,16 @@
                         if (this.questions[idx].selected) return; // Already answered
                         this.questions[idx].selected = optionKey;
                         if (optionKey === this.questions[idx].correct) this.score++;
+                    },
+                    getPercentage() {
+                        return Math.round((this.score / this.questions.length) * 100);
+                    },
+                    getGrade() {
+                        const pct = this.getPercentage();
+                        if (pct >= 90) return { text: 'Excellent! 🎉', color: 'text-green-600' };
+                        if (pct >= 70) return { text: 'Good Job! 👍', color: 'text-blue-600' };
+                        if (pct >= 50) return { text: 'Keep Learning 📚', color: 'text-yellow-600' };
+                        return { text: 'Review Needed 📖', color: 'text-red-600' };
                     }
                 }">
                     <div class="flex items-center gap-4 mb-8">
@@ -203,8 +215,15 @@
                             class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 text-2xl">
                             <i class="fa-solid fa-brain"></i>
                         </div>
-                        <h2 class="text-3xl font-display font-bold text-slate-900 dark:text-white !m-0 !border-0">
-                            Knowledge Check</h2>
+                        <div>
+                            <h2 class="text-3xl font-display font-bold text-slate-900 dark:text-white !m-0 !border-0">
+                                Knowledge Check
+                            </h2>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                                <span x-text="questions.length"></span> Questions •
+                                <span x-text="questions.filter(q => q.selected).length"></span> Answered
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Quiz UI -->
@@ -245,26 +264,48 @@
                                     </template>
                                 </div>
 
-                                <!-- Explanation -->
-                                <div x-show="q.selected" x-collapse
-                                    class="mt-4 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 text-sm">
-                                    <strong class="block mb-1"><i class="fa-solid fa-lightbulb mr-1"></i>
-                                        Explanation</strong>
+                                <!-- Explanation (Always show after answer) -->
+                                <div x-show="q.selected" x-collapse class="mt-4 p-4 rounded-lg border-l-4"
+                                    :class="q.selected === q.correct ? 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-900 dark:text-green-100' : 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-900 dark:text-blue-100'">
+                                    <strong class="block mb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                        <span
+                                            x-text="q.selected === q.correct ? '✅ Correct!' : '📖 Explanation'"></span>
+                                    </strong>
                                     <span x-text="q.explanation"></span>
                                 </div>
                             </div>
                         </template>
 
-                        <!-- Score Summary -->
-                        <div class="p-8 rounded-2xl bg-slate-900 dark:bg-black text-white text-center"
+                        <!-- Score Summary (Enhanced) -->
+                        <div class="p-8 rounded-2xl text-white text-center"
+                            :class="getPercentage() >= 70 ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-slate-700 to-slate-900'"
                             x-show="questions.every(q => q.selected)">
-                            <h3 class="text-2xl font-bold mb-2">Quiz Complete!</h3>
-                            <p class="text-xl">You scored <span x-text="score"></span> / <span
-                                    x-text="questions.length"></span></p>
-                            <div class="w-full bg-white/20 h-2 rounded-full mt-4 overflow-hidden">
-                                <div class="bg-brand-500 h-full transition-all duration-1000"
-                                    :style="`width: ${(score/questions.length)*100}%`"></div>
+                            <div
+                                class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 mb-4">
+                                <i class="fa-solid text-4xl"
+                                    :class="getPercentage() >= 70 ? 'fa-trophy' : 'fa-book-open'"></i>
                             </div>
+                            <h3 class="text-3xl font-bold mb-2">Quiz Complete!</h3>
+                            <p class="text-xl mb-1" x-text="getGrade().text"></p>
+                            <p class="text-5xl font-black my-4">
+                                <span x-text="score"></span> / <span x-text="questions.length"></span>
+                            </p>
+                            <p class="text-2xl font-bold mb-4">
+                                <span x-text="getPercentage()"></span>%
+                            </p>
+                            <div class="w-full bg-white/20 h-3 rounded-full mt-4 overflow-hidden">
+                                <div class="bg-white h-full transition-all duration-1000"
+                                    :style="`width: ${getPercentage()}%`"></div>
+                            </div>
+                            <p class="text-sm mt-4 opacity-80">
+                                <template x-if="getPercentage() >= 70">
+                                    <span>✨ Great work! You're ready for the next day.</span>
+                                </template>
+                                <template x-if="getPercentage() < 70">
+                                    <span>💡 Review the material and try again to solidify your knowledge.</span>
+                                </template>
+                            </p>
                         </div>
                     </div>
                 </section>
